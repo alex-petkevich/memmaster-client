@@ -1,0 +1,87 @@
+<div class="col-md-12">
+  <div class="card card-container">
+    <img
+      id="profile-img"
+      src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+      class="profile-img-card"
+    />
+    <form
+      *ngIf="!isSuccessful"
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate
+      class="row g-3 needs-validation"
+    >
+      <div class="mb-1">
+        <label for="username">{{ 'account.register.username' | translate  }}</label>
+        <input
+          type="text"
+          class="form-control"  [ngClass]="{ 'is-invalid': username.errors && f.submitted}"
+          name="username"
+          [(ngModel)]="form.username"
+          required
+          minlength="3"
+          maxlength="20"
+          #username="ngModel"
+        />
+        <div class="invalid-feedback " *ngIf="username.errors && f.submitted">
+          <div *ngIf="username.errors['required']">{{ 'account.register.user-required' | translate  }}</div>
+          <div *ngIf="username.errors['minlength']">
+            {{ 'account.register.minlength' | translate  }}
+          </div>
+          <div *ngIf="username.errors['maxlength']">
+            {{ 'account.register.maxlength' | translate  }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-1">
+        <label for="email">{{ 'account.register.email' | translate  }}</label>
+        <input
+          type="email"
+          class="form-control" [ngClass]="{ 'is-invalid': email.errors && f.submitted}"
+          name="email"
+          [(ngModel)]="form.email"
+          required
+          email
+          #email="ngModel"
+        />
+        <div class="invalid-feedback" *ngIf="email.errors && f.submitted">
+          <div *ngIf="email.errors['required']">{{ 'account.register.email-required' | translate  }}</div>
+          <div *ngIf="email.errors['email']">
+            {{ 'account.register.email-valid' | translate  }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-1">
+        <label for="firstname">{{ 'account.register.firstname' | translate  }}</label>
+        <input
+          type="text"
+          class="form-control"
+          name="firstname"
+          [(ngModel)]="form.firstname"
+          #firstname="ngModel"
+        />
+      </div>
+      <div class="mb-1">
+        <label for="lastname">{{ 'account.register.lastname' | translate  }}</label>
+        <input
+          type="text"
+          class="form-control"
+          name="lastname"
+          [(ngModel)]="form.lastname"
+          #lastname="ngModel"
+        />
+      </div>
+      <div class="mb-1">
+        <button class="btn btn-primary btn-block">{{ 'account.register.signup' | translate  }}</button>
+      </div>
+      <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
+        {{ 'account.register.signup-failed' | translate  }}!<br />{{ errorMessage }}
+      </div>
+    </form>
+    <div class="alert alert-success" *ngIf="isSuccessful">
+      {{ 'account.register.success' | translate  }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+{
+  "name": "memmaster-client",
+  "version": "0.0.1",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "build:production": "ng build --aot --build-optimizer --common-chunk --vendor-chunk --optimization --progress --configuration=production"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^17.0.8",
+    "@angular/common": "^17.0.8",
+    "@angular/compiler": "^17.0.8",
+    "@angular/core": "^17.0.8",
+    "@angular/forms": "^17.0.8",
+    "@angular/localize": "^17.0.8",
+    "@angular/platform-browser": "^17.0.8",
+    "@angular/platform-browser-dynamic": "^17.0.8",
+    "@angular/router": "^17.0.8",
+    "@auth0/angular-jwt": "^5.0.2",
+    "@ng-bootstrap/ng-bootstrap": "16.0.0",
+    "@ng-select/ng-select": "^12.0.6",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
+    "@popperjs/core": "^2.10.2",
+    "@types/file-saver": "^2.0.5",
+    "file-saver": "^2.0.5",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.2"
+  },
+  "devDependencies": {
+    "@angular-builders/custom-webpack": "^17.0.0",
+    "@angular-devkit/build-angular": "^17.0.9",
+    "@angular/cli": "^17.0.9",
+    "@angular/compiler-cli": "^17.0.8",
+    "@types/jasmine": "~5.1.4",
+    "@types/node": "^20.10.7",
+    "jasmine-core": "~5.1.1",
+    "karma": "~6.4.1",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.1",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.2.0"
+  }
+}

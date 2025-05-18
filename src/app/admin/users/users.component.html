@@ -1,0 +1,80 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm mt-3 mb-3">
+            <h4>{{ 'users.header' | translate }}</h4>
+        </div>
+    </div>
+    <div class="progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" *ngIf="loadProgress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+    </div>
+    <div class="row" *ngIf="!loadProgress">
+        <div class="text-align-right col-12">
+            <button type="button" class="btn btn-light btn-sm me-3" data-bs-toggle="collapse" data-bs-target="#collapseFilterForm" aria-expanded="false"
+                    aria-controls="collapseFilterForm" (click)="displayFilter()"><em
+                    class="bi-filter"></em> {{ 'mails.show_filter' | translate }}</button>
+            <button class="btn btn-secondary btn-sm" [routerLink]="['/admin/users/new']"><em class="bi-bookmark-plus"></em> {{ 'users.create_user' | translate }}</button>
+        </div>
+    </div>
+    <div class="row collapse" id="collapseFilterForm" [ngClass]="{'in': isFilterOpen}">
+        <div class="container filter-box">
+            <div class="row">
+                <div class="col-sm-3 me-1">
+                    <input type="text" name="fname" [formControl]="fname" placeholder="{{ 'users.name' | translate }}" class="ms-3 form-control">
+                </div>
+                <div class="col-sm-3 me-1">
+                    <input type="text" name="fsubject" [formControl]="fusername" placeholder="{{ 'users.username' | translate }}" class="ms-3 form-control">
+                </div>
+                <div class="col-sm-3 me-1">
+                    <input type="text" name="femail" [formControl]="femail" class="ms-3 form-control" placeholder="{{ 'users.email' | translate }}">
+                </div>
+                <div class="col-sm pt-1 me-1">
+                    <input type="checkbox" name="factive" id="factive" [formControl]="factive" class="me-1"><label
+                        for="factive">{{ 'users.active' | translate }}</label>
+                </div>
+                <div class="col-sm text-align-right">
+                    <button type="button" class="btn btn-primary btn-sm mb-2 me-2" (click)="applyFilters()">{{ 'mails.apply_filter' | translate }}</button>
+                    <button type="button" class="btn btn-secondary btn-sm mb-2" (click)="resetFilters()">{{ 'mails.reset_filter' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="users?.totalElements! > 0 && !loadProgress">
+        <p class="col-sm">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#<app-sort [sort]="'id'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col">{{ 'users.name' | translate }}<app-sort [sort]="'lastname'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col">{{ 'users.username' | translate }}<app-sort [sort]="'username'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col">{{ 'users.email' | translate }}<app-sort [sort]="'email'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col" class="w-sm">{{ 'users.role' | translate }}<app-sort [sort]="'roleId'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col" class="w-sm">{{ 'users.active' | translate }}<app-sort [sort]="'active'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col" class="w-sm text-align-right">{{ 'users.actions' | translate }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let user of users?.content;">
+                    <th scope="row" [ngClass]="{ 'disabled': !user.active}">{{ user.id }}</th>
+                    <td [ngClass]="{ 'disabled': !user.active}">{{ user.firstname }} {{ user.lastname }}</td>
+                    <td [ngClass]="{ 'disabled': !user.active}"><a  [routerLink]="['/admin/users', user.id, 'edit']">{{ user.username }}</a></td>
+                    <td [ngClass]="{ 'disabled': !user.active}">{{ user.email }}</td>
+                    <td [ngClass]="{ 'disabled': !user.active}"><div *ngFor="let role of user.roles;">{{ role.name }}</div></td>
+                    <td><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" [checked]="user.active" (click)="activeUser(user.id)"></div></td>
+                    <td class="text-align-right" [ngClass]="{ 'disabled': !user.active}">
+                        <button type="button"
+                                class="btn btn-danger btn-sm" (click)="confirmDelete( user.id )"><em class="bi-trash"></em></button>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        <app-pagination #pagination [pages]="users" [callbackFunction]="pageCallback"></app-pagination>
+    </div>
+    <div class="row" *ngIf="users?.totalElements  === 0 && !loadProgress">
+        <div class="col-sm">
+            <p class="text-center" [innerHTML]=" 'users.error_no_users_found' | translate"></p>
+        </div>
+    </div>
+</div>
+
+<app-dialog #dialog></app-dialog>

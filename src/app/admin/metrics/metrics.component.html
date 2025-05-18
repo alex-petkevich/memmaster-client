@@ -1,0 +1,76 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm mt-3 mb-3">
+            <h4>{{ 'metrics.header' | translate }}</h4>
+        </div>
+    </div>
+    <div class="progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" *ngIf="loadProgress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated w-100"></div>
+    </div>
+
+    <div class="row" *ngIf="!loadProgress">
+        <div class="col-6 text-align-right">
+            <p class="lead">{{ 'metrics.app-status' | translate }}:</p>
+        </div>
+        <div class="col-6">
+            <p class="lead"><app-status-icon [isGreen]="health?.status == 'UP'"></app-status-icon></p>
+        </div>
+    </div>
+    <div class="row" *ngIf="!loadProgress">
+        <table class="table table-bordered table-striped-columns">
+            <thead>
+            <tr>
+                <th scope="col" class="w-name">{{ 'metrics.service-name' | translate }}</th>
+                <th scope="col" class="w-status">{{ 'metrics.service-status' | translate }}</th>
+                <th scope="col">{{ 'metrics.service-details' | translate }}</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let component of health?.components | keyvalue">
+                    <td>{{ component.key }}</td>
+                    <td><app-status-icon [isGreen]=" $any(component).value.status == 'UP'"></app-status-icon></td>
+                    <td class="fs-sm"><div *ngFor="let detail of $any(component).value.details | keyvalue">{{detail.key}}: {{detail.value}}</div></td>
+                </tr>
+            </tbody>
+        </table>
+
+    <div class="row mt-4 w-100" *ngIf="!loadProgress">
+        <div class="col-12 align-content-center">
+            <h6>{{ 'metrics.header' | translate }}</h6>
+        </div>
+    </div>
+    <div class="row" *ngIf="!loadProgress && metrics">
+        <div class="col-4" style="max-height: 600px;height: 600px;overflow-y: scroll;overflow-x: hidden">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link p-0" href (click)="showMetric(metric)"  *ngFor="let metric of metrics.names">{{metric}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-8" *ngIf="metricDetails">
+            <h6>{{ 'metrics.details.name' | translate }}: {{metricDetails.name}}</h6>
+            <div class="mb-2">{{ 'metrics.details.baseUnit' | translate }}: {{metricDetails.baseUnit}}</div>
+            <div class="mb-5">{{metricDetails.description}}</div>
+            <div>{{ 'metrics.details.measurements' | translate }}: </div>
+            <div *ngFor="let detail of metricDetails.measurements">{{detail.statistic}}: {{detail.value}}</div>
+            <div class="mt-5">{{ 'metrics.details.availableTags' | translate }}: </div>
+            <div class="mt-1" *ngFor="let tag of metricDetails.availableTags">{{tag.tag}}:
+                <div class="ms-3" *ngFor="let val of tag.values">{{val}}</div>
+            </div>
+        </div>
+        <div class="col-9" *ngIf="loadingMetrics">
+            <div class="d-flex align-items-center">
+                <strong role="status">{{'metrics.metrics-loading' | translate}}...</strong>
+                <div class="spinner-border ms-auto" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="!metrics && !loadProgress">
+        <div class="col-sm">
+            <p class="text-center" [innerHTML]=" 'metrics.error_no_metrics_found' | translate"></p>
+        </div>
+    </div>
+</div>
+
+<app-dialog #dialog></app-dialog>

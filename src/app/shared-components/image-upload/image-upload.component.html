@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-8">
+    <label class="btn btn-default p-0">
+      <input class="form-control" type="file" (change)="selectFile($event)" />
+    </label>
+  </div>
+  <div class="col-4 mb-3">
+    <button class="btn btn-success btn-sm" [disabled]="!selectedFiles" (click)="upload()">
+      {{ 'shared-components.image-upload.upload' | translate  }}
+    </button>
+  </div>
+</div>
+<div *ngIf="showProgress">
+<div class="progress my-3">
+  <div
+    class="progress-bar progress-bar-info progress-bar-striped"
+    role="progressbar"
+    attr.aria-valuenow="{{ progress }}"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [ngStyle]="{ width: progress + '%' }"
+
+  >
+    {{ progress }}%
+  </div>
+</div>
+<div *ngIf="message" class="alert alert-secondary" role="alert">{{ message }}</div>
+</div>
+
+<img [attr.src]="image" *ngIf="image" style="max-height: 200px">
+<div class="spinner-border text-primary" role="status" *ngIf="showSpinner">
+  <span class="sr-only">{{ 'shared-components.image-upload.loading' | translate  }}...</span>
+</div>
+
+<!--<div class="card mt-3">
+  <ul
+          class="list-group list-group-flush"
+          *ngFor="let image of imgList | async"
+  >
+    <li class="list-group-item">
+      <img [attr.src]="image" *ngIf="image" style="max-height: 200px">
+    </li>
+  </ul>
+</div>-->

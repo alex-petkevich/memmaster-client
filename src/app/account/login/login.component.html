@@ -1,0 +1,81 @@
+<div class="col-md-12">
+  <div class="card card-container">
+    <img
+      id="profile-img"
+      src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+      class="profile-img-card"
+    />
+    <div class="alert alert-success" *ngIf="isLoggedIn">
+      {{ 'account.login.logged-in' | translate  }} {{ roles }}.
+    </div>
+
+    <form
+      *ngIf="!isLoggedIn"
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate
+    >
+      <div class="mb-2">
+        <div
+          class="alert alert-danger"
+          role="alert"
+          *ngIf="isLoginFailed"
+        >
+          {{ 'account.login.problem' | translate  }}: {{ errorMessage }}
+        </div>
+        <div
+          class="alert alert-success"
+          role="alert"
+          *ngIf="isActivationSuccessful"
+        >
+          {{ 'account.login.activated-successfully' | translate  }}
+        </div>
+      </div>
+      <div class="mb-2">
+        <label for="username">{{ 'account.login.username' | translate  }}</label>
+        <input
+          type="text"
+          class="form-control" [ngClass]="{ 'is-invalid': username.errors && f.submitted}"
+          name="username"
+          [(ngModel)]="form.username"
+          required
+          #username="ngModel"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="username.errors && f.submitted"
+        >
+          {{ 'account.login.username-required' | translate  }}
+        </div>
+      </div>
+      <div class="mb-2">
+        <label for="password"> {{ 'account.login.password' | translate  }}</label>
+        <input
+          type="password"
+          class="form-control" [ngClass]="{ 'is-invalid': password.errors && f.submitted}"
+          name="password"
+          [(ngModel)]="form.password"
+          required
+          minlength="6"
+          #password="ngModel"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="password.errors && f.submitted"
+        >
+          <div *ngIf="password.errors['required']">{{ 'account.login.password-required' | translate  }}</div>
+          <div *ngIf="password.errors['minlength']">
+            {{ 'account.login.password-6-chars' | translate  }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-2">
+        <button class="btn btn-primary btn-block">
+          {{ 'account.login.login' | translate  }}
+        </button>
+      </div>
+      <a href="/account/forgot-password">{{ 'account.login.forgot-password' | translate  }}?</a> / <a href="/register">{{ 'account.login.register-account' | translate  }}</a>
+    </form>
+  </div>
+</div>

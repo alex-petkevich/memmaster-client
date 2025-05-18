@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm mt-3 mb-3">
+            <h4>{{ 'logs.header' | translate }}</h4>
+        </div>
+    </div>
+    <div class="progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" *ngIf="loadProgress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated w-100"></div>
+    </div>
+    <div class="container" *ngIf="!loadProgress && logs">
+        {{ 'logs.logLevels' | translate }}:
+        <ng-container *ngFor="let ll of logs.levels"><input type="checkbox" name="ll_{{ll}}" class="me-1" id="ll_{{ll}}" (click)="changeLL(ll)" [checked]="checkedLL(ll)"><label for="ll_{{ll}}" class="me-3">{{ll}}</label></ng-container>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{ 'logs.log-name' | translate }}</th>
+                    <th>{{ 'logs.log-config' | translate }}</th>
+                    <th>{{ 'logs.log-effecitve' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let log of logs.loggers | keyvalue">
+                    <tr *ngIf="showLevel($any(log).value.configuredLevel, $any(log).value.effectiveLevel)">
+                        <td>{{log.key}}</td>
+                        <td>{{$any(log).value.configuredLevel}}</td>
+                        <td>{{$any(log).value.effectiveLevel}}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="row" *ngIf="!logs && !loadProgress">
+        <div class="col-sm">
+            <p class="text-center" [innerHTML]=" 'logs.error_no_logs_found' | translate"></p>
+        </div>
+    </div>
+</div>
+
+<app-dialog #dialog></app-dialog>

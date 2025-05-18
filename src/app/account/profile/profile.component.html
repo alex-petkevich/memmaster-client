@@ -1,0 +1,90 @@
+<div class="col-md-12">
+  <div class="card card-container-wide" *ngIf="currentUser; else loggedOut">
+    <img
+            id="profile-img"
+            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            class="profile-img-card"
+    />
+
+  <header class="jumbotron">
+    <h3>
+      {{ 'account.profile.edit' | translate  }}
+    </h3>
+  </header>
+  <form
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit(f.form.valid)"
+    #f="ngForm"
+    novalidate
+  >
+    <div class="mb-2">
+      <label for="email">{{ 'account.profile.email' | translate  }}</label>
+      <input
+        type="email"
+        class="form-control" [ngClass]="{ 'is-invalid': email.errors && f.submitted}"
+        name="email"
+        [(ngModel)]="form.email"
+        required
+        email
+        #email="ngModel"
+      />
+      <div class="invalid-feedback" *ngIf="email.errors && f.submitted">
+        <div *ngIf="email.errors['required']">{{ 'account.profile.email-required' | translate  }}</div>
+        <div *ngIf="email.errors['email']">
+          {{ 'account.login.email-valid' | translate  }}
+        </div>
+      </div>
+    </div>
+    <div class="mb-2">
+      <label for="firstname">{{ 'account.profile.firstname' | translate  }}</label>
+      <input
+        type="text"
+        class="form-control" [ngClass]="{ 'is-invalid': firstname.errors && f.submitted}"
+        name="firstname"
+        [(ngModel)]="form.firstname"
+        required
+        #firstname="ngModel"
+      />
+      <div class="invalid-feedback" *ngIf="firstname.errors && f.submitted">
+        <div *ngIf="firstname.errors['required']">{{ 'account.profile.firstname-required' | translate  }}</div>
+      </div>
+    </div>
+    <div class="mb-2">
+      <label for="lastname">{{ 'account.profile.lastname' | translate  }}</label>
+      <input
+        type="text"
+        class="form-control" [ngClass]="{ 'is-invalid': lastname.errors && f.submitted}"
+        name="lastname"
+        [(ngModel)]="form.lastname"
+        required
+        #lastname="ngModel"
+      />
+      <div class="invalid-feedback" *ngIf="lastname.errors && f.submitted">
+        <div *ngIf="lastname.errors['required']">{{ 'account.profile.lastname-required' | translate  }}</div>
+-      </div>
+    </div>
+    <div class="mb-2">
+      <a href="/account/forgot-password">{{ 'account.profile.change-password' | translate  }}</a>
+    </div>
+
+    <div class="mb-2">
+      <label for="avatar">{{ 'account.profile.upload-avatar' | translate  }}</label>
+      <app-image-upload id="avatar" ></app-image-upload>
+    </div>
+
+    <div class="mb-2">
+      <button class="btn btn-primary btn-block">{{ 'account.profile.save-data' | translate  }}</button>
+    </div>
+    <div class="alert alert-warning" *ngIf="f.submitted && isUpdatingFailed">
+      {{ 'account.profile.update-failed' | translate  }}!<br />{{ errorMessage }}
+    </div>
+  </form>
+  <div class="alert alert-success" *ngIf="isSuccessful">
+    {{ 'account.profile.profile-saved' | translate  }}
+  </div>
+
+  </div>
+</div>
+<ng-template #loggedOut>
+  {{ 'account.profile.please-login' | translate  }}.
+</ng-template>

@@ -1,0 +1,5 @@
+<button class="btn-sort btn-sm" (click)="reorder(sort, sortOrder)">
+  <i class="bi bi-arrow-down-up" *ngIf="sort != curentSort"></i>
+  <i class="bi bi-arrow-up" *ngIf="sort == curentSort && sortOrder != 'desc'"></i>
+  <i class="bi bi-arrow-down" *ngIf="sort == curentSort && sortOrder == 'desc'"></i>
+</button>

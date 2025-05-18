@@ -1,0 +1,119 @@
+<div class="col-md-12" xmlns="http://www.w3.org/1999/html">
+    <div class="card card-container-wide">
+
+        <header class="jumbotron">
+            <h3>
+                {{ 'users.edit.header' | translate  }}
+            </h3>
+        </header>
+        <form
+                name="form"
+                (ngSubmit)="f.form.valid && onSubmit(f.form.valid)"
+                #f="ngForm"
+                novalidate
+                class="row g-3 needs-validation"
+        >
+            <div class="mb-1" *ngIf="currentUser != undefined">
+                <label for="id">{{ 'users.edit.id' | translate  }}:</label>&nbsp;
+                <b>{{ currentUser.id }}</b>
+            </div>
+            <div class="mb-1 form-check form-switch" *ngIf="currentUser != undefined">
+                <label for="active">{{ 'users.edit.active' | translate  }}</label>
+                <input
+                        type="checkbox"
+                        class="form-check-input"
+                        role="switch"
+                        name="active"
+                        id="active"
+                        [(ngModel)]="form.active"
+                        #name="ngModel"
+                />
+            </div>
+
+            <div class="mb-2">
+                <label for="username">{{ 'users.edit.username' | translate  }}</label>
+                <input
+                        type="text"
+                        class="form-control" [ngClass]="{ 'is-invalid': username.errors && f.submitted}"
+                        name="username"
+                        id="username"
+                        [(ngModel)]="form.username"
+                        required
+                        #username="ngModel"
+                />
+                <div class="invalid-feedback" *ngIf="username.errors && f.submitted">
+                    <div *ngIf="username.errors['required']">{{ 'users.edit.username-required' | translate  }}</div>
+                    <div *ngIf="username.errors['username']">
+                        {{ 'users.edit.username-valid' | translate  }}
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="email">{{ 'users.edit.email' | translate  }}</label>
+                <input
+                        type="email"
+                        class="form-control" [ngClass]="{ 'is-invalid': email.errors && f.submitted}"
+                        name="email"
+                        id="email"
+                        [(ngModel)]="form.email"
+                        required
+                        email
+                        #email="ngModel"
+                />
+                <div class="invalid-feedback" *ngIf="email.errors && f.submitted">
+                    <div *ngIf="email.errors['required']">{{ 'users.edit.email-required' | translate  }}</div>
+                    <div *ngIf="email.errors['email']">
+                        {{ 'users.edit.email-valid' | translate  }}
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="firstname">{{ 'users.edit.firstname' | translate  }}</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        name="firstname"
+                        id="firstname"
+                        [(ngModel)]="form.firstname"
+                        #firstname="ngModel"
+                />
+            </div>
+            <div class="mb-2">
+                <label for="lastname">{{ 'users.edit.lastname' | translate  }}</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        name="lastname"
+                        id="lastname"
+                        [(ngModel)]="form.lastname"
+                        #lastname="ngModel"
+                />
+            </div>
+            <div class="mb-2">
+                <label for="roles">{{ 'users.edit.roles' | translate  }}</label>
+                <ul class="list-group" id="roles">
+                    <li class="list-group-item" *ngFor="let role of roles">
+                        <input class="form-check-input me-1" type="checkbox" id="firstCheckbox_{{role.id}}" [checked]="hasRole(role)" (click)="changeRole(role)">
+                        <label class="form-check-label stretched-link" for="firstCheckbox_{{role.id}}">{{role.name}}</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="mb-2" *ngIf="currentUser?.id">
+                <button class="btn btn-danger" (click)="initiateResetPassword()">{{ 'users.edit.reset-password' | translate  }}</button>
+            </div>
+
+            <div class="mb-1">
+                <button class="btn btn-primary">{{ 'users.edit.save-data' | translate  }}</button>&nbsp;
+                <button class="btn btn-secondary" [routerLink]="['/admin/users']">{{ 'users.edit.cancel' | translate }}</button>
+            </div>
+        </form>
+        <div class="alert alert-success" *ngIf="isSuccessful">
+            {{ 'users.edit.users-saved' | translate  }}
+        </div>
+        <div class="alert alert-danger" *ngIf="errorMessage != ''">
+            {{ errorMessage  }}
+        </div>
+
+    </div>
+</div>
+<app-toast #finalDialog></app-toast>

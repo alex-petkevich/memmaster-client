@@ -1,0 +1,9 @@
+<nav aria-label="Page navigation example" *ngIf="pages?.totalPages! > 1">
+    <ul class="pagination">
+        <li class="page-item" [ngClass]="{ 'disabled': pages?.first!}"><a role="button" class="page-link" (click)="changePg(pages?.number! - 1)">&laquo;</a></li>
+        <li class="page-item"
+            *ngFor="let dummy of counter(pages?.totalPages!);let page = index"
+            [ngClass]="{ 'active': pages?.number! == page}"><a role="button" class="page-link" (click)="changePg(page)">{{ page + 1 }}</a></li>
+        <li class="page-item" [ngClass]="{ 'disabled': pages?.last!}"><a role="button" class="page-link" (click)="changePg(pages?.number! + 1)">&raquo;</a></li>
+    </ul>
+</nav>

@@ -1,0 +1,12 @@
+<div class="container py-4">
+  <div class="p-5 mb-4 bg-body-tertiary border rounded-3">
+    <div class="container-fluid py-5" *ngIf="!isLoggedIn">
+      <h2>Authourization required</h2>
+      <p>{{ 'home.please' | translate  }} <a href="/register">{{ 'home.register' | translate  }}</a> {{ 'home.or' | translate  }} <a href="/login">{{ 'home.login' | translate  }}</a> {{ 'home.to-get-funct' | translate  }}</p>
+    </div>
+    <div class="container-fluid py-5" *ngIf="isLoggedIn">
+      <h1 class="display-5 fw-bold">{{ 'home.short-stat' | translate  }}</h1>
+      <p class="col-md-8 fs-4">Total processed, Last Period, Matched rule</p>
+    </div>
+  </div>
+</div>

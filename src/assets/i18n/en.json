@@ -1,0 +1,295 @@
+{
+  "title": "Mem Master",
+  "home-nav": "Home",
+  "admin": "Admin Board",
+  "my-cards": "Cards",
+  "my-folders": "Folders",
+  "sign-up": "Sign Up",
+  "login": "Login",
+  "logout": "Logout",
+  "profile": "User's Profile",
+  "settings": "Settings",
+  "users-menu": "Users",
+  "metrics-menu": "Metrics",
+  "home": {
+    "please": "Please",
+    "register": "register",
+    "or": "or",
+    "login": "login",
+    "to-get-funct": "to get access to the Mem Master functionality",
+    "short-stat": "Short statistics"
+  },
+  "account": {
+    "forgot-password": {
+      "sent-successfully": "In case username / email exists you should receive reset password link shortly",
+      "problem": "Problem, try again later",
+      "username": "Username / Email",
+      "send-password": "Send password reset link",
+      "login": "Login",
+      "register-account": "Register New Account",
+      "username-required": "Username / Email is required!"
+    },
+    "login": {
+      "logged-in": "Logged in as",
+      "username": "Username",
+      "username-required": "Username is required!",
+      "password": "Password",
+      "login": "Login",
+      "password-required": "Password is required",
+      "password-6-chars": "Password must be at least 6 characters",
+      "forgot-password": "Forgot Password",
+      "register-account": "Register New Account",
+      "activated-successfully": "Account activated successfully. Please check Email to create a new password and login",
+      "activation-key-not-exists": "Activation key not exists",
+      "create-a-new-password": "Create a new password",
+      "problem": "Problem"
+    },
+    "reset": {
+      "success": "Password changed successfully",
+      "incorrect-link": "Incorrect link",
+      "problem-try-later": "Problem, try again later",
+      "new-password": "New Password",
+      "invalid-password": "Invalid password",
+      "change-password": "Change Password",
+      "login": "Login",
+      "register": "Register New Account"
+    },
+    "profile": {
+      "edit": "Edit profile",
+      "email": "Email",
+      "email-required": "Email is required",
+      "email-valid": "Email must be a valid email address",
+      "firstname": "First name",
+      "lastname": "Last name",
+      "change-password": "Change Password",
+      "upload-avatar": "Upload Avatar",
+      "save-data": "Save data",
+      "update-failed": "Update data failed",
+      "profile-saved": "Profile data saved successfully",
+      "please-login": "Please login"
+    },
+    "register": {
+      "username": "Username",
+      "minlength": "Username must be at least 3 characters",
+      "user-required": "Username is required",
+      "maxlength": "Username must be at most 20 characters",
+      "email": "Email",
+      "email-required": "Email is required",
+      "email-valid": "Email must be a valid email address",
+      "firstname": "First name",
+      "lastname": "Last name",
+      "password": "Password",
+      "password-required": "Password is required",
+      "password-minlength": "Password must be at least 6 characters",
+      "signup": "Sign Up",
+      "signup-failed": "Signup failed",
+      "success": "Your registration is successful! Please check your email and press the activation link to activate account."
+    },
+    "settings": {
+      "edit": "Edit mail server data",
+      "mailserver": "Host address",
+      "mailserver-required": "Host address is required",
+      "mailport": "Port",
+      "mailssl": "Connect via SSL",
+      "username": "Username",
+      "password": "Password",
+      "period": "Period to check new mail, min",
+      "save-data": "Save data",
+      "update-failed": "Update data failed",
+      "settings-saved": "Settings saved successfully",
+      "please-login": "Please login"
+    },
+    "sync": {
+      "edit": "Edit Joplin syncroinzation settings",
+      "joplinserver": "Target",
+      "joplinserver-required": "Target is required",
+      "joplinserver-dav-url": "WebDAV URL",
+      "joplinserver-dav-username": "WebDAV username",
+      "joplinserver-dav-password": "WebDAV password",
+      "joplinserver-server-url": "Joplin Server URL",
+      "joplinserver-server-username": "Joplin Server email",
+      "joplinserver-server-password": "Joplin Server password",
+      "joplinserver-parentnode": "Joplin Notebook Parent node",
+      "save-data": "Save data",
+      "update-failed": "Update data failed",
+      "settings-saved": "Settings saved successfully",
+      "please-login": "Please login"
+    }
+  },
+  "shared-components": {
+    "image-upload": {
+      "upload": "Upload",
+      "loading": "Loading",
+      "upload-error": "Could not upload the file!"
+    },
+    "alert": {
+      "confirmation": "Confirmation",
+      "ok": "Ok",
+      "cancel": "Cancel"
+    }
+  },
+  "rules": {
+    "header": "My Rules",
+    "name": "Name",
+    "total_qty": "Met",
+    "last_processed": "Last processed",
+    "actions": "Actions",
+    "change": "Change",
+    "delete": "Delete",
+    "copy": "Create Rule Copy",
+    "error_mail_not_configured": "Mail server was not set up. Please <a href=\"/settings\">complete the configuration</a>",
+    "error_no_rules_found": "No Rules found",
+    "create_rule": "Create Rule",
+    "copy-confirm": "Are you really want to copy this rule?",
+    "delete-confirm": "Are you really want to delete this rule?",
+    "edit": {
+      "save-data": "Save Rule",
+      "cancel": "Cancel",
+      "header": "Rule Properties",
+      "id": "ID",
+      "processed": "Pocessed amount",
+      "last_processed_at": "Last execution time",
+      "stop_process_rules": "Stop process rules",
+      "name": "Name",
+      "type": "Rule",
+      "save_in": "Create a new record for each email",
+      "final_action": "Final action",
+      "name-required": "Name required",
+      "name-valid": "Incorrect value",
+      "comparison_text-required": "Rule required",
+      "comparison_text-valid": "Incorrect value",
+      "rules-saved": "Rule saved successfully",
+      "rules-saved-new": "Rule saved successfully. Now please add rule conditions and actions below"
+    }
+  },
+  "lists" : {
+    "types" : {
+      "From": "From",
+      "To": "To",
+      "Subject": "Subject",
+      "Body": "Body",
+      "Attach": "Attach"
+    },
+    "comparison" : {
+      "Equals": "Equals",
+      "Contains": "Contains"
+    },
+    "final_action" : {
+      "MARK_READ": "Mark as read",
+      "DELETE": "Delete",
+      "MOVE_TO_FOLDER": "Move to another folder:",
+      "RENAME": "Change mail subject:"
+    },
+    "joplinserver" : {
+      "WEBDAV": "WebDAV",
+      "SERVER": "Joplin Server",
+      "LOCAL": "Store in account"
+    }
+  },
+  "mails": {
+    "header": "My Mails",
+    "subject": "Subject",
+    "text": "Текст",
+    "received": "Received",
+    "sender": "Sender",
+    "attachments": "Attachments",
+    "rule": "Processed rule",
+    "converted": "Exported",
+    "resync_joplin": "Sync selected",
+    "actions": "Actions",
+    "show_filter": "Filter",
+    "apply_filter": "Ok",
+    "reset_filter": "Reset",
+    "delete": "Delete",
+    "error_mail_not_configured": "Mail server was not set up. Please <a href=\"/settings\">complete the configuration</a>",
+    "error_no_mails_found": "No Mails found",
+    "resync-success": "Joplin notes syncronized successfully",
+    "delete-confirm": "Are you really want to delete this mail?",
+    "view": {
+      "header": "View Mail",
+      "id": "ID",
+      "received": "Received",
+      "sender": "Sender",
+      "attachments": "Attachments",
+      "converted": "Exported",
+      "back": "Back"
+    }
+  },
+  "users": {
+    "header": "Users",
+    "name": "Name",
+    "total_qty": "Met",
+    "last_processed": "Last processed",
+    "actions": "Actions",
+    "change": "Change",
+    "delete": "Delete",
+    "error_mail_not_configured": "Mail server was not set up. Please <a href=\"/settings\">complete the configuration</a>",
+    "error_no_rules_found": "No Rules found",
+    "create_rule": "Create Rule",
+    "delete-confirm": "Are you really want to delete this user?",
+    "edit": {
+      "save-data": "Save Rule",
+      "cancel": "Cancel",
+      "header": "Rule Properties",
+      "id": "ID",
+      "processed": "Pocessed amount",
+      "last_processed_at": "Last execution time",
+      "name": "Name",
+      "type": "Rule",
+      "save_in": "Create a new record for each email",
+      "final_action": "Final action",
+      "name-required": "Name required",
+      "name-valid": "Incorrect value",
+      "comparison_text-required": "Rule required",
+      "comparison_text-valid": "Incorrect value",
+      "rules-saved": "User saved successfully",
+      "reset-link-sent": "Password reset link was sent user successfully"
+    }
+  },
+  "metrics": {
+    "header": "Metrics",
+    "app-status": "Application status",
+    "service-status": "Service status",
+    "service-name": "Service name",
+    "service-details": "Details",
+    "error_no_metrics_found": "Metrics not found",
+    "metrics-loading": "Loading",
+    "details": {
+      "name": "Name",
+      "description": "Description",
+      "baseUnit": "Base unit",
+      "measurements": "Measurements",
+      "availableTags": "Available tags",
+      "tag": "Tag",
+      "values": "Value"
+
+    }
+  },
+  "logs": {
+    "header": "Loggers",
+    "logLevels": "Log levels",
+    "log-name": "Name",
+    "log-config": "Config",
+    "log-effecitve": "Effective",
+    "error_no_logs_found": "Loggers not found"
+  },
+  "configs": {
+    "header": "Configuration",
+    "active-profiles": "Active profiles",
+    "env-name": "Name",
+    "env-properties": "Properties",
+    "env": "Environment",
+    "flyway": "Flyway migrations",
+    "flyway-type": "Type",
+    "flyway-checksum": "Checksum",
+    "flyway-version": "Version",
+    "flyway-description": "Description",
+    "flyway-script": "Script",
+    "flyway-state": "State",
+    "flyway-installedBy": "Installed by",
+    "flyway-installedOn": "Installed on",
+    "flyway-installedRank": "Installed rank",
+    "flyway-executionTime": "Execution time",
+    "error_configs_logs_found": "Configuration not found"
+  }
+}
