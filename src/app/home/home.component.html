@@ -1,12 +1,52 @@
-<div class="container py-4">
-  <div class="p-5 mb-4 bg-body-tertiary border rounded-3">
-    <div class="container-fluid py-5" *ngIf="!isLoggedIn">
-      <h2>Authourization required</h2>
-      <p>{{ 'home.please' | translate  }} <a href="/register">{{ 'home.register' | translate  }}</a> {{ 'home.or' | translate  }} <a href="/login">{{ 'home.login' | translate  }}</a> {{ 'home.to-get-funct' | translate  }}</p>
+<div class="jumbotron text-center">
+  <h1 class="display-4">Enhance Your Vocabulary with MemMaster!</h1>
+  <p class="lead">Learn new terms efficiently and effectively. Join thousands who have improved their memory skills.</p>
+  <hr class="my-4">
+  <a class="btn btn-primary btn-lg" href="/register" role="button"><i class="fas fa-user-plus"></i> Register Now</a>
+  <a class="btn btn-secondary btn-lg" href="#download" role="button"><i class="fas fa-mobile-alt"></i> Download App</a>
+</div>
+
+<section id="benefits" class="mt-5">
+  <h2>Benefits of Using WordMaster</h2>
+  <div class="row">
+    <div class="col-md-3 text-center">
+      <i class="fas fa-brain benefit-icon"></i>
+      <p>Personalized learning plans tailored to your needs.</p>
     </div>
-    <div class="container-fluid py-5" *ngIf="isLoggedIn">
-      <h1 class="display-5 fw-bold">{{ 'home.short-stat' | translate  }}</h1>
-      <p class="col-md-8 fs-4">Total processed, Last Period, Matched rule</p>
+    <div class="col-md-3 text-center">
+      <i class="fas fa-puzzle-piece benefit-icon"></i>
+      <p>Interactive quizzes to test your progress.</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <i class="fas fa-book-open benefit-icon"></i>
+      <p>Access to a vast library of words and definitions.</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <i class="fas fa-mobile-alt benefit-icon"></i>
+      <p>Mobile-friendly interface for learning on the go.</p>
     </div>
   </div>
-</div>
+</section>
+
+<section id="register" class="mt-5">
+  <h2>Register for Free</h2>
+  <form>
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" class="form-control" id="email" placeholder="Enter email">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Sign Up</button>
+  </form>
+</section>
+
+<section id="download" class="mt-5 text-center">
+  <h2>Download the Mobile App</h2>
+  <img src="https://via.placeholder.com/150" alt="Mobile App" class="img-fluid mb-3">
+  <p>Available on Android and iOS. Click below to download:</p>
+  <a href="#" class="btn btn-success"><i class="fab fa-android"></i> Download for Android</a>
+  <a href="#" class="btn btn-info"><i class="fab fa-apple"></i> Download for iOS</a>
+</section>

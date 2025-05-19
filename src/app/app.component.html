@@ -1,141 +1,92 @@
-<div id="app">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+        <img src="/assets/images/logo_tr.png" height="30" alt="Mem Master" class="d-inline-block align-top" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto" routerLinkActive="active">
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <a href="/cards" class="nav-link" *ngIf="isLoggedIn" routerLink="cards">{{ 'my-cards' | translate }}</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <a href="/folders" class="nav-link" *ngIf="isLoggedIn" routerLink="folders">{{ 'my-folders' | translate }}</a>
+          </li>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">
-            <img src="/assets/images/logo_tr.png" height="30" alt="Mem Master" class="d-inline-block align-top" alt="">
-        </a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto" routerLinkActive="active">
-              <li class="nav-item" *ngIf="isLoggedIn">
-                <a href="/cards" class="nav-link" *ngIf="isLoggedIn" routerLink="cards">{{ 'my-cards' | translate }}</a>
-              </li>
-              <li class="nav-item" *ngIf="isLoggedIn">
-                <a href="/folders" class="nav-link" *ngIf="isLoggedIn" routerLink="folders">{{ 'my-folders' | translate }}</a>
-              </li>
-
-            </ul>
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item" *ngIf="!isLoggedIn">
-                <a href="/register" class="nav-link" routerLink="register">{{ 'sign-up' | translate }}</a>
-              </li>
-              <li class="nav-item" *ngIf="!isLoggedIn">
-                <a href="/login" class="nav-link" routerLink="login">{{ 'login' | translate }}</a>
-              </li>
-              <li class="nav-item dropdown" *ngIf="showAdminBoard">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" >{{ 'admin' | translate }} </a>
-                <div  class="dropdown-menu">
-                  <ng-container>
-                    <a href="/admin/users" class="dropdown-item" >
-                      {{ 'users-menu' | translate }}
-                    </a>
-                    <a href="/admin/metrics" class="dropdown-item" >
-                      {{ 'metrics-menu' | translate }}
-                    </a>
-                    <a href="/admin/logs" class="dropdown-item" >
-                      {{ 'logs-menu' | translate }}
-                    </a>
-                    <a href="/admin/configs" class="dropdown-item" >
-                      {{ 'configs-menu' | translate }}
-                    </a>
-                  </ng-container>
-                </div>
-              </li>
-              <li class="nav-item dropdown" *ngIf="isLoggedIn">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                  <img src="{{ avatar }}" alt="" width="30" height="24" class="d-inline-block align-text-top profile-avatar-img-card" *ngIf="avatar">
-                  <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="" width="30" height="24" class="d-inline-block align-text-top profile-avatar-img-card" *ngIf="!avatar">
-                  {{ username }}
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item" *ngIf="!isLoggedIn">
+            <a href="/register" class="nav-link" routerLink="register">{{ 'sign-up' | translate }}</a>
+          </li>
+          <li class="nav-item" *ngIf="!isLoggedIn">
+            <a href="/login" class="nav-link" routerLink="login">{{ 'login' | translate }}</a>
+          </li>
+          <li class="nav-item dropdown" *ngIf="showAdminBoard">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" >{{ 'admin' | translate }} </a>
+            <div  class="dropdown-menu">
+              <ng-container>
+                <a href="/admin/users" class="dropdown-item" >
+                  {{ 'users-menu' | translate }}
                 </a>
-                <div  class="dropdown-menu">
-                  <ng-container>
-                    <a href="/profile" class="dropdown-item" >
-                      {{ 'profile' | translate }}
-                    </a>
-                    <a href="/settings" class="dropdown-item" >
-                      {{ 'settings' | translate }}
-                    </a>
-                    <a href class="nav-link" class="dropdown-item" (click)="logout()">
-                      {{ 'logout' | translate }}
-                    </a>
-                  </ng-container>
-                </div>
-              </li>
-              <li class="nav-item dropdown" *ngIf="languageList.length > 1">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                  {{ currentLanguage }}
+                <a href="/admin/metrics" class="dropdown-item" >
+                  {{ 'metrics-menu' | translate }}
                 </a>
-                <div  class="dropdown-menu">
-                  <ng-container *ngFor="let language of languageList">
-                    <a
-                            class="dropdown-item"
-                            (click)="changeSiteLanguage(language.code)">
-                      {{ language.label }}
-                    </a>
-                  </ng-container>
-                </div>
-              </li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container mt-5">
-        <div class="jumbotron text-center">
-            <h1 class="display-4">Enhance Your Vocabulary with MemMaster!</h1>
-            <p class="lead">Learn new terms efficiently and effectively. Join thousands who have improved their memory skills.</p>
-            <hr class="my-4">
-            <a class="btn btn-primary btn-lg" href="/register" role="button"><i class="fas fa-user-plus"></i> Register Now</a>
-            <a class="btn btn-secondary btn-lg" href="#download" role="button"><i class="fas fa-mobile-alt"></i> Download App</a>
-        </div>
-
-        <section id="benefits" class="mt-5">
-            <h2>Benefits of Using WordMaster</h2>
-            <div class="row">
-                <div class="col-md-3 text-center">
-                    <i class="fas fa-brain benefit-icon"></i>
-                    <p>Personalized learning plans tailored to your needs.</p>
-                </div>
-                <div class="col-md-3 text-center">
-                    <i class="fas fa-puzzle-piece benefit-icon"></i>
-                    <p>Interactive quizzes to test your progress.</p>
-                </div>
-                <div class="col-md-3 text-center">
-                    <i class="fas fa-book-open benefit-icon"></i>
-                    <p>Access to a vast library of words and definitions.</p>
-                </div>
-                <div class="col-md-3 text-center">
-                    <i class="fas fa-mobile-alt benefit-icon"></i>
-                    <p>Mobile-friendly interface for learning on the go.</p>
-                </div>
+                <a href="/admin/logs" class="dropdown-item" >
+                  {{ 'logs-menu' | translate }}
+                </a>
+                <a href="/admin/configs" class="dropdown-item" >
+                  {{ 'configs-menu' | translate }}
+                </a>
+              </ng-container>
             </div>
-        </section>
-
-        <section id="register" class="mt-5">
-            <h2>Register for Free</h2>
-            <form>
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Sign Up</button>
-            </form>
-        </section>
-
-        <section id="download" class="mt-5 text-center">
-            <h2>Download the Mobile App</h2>
-            <img src="https://via.placeholder.com/150" alt="Mobile App" class="img-fluid mb-3">
-            <p>Available on Android and iOS. Click below to download:</p>
-            <a href="#" class="btn btn-success"><i class="fab fa-android"></i> Download for Android</a>
-            <a href="#" class="btn btn-info"><i class="fab fa-apple"></i> Download for iOS</a>
-        </section>
+          </li>
+          <li class="nav-item dropdown" *ngIf="isLoggedIn">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+              <img src="{{ avatar }}" alt="" width="30" height="24" class="d-inline-block align-text-top profile-avatar-img-card" *ngIf="avatar">
+              <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="" width="30" height="24" class="d-inline-block align-text-top profile-avatar-img-card" *ngIf="!avatar">
+              {{ username }}
+            </a>
+            <div  class="dropdown-menu">
+              <ng-container>
+                <a href="/profile" class="dropdown-item" >
+                  {{ 'profile' | translate }}
+                </a>
+                <a href="/settings" class="dropdown-item" >
+                  {{ 'settings' | translate }}
+                </a>
+                <a href class="nav-link" class="dropdown-item" (click)="logout()">
+                  {{ 'logout' | translate }}
+                </a>
+              </ng-container>
+            </div>
+          </li>
+          <li class="nav-item dropdown" *ngIf="languageList.length > 1">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+              {{ currentLanguage }}
+            </a>
+            <div  class="dropdown-menu">
+              <ng-container *ngFor="let language of languageList">
+                <a
+                        class="dropdown-item"
+                        (click)="changeSiteLanguage(language.code)">
+                  {{ language.label }}
+                </a>
+              </ng-container>
+            </div>
+          </li>
+        </ul>
     </div>
+  </div>
+</nav>
 
-    <footer class="bg-light text-center py-4 mt-5">
-        <p>&copy; 2025 MemMaster. All rights reserved.</p>
-    </footer>
+<div class="container mt-5">
+  <router-outlet></router-outlet>
 </div>
+
+<footer class="bg-light text-center py-4 mt-5">
+    <p>&copy; 2025 MemMaster. All rights reserved.</p>
+</footer>
 
 

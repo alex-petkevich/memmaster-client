@@ -34,7 +34,7 @@ const routes: Routes = [
   { path: 'admin/configs', component: ConfigsComponent },
   { path: 'user', component: BoardUserComponent },
   { path: 'settings', component: SettingsComponent },
-  { path: '', redirectTo: 'mails', pathMatch: 'full' }
+  { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({
