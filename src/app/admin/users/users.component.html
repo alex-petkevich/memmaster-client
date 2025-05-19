@@ -11,7 +11,7 @@
         <div class="text-align-right col-12">
             <button type="button" class="btn btn-light btn-sm me-3" data-bs-toggle="collapse" data-bs-target="#collapseFilterForm" aria-expanded="false"
                     aria-controls="collapseFilterForm" (click)="displayFilter()"><em
-                    class="bi-filter"></em> {{ 'mails.show_filter' | translate }}</button>
+                    class="bi-filter"></em> {{ 'users.show_filter' | translate }}</button>
             <button class="btn btn-secondary btn-sm" [routerLink]="['/admin/users/new']"><em class="bi-bookmark-plus"></em> {{ 'users.create_user' | translate }}</button>
         </div>
     </div>
@@ -32,8 +32,8 @@
                         for="factive">{{ 'users.active' | translate }}</label>
                 </div>
                 <div class="col-sm text-align-right">
-                    <button type="button" class="btn btn-primary btn-sm mb-2 me-2" (click)="applyFilters()">{{ 'mails.apply_filter' | translate }}</button>
-                    <button type="button" class="btn btn-secondary btn-sm mb-2" (click)="resetFilters()">{{ 'mails.reset_filter' | translate }}</button>
+                    <button type="button" class="btn btn-primary btn-sm mb-2 me-2" (click)="applyFilters()" data-toggle="tooltip" data-placement="top" title="{{ 'users.apply_filter' | translate }}"><em class="bi-search"></em></button>
+                    <button type="button" class="btn btn-secondary btn-sm mb-2" (click)="resetFilters()" data-toggle="tooltip" data-placement="top" title="{{ 'users.reset_filter' | translate }}"><em class="bi-ban"></em></button>
                 </div>
             </div>
         </div>
