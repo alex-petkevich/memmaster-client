@@ -76,10 +76,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "MemMasterClient:build:production"
+              "buildTarget": "MemMasterClient:build:production"
             },
             "development": {
-              "browserTarget": "MemMasterClient:build:development"
+              "buildTarget": "MemMasterClient:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -87,7 +87,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "MemMasterClient:build"
+            "buildTarget": "MemMasterClient:build"
           }
         },
         "test": {

@@ -2,6 +2,7 @@ import {Component, Input} from "@angular/core";
 import {IPagination} from "../model/pagination.model";
 
 @Component({
+  standalone: false,
   selector: 'app-sort',
   templateUrl: './sort.component.html',
   styleUrls: ['./sort.component.scss']

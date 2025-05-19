@@ -2,6 +2,7 @@ import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { IPagination } from "../model/pagination.model";
 
 @Component({
+  standalone: false,
   selector: 'app-pagination',
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.scss']

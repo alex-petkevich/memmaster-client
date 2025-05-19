@@ -4,6 +4,7 @@ import {TokenStorageService} from "../../_services/token-storage.service";
 import {Router} from "@angular/router";
 
 @Component({
+  standalone: false,
   selector: 'app-login',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss']

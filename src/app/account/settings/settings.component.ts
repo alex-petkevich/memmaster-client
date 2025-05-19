@@ -6,6 +6,7 @@ import { ISettingsInfo } from "../../model/setting.model";
 import { DialogComponent } from '../../shared-components/dialog/dialog.component';
 
 @Component({
+  standalone: false,
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']

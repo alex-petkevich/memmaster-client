@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
+  standalone: false,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']

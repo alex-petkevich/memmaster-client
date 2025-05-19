@@ -13,6 +13,7 @@ import { PaginationComponent } from "../../shared-components/pagination/paginati
 import { FormControl } from "@angular/forms";
 
 @Component({
+    standalone: false,
     selector: 'app-users',
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.scss']

@@ -98,22 +98,6 @@
       "update-failed": "Update data failed",
       "settings-saved": "Settings saved successfully",
       "please-login": "Please login"
-    },
-    "sync": {
-      "edit": "Edit Joplin syncroinzation settings",
-      "joplinserver": "Target",
-      "joplinserver-required": "Target is required",
-      "joplinserver-dav-url": "WebDAV URL",
-      "joplinserver-dav-username": "WebDAV username",
-      "joplinserver-dav-password": "WebDAV password",
-      "joplinserver-server-url": "Joplin Server URL",
-      "joplinserver-server-username": "Joplin Server email",
-      "joplinserver-server-password": "Joplin Server password",
-      "joplinserver-parentnode": "Joplin Notebook Parent node",
-      "save-data": "Save data",
-      "update-failed": "Update data failed",
-      "settings-saved": "Settings saved successfully",
-      "please-login": "Please login"
     }
   },
   "shared-components": {
@@ -128,91 +112,10 @@
       "cancel": "Cancel"
     }
   },
-  "rules": {
-    "header": "My Rules",
-    "name": "Name",
-    "total_qty": "Met",
-    "last_processed": "Last processed",
-    "actions": "Actions",
-    "change": "Change",
-    "delete": "Delete",
-    "copy": "Create Rule Copy",
-    "error_mail_not_configured": "Mail server was not set up. Please <a href=\"/settings\">complete the configuration</a>",
-    "error_no_rules_found": "No Rules found",
-    "create_rule": "Create Rule",
-    "copy-confirm": "Are you really want to copy this rule?",
-    "delete-confirm": "Are you really want to delete this rule?",
-    "edit": {
-      "save-data": "Save Rule",
-      "cancel": "Cancel",
-      "header": "Rule Properties",
-      "id": "ID",
-      "processed": "Pocessed amount",
-      "last_processed_at": "Last execution time",
-      "stop_process_rules": "Stop process rules",
-      "name": "Name",
-      "type": "Rule",
-      "save_in": "Create a new record for each email",
-      "final_action": "Final action",
-      "name-required": "Name required",
-      "name-valid": "Incorrect value",
-      "comparison_text-required": "Rule required",
-      "comparison_text-valid": "Incorrect value",
-      "rules-saved": "Rule saved successfully",
-      "rules-saved-new": "Rule saved successfully. Now please add rule conditions and actions below"
-    }
-  },
   "lists" : {
-    "types" : {
-      "From": "From",
-      "To": "To",
-      "Subject": "Subject",
-      "Body": "Body",
-      "Attach": "Attach"
-    },
     "comparison" : {
       "Equals": "Equals",
       "Contains": "Contains"
-    },
-    "final_action" : {
-      "MARK_READ": "Mark as read",
-      "DELETE": "Delete",
-      "MOVE_TO_FOLDER": "Move to another folder:",
-      "RENAME": "Change mail subject:"
-    },
-    "joplinserver" : {
-      "WEBDAV": "WebDAV",
-      "SERVER": "Joplin Server",
-      "LOCAL": "Store in account"
-    }
-  },
-  "mails": {
-    "header": "My Mails",
-    "subject": "Subject",
-    "text": "Текст",
-    "received": "Received",
-    "sender": "Sender",
-    "attachments": "Attachments",
-    "rule": "Processed rule",
-    "converted": "Exported",
-    "resync_joplin": "Sync selected",
-    "actions": "Actions",
-    "show_filter": "Filter",
-    "apply_filter": "Ok",
-    "reset_filter": "Reset",
-    "delete": "Delete",
-    "error_mail_not_configured": "Mail server was not set up. Please <a href=\"/settings\">complete the configuration</a>",
-    "error_no_mails_found": "No Mails found",
-    "resync-success": "Joplin notes syncronized successfully",
-    "delete-confirm": "Are you really want to delete this mail?",
-    "view": {
-      "header": "View Mail",
-      "id": "ID",
-      "received": "Received",
-      "sender": "Sender",
-      "attachments": "Attachments",
-      "converted": "Exported",
-      "back": "Back"
     }
   },
   "users": {

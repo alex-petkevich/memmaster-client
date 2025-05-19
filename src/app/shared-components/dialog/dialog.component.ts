@@ -14,6 +14,7 @@ var modal = this.dialogComponent?.open("testtesttest");
  */
 
 @Component({
+  standalone: false,
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss']

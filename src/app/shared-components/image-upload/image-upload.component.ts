@@ -6,6 +6,7 @@ import {IFileInfo} from '../model/fileInfo.model';
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
+  standalone: false,
   selector: 'app-image-upload',
   templateUrl: './image-upload.component.html',
   styleUrls: ['./image-upload.component.scss']

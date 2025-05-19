@@ -9,6 +9,7 @@ import { ToastComponent } from "../../../shared-components/toast/toast.component
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
+  standalone: false,
   selector: 'app-users-edit',
   templateUrl: './users-edit.component.html',
   styleUrls: ['./users-edit.component.scss']

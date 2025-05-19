@@ -6,6 +6,7 @@ import { ToastComponent } from "../../shared-components/toast/toast.component";
 import { MetricsService } from "../../_services/metrics.service";
 
 @Component({
+    standalone: false,
     selector: 'app-logs',
     templateUrl: './logs.component.html',
     styleUrls: ['./logs.component.scss']

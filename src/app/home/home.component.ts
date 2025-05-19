@@ -3,6 +3,7 @@ import {UserService} from "../_services/user.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 
 @Component({
+  standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']

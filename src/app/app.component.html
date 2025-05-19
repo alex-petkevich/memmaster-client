@@ -1,8 +1,9 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="container-fluid p-0 main-container">
+  <nav class="navbar navbar-expand-lg navbar-light bg-nav">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-        <img src="/assets/images/logo_tr.png" height="30" alt="Mem Master" class="d-inline-block align-top" alt="">
-    </a>
+    <a class="navbar-brand" href="/">
+        <img src="/assets/images/logo.png" height="40" alt="Mem Master" class="d-inline-block align-top" alt="">
+    </a> 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -66,7 +67,7 @@
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
               {{ currentLanguage }}
             </a>
-            <div  class="dropdown-menu">
+            <div  class="dropdown-menu dd-lang">
               <ng-container *ngFor="let language of languageList">
                 <a
                         class="dropdown-item"
@@ -84,7 +85,7 @@
 <div class="container mt-5">
   <router-outlet></router-outlet>
 </div>
-
+</div>
 <footer class="bg-light text-center py-4 mt-5">
     <p>&copy; 2025 MemMaster. All rights reserved.</p>
 </footer>

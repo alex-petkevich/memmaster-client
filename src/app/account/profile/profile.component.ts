@@ -4,6 +4,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {AuthService} from "../../_services/auth.service";
 
 @Component({
+  standalone: false,
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']

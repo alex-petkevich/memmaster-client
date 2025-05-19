@@ -2,6 +2,7 @@ import { Component, TemplateRef, ViewChild } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
+    standalone: false,
     selector: 'app-toast',
     templateUrl: './toast.component.html',
     styleUrls: ['./toast.component.scss']
