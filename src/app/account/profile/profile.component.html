@@ -1,16 +1,14 @@
-<div class="col-md-12">
-  <div class="card card-container-wide" *ngIf="currentUser; else loggedOut">
+<div class="col-md-12 ">
+  <div class="jumbotron bg-light p-5 rounded card-container-wide" *ngIf="currentUser; else loggedOut">
     <img
             id="profile-img"
             src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
             class="profile-img-card"
     />
 
-  <header class="jumbotron">
     <h3>
       {{ 'account.profile.edit' | translate  }}
     </h3>
-  </header>
   <form
     name="form"
     (ngSubmit)="f.form.valid && onSubmit(f.form.valid)"
