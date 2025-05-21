@@ -24,6 +24,8 @@ import { MetricsComponent } from "./admin/metrics/metrics.component";
 import { SharedModule } from "./shared-components/shared.module";
 import { LogsComponent } from "./admin/logs/logs.component";
 import { ConfigsComponent } from "./admin/configs/configs.component";
+import { FoldersComponent } from './folders/folders.component';
+import { FoldersEditComponent } from './folders/edit/folders-edit.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { ConfigsComponent } from "./admin/configs/configs.component";
     BoardUserComponent,
     MetricsComponent,
     UsersComponent,
+    FoldersComponent,
+    FoldersEditComponent,
     UsersEditComponent
   ],
 	imports: [

@@ -14,6 +14,8 @@ import { UsersEditComponent } from "./admin/users/edit/users-edit.component";
 import { MetricsComponent } from "./admin/metrics/metrics.component";
 import { LogsComponent } from "./admin/logs/logs.component";
 import { ConfigsComponent } from "./admin/configs/configs.component";
+import { FoldersComponent } from './folders/folders.component';
+import { FoldersEditComponent } from './folders/edit/folders-edit.component';
 
 const routes: Routes = [
   { path: 'account/activate', component: LoginComponent },
@@ -32,6 +34,10 @@ const routes: Routes = [
   { path: 'admin/metrics/:id', component: MetricsComponent },
   { path: 'admin/logs', component: LogsComponent },
   { path: 'admin/configs', component: ConfigsComponent },
+  { path: 'folders', component: FoldersComponent },
+  { path: 'folders/new', component: FoldersEditComponent },
+  { path: 'folders/:id/edit', component: FoldersEditComponent },
+  { path: 'folders/:id/delete', component: FoldersEditComponent },
   { path: 'user', component: BoardUserComponent },
   { path: 'settings', component: SettingsComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }

@@ -1,0 +1,72 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm mt-3 mb-3">
+            <h4>{{ 'folders.header' | translate }}</h4>
+        </div>
+    </div>
+    <div class="progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" *ngIf="loadProgress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+    </div>
+    <div class="row" *ngIf="!loadProgress">
+        <div class="text-align-right col-12">
+            <button type="button" class="btn btn-light btn-sm me-3" data-bs-toggle="collapse" data-bs-target="#collapseFilterForm" aria-expanded="false"
+                    aria-controls="collapseFilterForm" (click)="displayFilter()"><em
+                    class="bi-filter"></em> {{ 'folders.show_filter' | translate }}</button>
+            <button class="btn btn-secondary btn-sm" [routerLink]="['/folders/new']"><em class="bi-bookmark-plus"></em> {{ 'folders.create_folder' | translate }}</button>
+        </div>
+    </div>
+    <div class="row collapse" id="collapseFilterForm" [ngClass]="{'in': isFilterOpen}">
+        <div class="container filter-box">
+            <div class="row">
+                <div class="col-sm-3 me-1">
+                    <input type="text" name="fuuid" [formControl]="fuuid" placeholder="{{ 'folders.uuid' | translate }}" class="ms-3 form-control">
+                </div>
+                <div class="col-sm-3 me-1">
+                    <input type="text" name="fname" [formControl]="fname" placeholder="{{ 'folders.name' | translate }}" class="ms-3 form-control">
+                </div>
+                <div class="col-sm pt-1 me-1">
+                    <input type="checkbox" name="factive" id="factive" [formControl]="factive" class="me-1"><label
+                        for="factive">{{ 'folders.active' | translate }}</label>
+                </div>
+                <div class="col-sm text-align-right">
+                    <button type="button" class="btn btn-primary btn-sm mb-2 me-2" (click)="applyFilters()" data-toggle="tooltip" data-placement="top" title="{{ 'folders.apply_filter' | translate }}"><em class="bi-search"></em></button>
+                    <button type="button" class="btn btn-secondary btn-sm mb-2" (click)="resetFilters()" data-toggle="tooltip" data-placement="top" title="{{ 'folders.reset_filter' | translate }}"><em class="bi-ban"></em></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="folders?.length! > 0 && !loadProgress">
+        <p class="col-sm">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#<app-sort [sort]="'id'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col">{{ 'folders.uuid' | translate }}<app-sort [sort]="'lastname'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col">{{ 'folders.name' | translate }}<app-sort [sort]="'name'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col" class="w-sm">{{ 'folders.active' | translate }}<app-sort [sort]="'active'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
+                    <th scope="col" class="w-sm text-align-right">{{ 'folders.actions' | translate }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let folder of folders;">
+                    <th scope="row" [ngClass]="{ 'disabled': !folder.active}">{{ folder.id }}</th>
+                    <td [ngClass]="{ 'disabled': !folder.active}">{{ folder.uuid }}</td>
+                    <td [ngClass]="{ 'disabled': !folder.active}"><a  [routerLink]="['/folders', folder.id, 'edit']">{{ folder.name }}</a></td>
+                    <td><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" [checked]="folder.active" (click)="activeFolder(folder.id)"></div></td>
+                    <td class="text-align-right" [ngClass]="{ 'disabled': !folder.active}">
+                        <button type="button"
+                                class="btn btn-danger btn-sm" (click)="confirmDelete( folder.id )"><em class="bi-trash"></em></button>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+    </div>
+    <div class="row" *ngIf="!folders?.length && !loadProgress">
+        <div class="col-sm">
+            <p class="text-center" [innerHTML]=" 'folders.error_no_folders_found' | translate"></p>
+        </div>
+    </div>
+</div>
+
+<app-dialog #dialog></app-dialog>

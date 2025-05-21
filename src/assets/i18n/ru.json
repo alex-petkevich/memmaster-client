@@ -206,6 +206,33 @@
     "flyway-installedRank": "Installed rank",
     "flyway-executionTime": "Execution time",
     "error_configs_logs_found": "Конфигурация не найдена"
+  },
+  "folders": {
+    "header": "Папки",
+    "name": "Имя",
+    "uuid": "Идентификатор",
+    "active": "Активно",
+    "change": "Изменить",
+    "actions": "Действия",
+    "delete": "Удалить",
+    "show_filter": "Фильтр",
+    "apply_filter": "Применить",
+    "reset_filter": "Сбросить",
+    "error_no_folders_found": "Папки не найдены",
+    "create_folder": "Создать папку",
+    "delete-confirm": "Вы действительно хотите удалить эту запись?",
+    "edit": {
+      "save-data": "Сохранить папку",
+      "cancel": "Отмена",
+      "active": "Папка активна",
+      "header": "Свойства папки",
+      "id": "ID",
+      "uuid": "Идентификатор",
+      "name": "Имя папки",
+      "name-required": "Имя папки обязательно",
+      "name-valid": "Неверное значение",
+      "folders-saved": "Данные сохранены успешно"
+    }
   }
 }
 

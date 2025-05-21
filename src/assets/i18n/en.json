@@ -194,5 +194,32 @@
     "flyway-installedRank": "Installed rank",
     "flyway-executionTime": "Execution time",
     "error_configs_logs_found": "Configuration not found"
+  },
+  "folders": {
+    "header": "Folders",
+    "name": "Name",
+    "uuid": "Identificator",
+    "active": "Active",
+    "change": "Change",
+    "actions": "Actions",
+    "delete": "Delete",
+    "show_filter": "Filter",
+    "apply_filter": "Apply",
+    "reset_filter": "Reset",
+    "error_no_folders_found": "No folders found",
+    "create_folder": "Create folder",
+    "delete-confirm": "Are you really want to delete this folder?",
+    "edit": {
+      "save-data": "Save folder",
+      "cancel": "Cancel",
+      "active": "Folder is active",
+      "header": "Folder properties",
+      "id": "ID",
+      "uuid": "Identificator",
+      "name": "Folder name",
+      "name-required": "Required",
+      "name-valid": "Incorrect value",
+      "folders-saved": "Data saved successfully"
+    }
   }
 }
