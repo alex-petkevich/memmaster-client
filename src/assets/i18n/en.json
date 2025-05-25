@@ -198,7 +198,7 @@
   "folders": {
     "header": "Folders",
     "name": "Name",
-    "uuid": "Identificator",
+    "uuid": "Link",
     "active": "Active",
     "change": "Change",
     "actions": "Actions",
@@ -215,6 +215,8 @@
       "active": "Folder is active",
       "header": "Folder properties",
       "id": "ID",
+      "link": "Link",
+      "is_public": "Shared folder",
       "uuid": "Identificator",
       "name": "Folder name",
       "name-required": "Required",

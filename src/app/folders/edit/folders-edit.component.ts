@@ -21,7 +21,9 @@ export class FoldersEditComponent implements OnInit {
     parent_id: 0,
     last_modified_at: undefined,
     created_at: undefined,
-    active: true
+    active: true,
+    is_public: false,
+    icon: ""
   };
   errorMessage: String = "";
   @ViewChild("finalDialog") toastComponent: ToastComponent | undefined;

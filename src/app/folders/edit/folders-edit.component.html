@@ -1,4 +1,4 @@
-<div class="col-md-12">
+<div class="col-md-12 d-flex justify-content-center">
     <div class="jumbotron bg-light p-5 rounded card-container-wide">
 
         <header class="jumbotron">
@@ -17,9 +17,17 @@
                 <label for="id">{{ 'folders.edit.id' | translate  }}:</label>&nbsp;
                 <b>{{ currentFolder.id }}</b>
             </div>
-            <div class="mb-1" *ngIf="currentFolder != undefined">
-                <label for="id">{{ 'folders.edit.uuid' | translate  }}:</label>&nbsp;
-                <b>{{ currentFolder.id }}</b>
+            <div class="mb-1 form-check form-switch" *ngIf="currentFolder != undefined">
+                <label for="is_public">{{ 'folders.edit.is_public' | translate  }}</label>
+                <input
+                        type="checkbox"
+                        class="form-check-input"
+                        role="switch"
+                        name="is_public"
+                        id="is_public"
+                        [(ngModel)]="form.is_public"
+                        #name="ngModel"
+                /> <a [routerLink]="['/shared', currentFolder.uuid]" class="p-3">{{ 'folders.edit.link' | translate  }}</a>
             </div>
             <div class="mb-1 form-check form-switch" *ngIf="currentFolder != undefined">
                 <label for="active">{{ 'folders.edit.active' | translate  }}</label>
