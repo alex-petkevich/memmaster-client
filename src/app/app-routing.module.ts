@@ -36,7 +36,7 @@ const routes: Routes = [
   { path: 'admin/configs', component: ConfigsComponent },
   { path: 'folders', component: FoldersComponent },
   { path: 'folders/new', component: FoldersEditComponent },
-  { path: 'folders/:id/edit', component: FoldersEditComponent },
+  { path: 'folders/:id/:action', component: FoldersEditComponent },
   { path: 'folders/:id/delete', component: FoldersEditComponent },
   { path: 'user', component: BoardUserComponent },
   { path: 'settings', component: SettingsComponent },

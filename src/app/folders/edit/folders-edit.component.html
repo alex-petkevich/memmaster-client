@@ -1,78 +1,82 @@
 <div class="col-md-12 d-flex justify-content-center">
-    <div class="jumbotron bg-light p-5 rounded card-container-wide">
+   <div class="jumbotron bg-light p-5 rounded card-container-wide">
 
-        <header class="jumbotron">
-            <h3>
-                {{ 'folders.edit.header' | translate  }}
-            </h3>
-        </header>
-        <form
-                name="form"
-                (ngSubmit)="f.form.valid && onSubmit(f.form.valid)"
-                #f="ngForm"
-                novalidate
-                class="row g-3 needs-validation"
-        >
-            <div class="mb-1" *ngIf="currentFolder != undefined">
-                <label for="id">{{ 'folders.edit.id' | translate  }}:</label>&nbsp;
-                <b>{{ currentFolder.id }}</b>
-            </div>
-            <div class="mb-1 form-check form-switch" *ngIf="currentFolder != undefined">
-                <label for="is_public">{{ 'folders.edit.is_public' | translate  }}</label>
-                <input
-                        type="checkbox"
-                        class="form-check-input"
-                        role="switch"
-                        name="is_public"
-                        id="is_public"
-                        [(ngModel)]="form.is_public"
-                        #name="ngModel"
-                /> <a [routerLink]="['/shared', currentFolder.uuid]" class="p-3">{{ 'folders.edit.link' | translate  }}</a>
-            </div>
-            <div class="mb-1 form-check form-switch" *ngIf="currentFolder != undefined">
-                <label for="active">{{ 'folders.edit.active' | translate  }}</label>
-                <input
-                        type="checkbox"
-                        class="form-check-input"
-                        role="switch"
-                        name="active"
-                        id="active"
-                        [(ngModel)]="form.active"
-                        #name="ngModel"
-                />
-            </div>
+      <header class="jumbotron">
+         <h3 *ngIf="currentFolder != undefined">
+            {{ 'folders.edit.header' | translate  }}
+         </h3>
+         <h3 *ngIf="!currentFolder">
+            {{ 'folders.edit.header-new' | translate  }}
+         </h3>
+      </header>
+      <form
+         name="form"
+         (ngSubmit)="f.form.valid && onSubmit(f.form.valid)"
+         #f="ngForm"
+         novalidate
+         class="row g-3 needs-validation"
+      >
+         <div class="mb-1" *ngIf="currentFolder != undefined">
+            <label for="id">{{ 'folders.edit.id' | translate  }}:</label>&nbsp;
+            <b>{{ currentFolder.id }}</b>
+         </div>
+         <div class="mb-1 form-check form-switch" *ngIf="currentFolder != undefined">
+            <label for="is_public">{{ 'folders.edit.is_public' | translate  }}</label>
+            <input
+               type="checkbox"
+               class="form-check-input"
+               role="switch"
+               name="is_public"
+               id="is_public"
+               [(ngModel)]="form.is_public"
+               #name="ngModel"
+            /> <a [routerLink]="['/shared', currentFolder.uuid]" class="p-3">{{ 'folders.edit.link' | translate  }}</a>
+         </div>
+         <div class="mb-1 form-check form-switch" *ngIf="currentFolder != undefined">
+            <label for="active">{{ 'folders.edit.active' | translate  }}</label>
+            <input
+               type="checkbox"
+               class="form-check-input"
+               role="switch"
+               name="active"
+               id="active"
+               [(ngModel)]="form.active"
+               #name="ngModel"
+            />
+         </div>
 
-            <div class="mb-2">
-                <label for="name">{{ 'folders.edit.name' | translate  }}</label>
-                <input
-                        type="text"
-                        class="form-control" [ngClass]="{ 'is-invalid': name.errors && f.submitted}"
-                        name="name"
-                        id="name"
-                        [(ngModel)]="form.name"
-                        required
-                        #name="ngModel"
-                />
-                <div class="invalid-feedback" *ngIf="name.errors && f.submitted">
-                    <div *ngIf="name.errors['required']">{{ 'folders.edit.name-required' | translate  }}</div>
-                    <div *ngIf="name.errors['name']">
-                        {{ 'folders.edit.name-valid' | translate  }}
-                    </div>
-                </div>
+         <div class="mb-2">
+            <label for="name">{{ 'folders.edit.name' | translate  }}</label>
+            <input
+               type="text"
+               class="form-control" [ngClass]="{ 'is-invalid': name.errors && f.submitted}"
+               name="name"
+               id="name"
+               [(ngModel)]="form.name"
+               required
+               #name="ngModel"
+            />
+            <div class="invalid-feedback" *ngIf="name.errors && f.submitted">
+               <div *ngIf="name.errors['required']">{{ 'folders.edit.name-required' | translate  }}</div>
+               <div *ngIf="name.errors['name']">
+                  {{ 'folders.edit.name-valid' | translate  }}
+               </div>
             </div>
+         </div>
 
-            <div class="mb-1">
-                <button class="btn btn-primary">{{ 'folders.edit.save-data' | translate  }}</button>&nbsp;
-                <button class="btn btn-secondary" [routerLink]="['/folders']">{{ 'folders.edit.cancel' | translate }}</button>
-            </div>
-        </form>
-        <div class="alert alert-success" *ngIf="isSuccessful">
-            {{ 'folders.edit.folders-saved' | translate  }}
-        </div>
-        <div class="alert alert-danger" *ngIf="errorMessage != ''">
-            {{ errorMessage  }}
-        </div>
+         <div class="mb-1">
+            <button class="btn btn-primary">{{ 'folders.edit.save-data' | translate  }}</button>&nbsp;
+            <button class="btn btn-secondary"
+                    [routerLink]="['/folders']">{{ 'folders.edit.cancel' | translate }}</button>
+         </div>
+      </form>
+      <div class="alert alert-success" *ngIf="isSuccessful">
+         {{ 'folders.edit.folders-saved' | translate  }}
+      </div>
+      <div class="alert alert-danger" *ngIf="errorMessage != ''">
+         {{ errorMessage  }}
+      </div>
 
-    </div>
+   </div>
 </div>
 <app-toast #finalDialog></app-toast>

@@ -62,17 +62,13 @@ export class FoldersComponent implements OnInit {
     }
 
     confirmDelete(id: any) {
-        this.translate.get('folders.delete-confirm').subscribe({
-            next: data => {
-                var modal = this.dialogComponent?.open(data);
-                (modal as NgbModalRef).result.then((result) => {
-                    this.foldersService.delete(id).subscribe({
-                        next: data => {
-                            this.loadFolders();
-                        }
-                    });
-                });
-            }
+        var modal = this.dialogComponent?.open(this.translate.instant('folders.delete-confirm'));
+        (modal as NgbModalRef).result.then((result) => {
+            this.foldersService.delete(id).subscribe({
+                next: data => {
+                    this.loadFolders();
+                }
+            });
         });
     }
 
@@ -126,5 +122,24 @@ export class FoldersComponent implements OnInit {
                 })
             }
         })
+    }
+
+    copySharedLink(uuid: string | undefined) {
+        if (!uuid) {
+            return;
+        }
+        const url = window.location.origin + '/shared/' + uuid;
+        navigator.clipboard.writeText(url).then(() => {
+            this.toastComponent?.success(this.translate.instant('folders.shared-link-copied'));
+        }).catch(err => {
+            this.toastComponent?.error(this.translate.instant('folders.shared-link-copy-error'));
+        });
+    }
+
+    addFolder(id: number | undefined) {
+        if (!id) {
+            return;
+        }
+        this.router.navigate(['/folders', id, 'new']);
     }
 }

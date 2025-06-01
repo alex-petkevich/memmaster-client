@@ -40,7 +40,6 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th scope="col" class="w-id">#<app-sort [sort]="'id'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
                     <th scope="col">{{ 'folders.name' | translate }}<app-sort [sort]="'name'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
                     <th scope="col" class="w-sm">{{ 'folders.active' | translate }}<app-sort [sort]="'active'" [curentSort]="sort" [sortOrder]="sortOrder" [callbackFunction]="reorderCallback"></app-sort></th>
                     <th scope="col" class="w-sm text-align-right">{{ 'folders.actions' | translate }}</th>
@@ -48,12 +47,14 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let folder of folders;">
-                    <th scope="row" [ngClass]="{ 'disabled': !folder.active}">{{ folder.id }}</th>
-                    <td [ngClass]="{ 'disabled': !folder.active}"><a  [routerLink]="['/folders', folder.id, 'edit']">{{ folder.name }}</a></td>
+                    <td [ngClass]="{ 'disabled': !folder.active}"><a  [routerLink]="['/folders', folder.id, 'edit']">{{ folder.name }}</a>
+                        <button type="button" class="btn btn-link ms-2" (click)="copySharedLink(folder.uuid)" *ngIf="folder.is_public" ><em class="bi bi-folder-symlink"data-toggle="tooltip" data-placement="top" title="{{ 'folders.public-folder' | translate }}"></em></button></td>
                     <td><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" [checked]="folder.active" (click)="activeFolder(folder.id)"></div></td>
                     <td class="text-align-right" [ngClass]="{ 'disabled': !folder.active}">
                         <button type="button"
-                                class="btn btn-danger btn-sm" (click)="confirmDelete( folder.id )"><em class="bi-trash"></em></button>
+                                class="btn btn-outline-success btn-sm me-2" (click)="addFolder( folder.id )"><em class="bi bi-folder-plus"></em></button>
+                        <button type="button"
+                                class="btn btn-outline-danger btn-sm" (click)="confirmDelete( folder.id )"><em class="bi-trash"></em></button>
                     </td>
                 </tr>
 
@@ -68,3 +69,5 @@
 </div>
 
 <app-dialog #dialog></app-dialog>
+<app-toast #toast></app-toast>
+

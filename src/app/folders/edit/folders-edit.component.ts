@@ -37,19 +37,22 @@ export class FoldersEditComponent implements OnInit {
   async ngOnInit(): Promise<void> {
    await this.auth.isLoggedIn();
 
-    this.route.params.subscribe(res=>{
-      if (res['id']) {
-        this.foldersService.get(res['id'])
-            .subscribe({
-              next: data => {
-                if (data) {
-                  this.currentFolder = data;
-                  this.form = this.currentFolder as IFolder;
-                }
-              }
-        });
-      }
-    })
+    this.route.params.subscribe(res=> {
+          if (res['id'] && res['action'] !== 'new') {
+            this.foldersService.get(res['id'])
+                .subscribe({
+                  next: data => {
+                    if (data) {
+                      this.currentFolder = data;
+                      this.form = this.currentFolder as IFolder;
+                    }
+                  }
+                });
+          } else if (res['action'] === 'new') {
+            this.form.parent_id = res['id'] ? parseInt(res['id'], 10) : 0;
+          }
+        }
+    )
   }
 
   onSubmit(valid: any) {
