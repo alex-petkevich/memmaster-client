@@ -14,6 +14,7 @@ import { IFolder } from 'src/app/model/folder.model';
 })
 export class FoldersEditComponent implements OnInit {
   currentFolder: IFolder | undefined = undefined;
+  rootFolder: IFolder | undefined = undefined;
   isSuccessful: boolean = false;
   form: IFolder = {
     name: "",
@@ -38,13 +39,18 @@ export class FoldersEditComponent implements OnInit {
    await this.auth.isLoggedIn();
 
     this.route.params.subscribe(res=> {
-          if (res['id'] && res['action'] !== 'new') {
+          if (res['id']) {
             this.foldersService.get(res['id'])
                 .subscribe({
                   next: data => {
                     if (data) {
-                      this.currentFolder = data;
-                      this.form = this.currentFolder as IFolder;
+                      if (res['action'] == 'new') {
+                        this.rootFolder = data;
+                      } else
+                      {
+                        this.currentFolder = data;
+                        this.form = this.currentFolder as IFolder;
+                      }
                     }
                   }
                 });
@@ -61,7 +67,7 @@ export class FoldersEditComponent implements OnInit {
       return false;
     }
     const savedFolder = this.form;
-    savedFolder.children = undefined;
+    savedFolder.parent_id = this.rootFolder?.id || 0;
 
     this.foldersService.save(savedFolder).subscribe({
       next: data => {

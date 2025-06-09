@@ -117,8 +117,14 @@ export class FoldersComponent implements OnInit {
             next: (folder) => {
                 this.folders?.forEach((usr, idx) => {
                     if (usr.id == folder.id) {
+                        folder.children = usr.children;
                         this.folders![idx] = folder;
                     }
+                    usr.children?.forEach((child, childIdx) => {
+                        if (child.id == folder.id) {
+                            usr.children![childIdx] = folder;
+                        }
+                    });
                 })
             }
         })

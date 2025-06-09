@@ -5140,6 +5140,13 @@ neo-async@^2.6.2:
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
+ngx-bootstrap-icons-picker@^17.0.4:
+  version "17.0.4"
+  resolved "https://registry.yarnpkg.com/ngx-bootstrap-icons-picker/-/ngx-bootstrap-icons-picker-17.0.4.tgz#603f01150095da81c41705b2de0eb37e1020d059"
+  integrity sha512-XxlvaM43qKSIP21+7Oqn8wOeP49t2G31r+/d63+VdwEC9dVgYhFgQawMyNlfni64G8Z6D+Uqi7khLTa36G/zhA==
+  dependencies:
+    tslib "^2.3.0"
+
 node-addon-api@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-6.1.0.tgz"

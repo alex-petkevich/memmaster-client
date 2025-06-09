@@ -29,6 +29,7 @@
     "@types/file-saver": "^2.0.5",
     "bootstrap-icons": "^1.13.1",
     "file-saver": "^2.0.5",
+    "ngx-bootstrap-icons-picker": "^17.0.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "vite": "^6.3.5",

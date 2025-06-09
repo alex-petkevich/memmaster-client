@@ -216,6 +216,7 @@
       "active": "Folder is active",
       "header": "Folder properties",
       "header-new": "Create folder",
+      "header-new-subfolder": "Create subfolder in folder",
       "id": "ID",
       "link": "Link",
       "is_public": "Shared folder",

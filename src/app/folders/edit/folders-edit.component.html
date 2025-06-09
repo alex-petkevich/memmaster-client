@@ -5,7 +5,10 @@
          <h3 *ngIf="currentFolder != undefined">
             {{ 'folders.edit.header' | translate  }}
          </h3>
-         <h3 *ngIf="!currentFolder">
+         <h3 *ngIf="rootFolder != undefined">
+            {{ 'folders.edit.header-new-subfolder' | translate  }}: <b>{{ rootFolder.name }}</b>
+         </h3>
+         <h3 *ngIf="!currentFolder && !rootFolder">
             {{ 'folders.edit.header-new' | translate  }}
          </h3>
       </header>
