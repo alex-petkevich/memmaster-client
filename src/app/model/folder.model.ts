@@ -10,5 +10,6 @@ export interface IFolder {
     is_public?: Boolean,
     active?: Boolean,
     created_at?: Date,
-    last_modified_at?: Date
+    last_modified_at?: Date,
+    children?: IFolder[],
 }

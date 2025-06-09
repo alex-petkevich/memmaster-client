@@ -61,6 +61,7 @@ export class FoldersEditComponent implements OnInit {
       return false;
     }
     const savedFolder = this.form;
+    savedFolder.children = undefined;
 
     this.foldersService.save(savedFolder).subscribe({
       next: data => {
