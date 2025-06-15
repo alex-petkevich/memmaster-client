@@ -26,6 +26,9 @@ import { LogsComponent } from "./admin/logs/logs.component";
 import { ConfigsComponent } from "./admin/configs/configs.component";
 import { FoldersComponent } from './folders/folders.component';
 import { FoldersEditComponent } from './folders/edit/folders-edit.component';
+import {NgxBootstrapIconsPickerModule} from "ngx-bootstrap-icons-picker";
+import {DictionaryComponent} from "./dictionary/dictionary.component";
+import {DictionaryEditComponent} from "./dictionary/edit/dictionary-edit.component";
 
 @NgModule({
   declarations: [
@@ -33,6 +36,8 @@ import { FoldersEditComponent } from './folders/edit/folders-edit.component';
     ConfigsComponent,
     LogsComponent,
     LoginComponent,
+    DictionaryComponent,
+    DictionaryEditComponent,
     ForgotPasswordComponent,
     PasswordResetComponent,
     RegisterComponent,
@@ -53,6 +58,7 @@ import { FoldersEditComponent } from './folders/edit/folders-edit.component';
 		FormsModule,
 		HttpClientModule,
 		NgxTranslateModule,
+        NgxBootstrapIconsPickerModule,
 		NgbModule,
         NgSelectModule,
 		ReactiveFormsModule,

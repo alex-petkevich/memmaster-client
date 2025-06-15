@@ -2,7 +2,7 @@
    <div class="jumbotron bg-light p-5 rounded card-container-wide">
 
       <header class="jumbotron">
-         <h3 *ngIf="currentFolder != undefined">
+         <h3 *ngIf="currentFolder?.id != undefined">
             {{ 'folders.edit.header' | translate  }}
          </h3>
          <h3 *ngIf="rootFolder != undefined">
@@ -19,11 +19,11 @@
          novalidate
          class="row g-3 needs-validation"
       >
-         <div class="mb-1" *ngIf="currentFolder != undefined">
+         <div class="mb-1" *ngIf="currentFolder?.id != undefined">
             <label for="id">{{ 'folders.edit.id' | translate  }}:</label>&nbsp;
-            <b>{{ currentFolder.id }}</b>
+            <b>{{ currentFolder?.id }}</b>
          </div>
-         <div class="mb-1 form-check form-switch" *ngIf="currentFolder != undefined">
+         <div class="mb-1 form-check form-switch">
             <label for="is_public">{{ 'folders.edit.is_public' | translate  }}</label>
             <input
                type="checkbox"
@@ -33,9 +33,9 @@
                id="is_public"
                [(ngModel)]="form.is_public"
                #name="ngModel"
-            /> <a [routerLink]="['/shared', currentFolder.uuid]" class="p-3">{{ 'folders.edit.link' | translate  }}</a>
+            /> <a [routerLink]="['/shared', currentFolder?.uuid]" class="p-3" *ngIf="currentFolder?.uuid && currentFolder?.is_public">{{ 'folders.edit.link' | translate  }}</a>
          </div>
-         <div class="mb-1 form-check form-switch" *ngIf="currentFolder != undefined">
+         <div class="mb-1 form-check form-switch" *ngIf="currentFolder?.id != undefined">
             <label for="active">{{ 'folders.edit.active' | translate  }}</label>
             <input
                type="checkbox"
@@ -49,6 +49,17 @@
          </div>
 
          <div class="mb-2">
+            <div class="mb-2" *ngIf="currentFolder?.id">
+               <input type="text"
+                      readonly
+                      class="icon-select"
+                      [iconPicker]="form.icon || 'empty'"
+                      value="{{ 'folders.edit.icon' | translate  }}"
+                      (iconPickerSelect)="onIconPickerSelect($event)"
+               />
+               <span class="ms-4 w20" *ngIf="form.icon"><i class="bi bi-{{form.icon}}"></i></span>
+            </div>
+
             <label for="name">{{ 'folders.edit.name' | translate  }}</label>
             <input
                type="text"
@@ -65,6 +76,19 @@
                   {{ 'folders.edit.name-valid' | translate  }}
                </div>
             </div>
+         </div>
+         <div class="mb-2">
+            <label for="name">{{ 'folders.edit.translations' | translate  }}</label>
+            <select name="lng_src" class="form-control d-inline-flex w-150 ms-3 me-3">
+               <option *ngFor="let lng of languages" [value]="lng.code" [selected]="lng.code === form.lng_src">
+                  {{ lng.name }}
+               </option>
+            </select>
+            <select name="lng_dest" class="form-control d-inline-flex w-150">
+               <option *ngFor="let lng of languages" [value]="lng.code" [selected]="lng.code === form.lng_dest">
+                  {{ lng.name }}
+               </option>
+            </select>
          </div>
 
          <div class="mb-1">

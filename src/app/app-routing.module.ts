@@ -16,6 +16,8 @@ import { LogsComponent } from "./admin/logs/logs.component";
 import { ConfigsComponent } from "./admin/configs/configs.component";
 import { FoldersComponent } from './folders/folders.component';
 import { FoldersEditComponent } from './folders/edit/folders-edit.component';
+import {DictionaryComponent} from "./dictionary/dictionary.component";
+import {DictionaryEditComponent} from "./dictionary/edit/dictionary-edit.component";
 
 const routes: Routes = [
   { path: 'account/activate', component: LoginComponent },
@@ -38,6 +40,8 @@ const routes: Routes = [
   { path: 'folders/new', component: FoldersEditComponent },
   { path: 'folders/:id/:action', component: FoldersEditComponent },
   { path: 'folders/:id/delete', component: FoldersEditComponent },
+  { path: 'dictionary', component: DictionaryComponent },
+  { path: 'dictionary/:id/:action', component: DictionaryEditComponent },
   { path: 'user', component: BoardUserComponent },
   { path: 'settings', component: SettingsComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }

@@ -1,0 +1,50 @@
+<div class="col-md-12 d-flex justify-content-center">
+   <div class="jumbotron bg-light p-5 rounded card-container-wide">
+
+      <header class="jumbotron">
+         <h3 *ngIf="rootFolder != undefined">
+            {{ 'dictionary.edit.header' | translate  }}: <span class="me-2" *ngIf="rootFolder.icon"><i class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b>
+         </h3>
+      </header>
+      <form
+         name="form"
+         (ngSubmit)="f.form.valid && onSubmit(f.form.valid)"
+         #f="ngForm"
+         novalidate
+         class="row g-3 needs-validation"
+      >
+         <div class="mb-2">
+
+            <label for="name">{{ 'folders.edit.name' | translate  }}</label>
+            <input
+               type="text"
+               class="form-control" [ngClass]="{ 'is-invalid': name.errors && f.submitted}"
+               name="name"
+               id="name"
+               [(ngModel)]="form.name"
+               required
+               #name="ngModel"
+            />
+            <div class="invalid-feedback" *ngIf="name.errors && f.submitted">
+               <div *ngIf="name.errors['required']">{{ 'folders.edit.name-required' | translate  }}</div>
+               <div *ngIf="name.errors['name']">
+                  {{ 'folders.edit.name-valid' | translate  }}
+               </div>
+            </div>
+         </div>
+         <div class="mb-1">
+            <button class="btn btn-primary">{{ 'dictionary.edit.save-data' | translate  }}</button>&nbsp;
+            <button class="btn btn-secondary"
+                    [routerLink]="['/dictionary']">{{ 'dictionary.edit.cancel' | translate }}</button>
+         </div>
+      </form>
+      <div class="alert alert-success" *ngIf="isSuccessful">
+         {{ 'dictionary.edit.dictionary-saved' | translate  }}
+      </div>
+      <div class="alert alert-danger" *ngIf="errorMessage != ''">
+         {{ errorMessage  }}
+      </div>
+
+   </div>
+</div>
+<app-toast #finalDialog></app-toast>

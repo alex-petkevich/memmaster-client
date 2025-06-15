@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
           this.tokenStorage.saveLang(data.lang);
         }
 
-        this.router.navigate(['/folders']).then(() => {
+        this.router.navigate(['/dictionary']).then(() => {
           window.location.reload();
         });
       } ,

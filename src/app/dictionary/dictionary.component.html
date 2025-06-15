@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm mt-3 mb-3">
+            <h4>{{ 'dictionary.header' | translate }}</h4>
+            <h6>{{ 'dictionary.subheader' | translate }}</h6>
+        </div>
+    </div>
+    <div class="progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" *ngIf="loadProgress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+    </div>
+    <div class="row" *ngIf="folders?.length! > 0 && !loadProgress">
+        <p class="col-sm">
+            <table class="table">
+                <tbody>
+                <tr *ngFor="let folder of folders;">
+                    <td colspan="3">
+                        <table class="w-100">
+                            <tr>
+                                <td [ngClass]="{ 'disabled': !folder.active}">
+                                    <span class="me-2" *ngIf="folder.icon"><i class="bi bi-{{folder.icon}}"></i></span>
+                                    <span class="me-2 d-inline-flex w-20" *ngIf="!folder.icon">&nbsp;</span>
+                                    <a  [routerLink]="['/dictionary', folder.id, 'edit']">{{ folder.name }}</a>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let subfolder of folder.children;">
+                                <td [ngClass]="{ 'disabled': !subfolder.active}" class="ps-5">
+                                    <span class="me-2" *ngIf="subfolder.icon"><i class="bi bi-{{subfolder.icon}}"></i></span>
+                                    <div class="me-2 d-inline-flex w-20" *ngIf="!subfolder.icon">&nbsp;</div>
+                                    <a  [routerLink]="['/dictionary', subfolder.id, 'edit']">{{ subfolder.name }}
+                                </a>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+    </div>
+    <div class="row" *ngIf="!folders?.length && !loadProgress">
+        <div class="col-sm">
+            <p class="text-center" [innerHTML]=" 'dictionary.error_no_folders_found' | translate"></p>
+        </div>
+    </div>
+</div>
+
+<app-dialog #dialog></app-dialog>
+<app-toast #toast></app-toast>
+

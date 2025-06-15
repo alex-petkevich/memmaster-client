@@ -5,6 +5,8 @@ export interface IFolder {
     uuid?: string,
     name: string,
     icon?: string,
+    lng_src?: string,
+    lng_dest?: string,
     user?: IUser,
     parent_id?: number,
     is_public?: Boolean,

@@ -219,6 +219,7 @@
       "header-new-subfolder": "Create subfolder in folder",
       "id": "ID",
       "link": "Link",
+      "icon": "Icon",
       "is_public": "Shared folder",
       "uuid": "Identificator",
       "name": "Folder name",
@@ -226,5 +227,10 @@
       "name-valid": "Incorrect value",
       "folders-saved": "Data saved successfully"
     }
+  },
+  "dictionary": {
+    "header": "Cards",
+    "subheader": "Select a folder to select cards",
+    "error_no_folders_found": "No folders found, please create a folder first",
   }
 }

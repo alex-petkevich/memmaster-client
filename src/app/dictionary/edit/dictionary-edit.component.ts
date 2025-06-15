@@ -5,24 +5,20 @@ import { ToastComponent } from "../../shared-components/toast/toast.component";
 import { TranslateService } from "@ngx-translate/core";
 import { FoldersService } from 'src/app/_services/folders.service';
 import { IFolder } from 'src/app/model/folder.model';
-import {ILanguage} from "../../model/language.model";
 
 @Component({
   standalone: false,
   selector: 'app-folders-edit',
-  templateUrl: './folders-edit.component.html',
-  styleUrls: ['./folders-edit.component.scss']
+  templateUrl: './dictionary-edit.component.html',
+  styleUrls: ['./dictionary-edit.component.scss']
 })
-export class FoldersEditComponent implements OnInit {
+export class DictionaryEditComponent implements OnInit {
   currentFolder: IFolder | undefined = undefined;
   rootFolder: IFolder | undefined = undefined;
   isSuccessful: boolean = false;
-  languages: ILanguage[] | undefined = [];
   form: IFolder = {
     name: "",
     uuid: "",
-    lng_src: "",
-    lng_dest: "",
     parent_id: 0,
     last_modified_at: undefined,
     created_at: undefined,
@@ -48,19 +44,15 @@ export class FoldersEditComponent implements OnInit {
                 .subscribe({
                   next: data => {
                     if (data) {
-                      if (res['action'] == 'new') {
                         this.rootFolder = data;
                         this.currentFolder = this.form = {name: ""};
-                      } else
-                      {
-                        this.currentFolder = data;
-                        this.form = this.currentFolder as IFolder;
-                      }
                     }
                   }
                 });
-          } else if (res['action'] === 'new') {
-            this.form.parent_id = res['id'] ? parseInt(res['id'], 10) : 0;
+          } else {
+            this.router.navigate(['/dictionary']).then(() => {
+              window.location.reload();
+            });
           }
         }
     )
