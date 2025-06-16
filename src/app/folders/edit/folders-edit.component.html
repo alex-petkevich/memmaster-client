@@ -79,14 +79,18 @@
          </div>
          <div class="mb-2">
             <label for="name">{{ 'folders.edit.translations' | translate  }}</label>
-            <select name="lng_src" class="form-control d-inline-flex w-150 ms-3 me-3">
-               <option *ngFor="let lng of languages" [value]="lng.code" [selected]="lng.code === form.lng_src">
-                  {{ lng.name }}
+            <select name="lng_src" class="form-control d-inline-flex w-150 ms-3 me-3" [(ngModel)]="form.lng_src" id="lng_src">
+               <option value="" [selected]="!form.lng_src">
+                  {{ 'folders.edit.select-language' | translate  }}</option>
+               <option *ngFor="let lng of languages" [value]="lng.key" [selected]="lng.key === form.lng_src">
+                  {{ lng.value }}
                </option>
             </select>
-            <select name="lng_dest" class="form-control d-inline-flex w-150">
-               <option *ngFor="let lng of languages" [value]="lng.code" [selected]="lng.code === form.lng_dest">
-                  {{ lng.name }}
+            <select name="lng_dest" class="form-control d-inline-flex w-150" [(ngModel)]="form.lng_dest" id="lng_dest">
+               <option value="" [selected]="!form.lng_dest">
+                  {{ 'folders.edit.select-language' | translate  }}</option>
+               <option *ngFor="let lng of languages" [value]="lng.key" [selected]="lng.key === form.lng_dest">
+                  {{ lng.value }}
                </option>
             </select>
          </div>

@@ -222,6 +222,7 @@
       "icon": "Icon",
       "is_public": "Shared folder",
       "uuid": "Identificator",
+      "select-language": "Select language",
       "name": "Folder name",
       "name-required": "Required",
       "name-valid": "Incorrect value",

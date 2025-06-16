@@ -2,10 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {AuthService} from "../../_services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import { ToastComponent } from "../../shared-components/toast/toast.component";
-import { TranslateService } from "@ngx-translate/core";
 import { FoldersService } from 'src/app/_services/folders.service';
 import { IFolder } from 'src/app/model/folder.model';
-import {ILanguage} from "../../model/language.model";
+import {DirectoryService} from "../../_services/directory.service";
+import {IDirectory} from "../../model/directory.model";
+import {DIRECTORY_TYPES} from "../../shared-components/general.constants";
 
 @Component({
   standalone: false,
@@ -17,7 +18,7 @@ export class FoldersEditComponent implements OnInit {
   currentFolder: IFolder | undefined = undefined;
   rootFolder: IFolder | undefined = undefined;
   isSuccessful: boolean = false;
-  languages: ILanguage[] | undefined = [];
+  languages: IDirectory[] | undefined = [];
   form: IFolder = {
     name: "",
     uuid: "",
@@ -37,7 +38,7 @@ export class FoldersEditComponent implements OnInit {
               private foldersService: FoldersService,
               private route: ActivatedRoute,
               private router: Router,
-              private translate: TranslateService) { }
+              private directory: DirectoryService) { }
 
   async ngOnInit(): Promise<void> {
    await this.auth.isLoggedIn();
@@ -63,7 +64,17 @@ export class FoldersEditComponent implements OnInit {
             this.form.parent_id = res['id'] ? parseInt(res['id'], 10) : 0;
           }
         }
-    )
+    );
+    this.directory.list(DIRECTORY_TYPES.LANGUAGE).subscribe({
+      next: data => {
+        if (data) {
+          this.languages = data;
+        }
+      },
+      error: err => {
+        this.errorMessage = err?.error?.message || err?.message;
+      }
+    });
   }
 
   onSubmit(valid: any) {
