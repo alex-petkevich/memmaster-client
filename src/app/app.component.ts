@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TokenStorageService} from "./_services/token-storage.service";
 import {FileService} from "./_services/file.service";
 import {TranslateService} from "@ngx-translate/core";
 import {environment} from "./environments/environment";
 import {UserService} from "./_services/user.service";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {filter, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -11,13 +13,15 @@ import {UserService} from "./_services/user.service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
 
   private roles: string[] = [];
   isLoggedIn = false;
   showAdminBoard = false;
   username?: string;
   avatar?:any;
+  path?: string | null;
+  private routerSub?: Subscription;
 
   languageList = [
     { code: 'en', label: 'English' },
@@ -29,15 +33,22 @@ export class AppComponent {
     return this.languageList.find( it => it.code == lang)?.label.toString();
   }
 
-  constructor(private tokenStorageService: TokenStorageService,
-              private fileService: FileService,
-              private translate: TranslateService,
-              private userService: UserService) {
+  constructor(private readonly tokenStorageService: TokenStorageService,
+              private readonly fileService: FileService,
+              private readonly translate: TranslateService,
+              private readonly userService: UserService,
+              private readonly route: ActivatedRoute,
+              private readonly router: Router) {
 
   }
 
   ngOnInit(): void {
     this.changeSiteLanguage(this.tokenStorageService.getLang());
+      this.routerSub = this.router.events
+          .pipe(filter(event => event instanceof NavigationEnd))
+          .subscribe(() => {
+              this.path = this.getFirstDirectoryFromUrl();
+          });
 
     this.isLoggedIn = !!this.tokenStorageService.getToken();
     if (this.isLoggedIn) {
@@ -52,6 +63,11 @@ export class AppComponent {
       })
     }
   }
+
+    ngOnDestroy(): void {
+        this.routerSub?.unsubscribe();
+    }
+
   logout(): void {
     this.tokenStorageService.signOut();
     window.location.reload();
@@ -82,4 +98,10 @@ export class AppComponent {
     }
   }
 
+    private getFirstDirectoryFromUrl(): string | null {
+        const raw = this.router.url || '';
+        const cleaned = raw.split('?')[0].split('#')[0]; // remove query and hash
+        const segments = cleaned.split('/').filter(Boolean); // drop empty segments
+        return segments.length ? segments[0] : null;
+    }
 }

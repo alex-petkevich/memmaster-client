@@ -1,5 +1,5 @@
 <div class="container-fluid p-0">
-  <nav class="navbar navbar-expand-lg navbar-light bg-nav">
+  <nav class="navbar navbar-expand-lg navbar-light bg-nav"  data-bs-theme="light">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">
         <img src="/assets/images/logo.png" height="40" alt="Mem Master" class="d-inline-block align-top" alt="">
@@ -10,10 +10,10 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto" routerLinkActive="active">
           <li class="nav-item" *ngIf="isLoggedIn">
-            <a href="/cards" class="nav-link" *ngIf="isLoggedIn" routerLink="dictionary">{{ 'my-cards' | translate }}</a>
+            <a href="/cards" class="nav-link" [ngClass]="{'active': path === 'dictionary'}" *ngIf="isLoggedIn" routerLink="dictionary">{{ 'my-cards' | translate }}</a>
           </li>
           <li class="nav-item" *ngIf="isLoggedIn">
-            <a href="/folders" class="nav-link" *ngIf="isLoggedIn" routerLink="folders">{{ 'my-folders' | translate }}</a>
+            <a href="/folders" class="nav-link" [ngClass]="{'active': path === 'folders'}" *ngIf="isLoggedIn" routerLink="folders">{{ 'my-folders' | translate }}</a>
           </li>
 
         </ul>
@@ -25,7 +25,7 @@
             <a href="/login" class="nav-link" routerLink="login">{{ 'login' | translate }}</a>
           </li>
           <li class="nav-item dropdown" *ngIf="showAdminBoard">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" >{{ 'admin' | translate }} </a>
+            <a href="#" class="nav-link dropdown-toggle" [ngClass]="{'active': path === 'admin'}" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" >{{ 'admin' | translate }} </a>
             <div  class="dropdown-menu">
               <ng-container>
                 <a href="/admin/users" class="dropdown-item" >
@@ -44,7 +44,7 @@
             </div>
           </li>
           <li class="nav-item dropdown" *ngIf="isLoggedIn">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" [ngClass]="{'active': path === 'profile' || path === 'settings'}" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
               <img src="{{ avatar }}" alt="" width="30" height="24" class="d-inline-block align-text-top profile-avatar-img-card" *ngIf="avatar">
               <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="" width="30" height="24" class="d-inline-block align-text-top profile-avatar-img-card" *ngIf="!avatar">
               {{ username }}

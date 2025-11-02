@@ -232,6 +232,6 @@
   "dictionary": {
     "header": "Cards",
     "subheader": "Select a folder to select cards",
-    "error_no_folders_found": "No folders found, please create a folder first",
+    "error_no_folders_found": "No folders found, please create a folder first"
   }
 }

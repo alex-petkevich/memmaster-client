@@ -1,50 +1,89 @@
+<!-- html -->
 <div class="col-md-12 d-flex justify-content-center">
-   <div class="jumbotron bg-light p-5 rounded card-container-wide">
+    <div class="jumbotron bg-light p-5 rounded card-container-wide w-100">
+        <header class="jumbotron">
+            <h3 *ngIf="rootFolder != undefined">
+                {{ 'dictionary.edit.header' | translate  }}: <span class="me-2" *ngIf="rootFolder.icon"><i class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b>
+            </h3>
+        </header>
 
-      <header class="jumbotron">
-         <h3 *ngIf="rootFolder != undefined">
-            {{ 'dictionary.edit.header' | translate  }}: <span class="me-2" *ngIf="rootFolder.icon"><i class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b>
-         </h3>
-      </header>
-      <form
-         name="form"
-         (ngSubmit)="f.form.valid && onSubmit(f.form.valid)"
-         #f="ngForm"
-         novalidate
-         class="row g-3 needs-validation"
-      >
-         <div class="mb-2">
+        <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+            <div *ngFor="let p of pairs; let i = index" class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-end">
 
-            <label for="name">{{ 'folders.edit.name' | translate  }}</label>
-            <input
-               type="text"
-               class="form-control" [ngClass]="{ 'is-invalid': name.errors && f.submitted}"
-               name="name"
-               id="name"
-               [(ngModel)]="form.name"
-               required
-               #name="ngModel"
-            />
-            <div class="invalid-feedback" *ngIf="name.errors && f.submitted">
-               <div *ngIf="name.errors['required']">{{ 'folders.edit.name-required' | translate  }}</div>
-               <div *ngIf="name.errors['name']">
-                  {{ 'folders.edit.name-valid' | translate  }}
-               </div>
+                    <!-- Name type selector and input/file -->
+                    <div class="col-md-5">
+                        <label class="form-label">Name (key) *</label>
+                        <div class="input-group">
+                            <select class="form-select w-25" [(ngModel)]="p.nameType" name="nameType{{i}}">
+                                <option value="text">Text</option>
+                                <option value="file">File</option>
+                            </select>
+
+                            <input
+                                    *ngIf="p.nameType === 'text'"
+                                    class="form-control w-100"
+                                    required
+                                    type="text"
+                                    [(ngModel)]="p.name"
+                                    name="name{{i}}"
+                                    placeholder="name_key"
+                            />
+
+                            <input
+                                    *ngIf="p.nameType === 'file'"
+                                    class="form-control"
+                                    type="file"
+                                    (change)="onNameFileChange(i, $event)"
+                                    name="nameFile{{i}}"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Value type selector and input/file -->
+                    <div class="col-md-5">
+                        <label class="form-label">Value</label>
+                        <div class="input-group">
+                            <select class="form-select w-25" [(ngModel)]="p.type" name="type{{i}}">
+                                <option value="text">Text</option>
+                                <option value="file">File</option>
+                            </select>
+
+                            <input
+                                    *ngIf="p.type === 'text'"
+                                    class="form-control w-100"
+                                    type="text"
+                                    [(ngModel)]="p.valueText"
+                                    name="valueText{{i}}"
+                                    placeholder="Enter value"
+                            />
+
+                            <input
+                                    *ngIf="p.type === 'file'"
+                                    class="form-control"
+                                    type="file"
+                                    (change)="onFileChange(i, $event)"
+                                    name="valueFile{{i}}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="col-md-1 text-end">
+                        <button type="button" class="btn btn-danger" (click)="removePair(i)" [disabled]="pairs.length === 1">
+                            &times;
+                        </button>
+                    </div>
+                </div>
             </div>
-         </div>
-         <div class="mb-1">
-            <button class="btn btn-primary">{{ 'dictionary.edit.save-data' | translate  }}</button>&nbsp;
-            <button class="btn btn-secondary"
-                    [routerLink]="['/dictionary']">{{ 'dictionary.edit.cancel' | translate }}</button>
-         </div>
-      </form>
-      <div class="alert alert-success" *ngIf="isSuccessful">
-         {{ 'dictionary.edit.dictionary-saved' | translate  }}
-      </div>
-      <div class="alert alert-danger" *ngIf="errorMessage != ''">
-         {{ errorMessage  }}
-      </div>
 
-   </div>
+            <div class="mb-3">
+                <button type="button" class="btn btn-outline-primary me-2" (click)="addPair()">Add pair</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+
+            <div class="alert alert-success" *ngIf="isSuccessful">Saved successfully.</div>
+            <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+        </form>
+    </div>
 </div>
 <app-toast #finalDialog></app-toast>
