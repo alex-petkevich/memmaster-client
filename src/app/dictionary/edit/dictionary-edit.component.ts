@@ -156,4 +156,9 @@ export class DictionaryEditComponent implements OnInit {
         console.log('FormData ready to send', payload);
     }
 
+    exchangePair(i: number) {
+        const val = this.pairs[i].valueText;
+        this.pairs[i].valueText = this.pairs[i].name;
+        this.pairs[i].name = val as string;
+    }
 }

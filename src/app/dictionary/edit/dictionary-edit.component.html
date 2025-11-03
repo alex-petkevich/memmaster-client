@@ -15,24 +15,24 @@
                     <div class="col-md-5">
                         <label class="form-label">Name (key) *</label>
                         <div class="input-group">
-                            <select class="form-select w-25" [(ngModel)]="p.nameType" name="nameType{{i}}">
+                            <select class="form-select" [(ngModel)]="p.nameType" name="nameType{{i}}">
                                 <option value="text">Text</option>
                                 <option value="file">File</option>
                             </select>
 
                             <input
                                     *ngIf="p.nameType === 'text'"
-                                    class="form-control w-100"
+                                    class="form-control text"
                                     required
                                     type="text"
                                     [(ngModel)]="p.name"
-                                    name="name{{i}}"
+                                    name="name ̰{{i}}"
                                     placeholder="name_key"
                             />
 
                             <input
                                     *ngIf="p.nameType === 'file'"
-                                    class="form-control"
+                                    class="form-control text"
                                     type="file"
                                     (change)="onNameFileChange(i, $event)"
                                     name="nameFile{{i}}"
@@ -40,18 +40,22 @@
                         </div>
                     </div>
 
+                    <div class="col-md-1 justify-content-center d-flex">
+                        <button type="button" class="bi bi-arrow-left-right" (click)="exchangePair(i)"></button>
+                    </div>
+
                     <!-- Value type selector and input/file -->
                     <div class="col-md-5">
                         <label class="form-label">Value</label>
                         <div class="input-group">
-                            <select class="form-select w-25" [(ngModel)]="p.type" name="type{{i}}">
+                            <select class="form-select" [(ngModel)]="p.type" name="type{{i}}">
                                 <option value="text">Text</option>
                                 <option value="file">File</option>
                             </select>
 
                             <input
                                     *ngIf="p.type === 'text'"
-                                    class="form-control w-100"
+                                    class="form-control text"
                                     type="text"
                                     [(ngModel)]="p.valueText"
                                     name="valueText{{i}}"
@@ -60,7 +64,7 @@
 
                             <input
                                     *ngIf="p.type === 'file'"
-                                    class="form-control"
+                                    class="form-control text"
                                     type="file"
                                     (change)="onFileChange(i, $event)"
                                     name="valueFile{{i}}"
@@ -68,7 +72,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-1 text-end">
+                    <div class="col-md-1">
                         <button type="button" class="btn btn-danger" (click)="removePair(i)" [disabled]="pairs.length === 1">
                             &times;
                         </button>
