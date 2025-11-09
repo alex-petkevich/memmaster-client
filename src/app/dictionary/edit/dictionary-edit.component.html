@@ -8,30 +8,31 @@
         </header>
 
         <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+            <div *ngIf="!pairs.length" class="container-fluid p-3 border m-3">{{ 'dictionary.edit.no-cards-added' | translate }}</div>
             <div *ngFor="let p of pairs; let i = index" class="mb-3 border rounded p-3">
                 <div class="row g-2 align-items-end">
 
                     <!-- Name type selector and input/file -->
                     <div class="col-md-5">
-                        <label class="form-label">Name (key) *</label>
+                        <label class="form-label" for="name_type">{{ 'dictionary.edit.name' | translate }}</label>
                         <div class="input-group">
-                            <select class="form-select" [(ngModel)]="p.nameType" name="nameType{{i}}">
-                                <option value="text">Text</option>
-                                <option value="file">File</option>
+                            <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{i}}">
+                                <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
+                                <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
                             </select>
 
                             <input
-                                    *ngIf="p.nameType === 'text'"
+                                    *ngIf="p.name_type === 'TEXT'"
                                     class="form-control text"
                                     required
                                     type="text"
                                     [(ngModel)]="p.name"
                                     name="name ̰{{i}}"
-                                    placeholder="name_key"
+                                    placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
                             />
 
                             <input
-                                    *ngIf="p.nameType === 'file'"
+                                    *ngIf="p.name_type === 'FILE'"
                                     class="form-control text"
                                     type="file"
                                     (change)="onNameFileChange(i, $event)"
@@ -41,33 +42,34 @@
                     </div>
 
                     <div class="col-md-1 justify-content-center d-flex">
-                        <button type="button" class="bi bi-arrow-left-right" (click)="exchangePair(i)"></button>
+                        <button class="btn btn-outline-primary" type="button" (click)="exchangePair(i)"><em class="bi bi-arrow-left-right"></em></button>
                     </div>
 
                     <!-- Value type selector and input/file -->
                     <div class="col-md-5">
-                        <label class="form-label">Value</label>
+                        <label class="form-label" for="value_type">{{ 'dictionary.edit.value' | translate }}</label>
                         <div class="input-group">
-                            <select class="form-select" [(ngModel)]="p.type" name="type{{i}}">
-                                <option value="text">Text</option>
-                                <option value="file">File</option>
+                            <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{i}}">
+                              <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
+                              <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
                             </select>
 
                             <input
-                                    *ngIf="p.type === 'text'"
+                                    *ngIf="p.value_type === 'TEXT'"
                                     class="form-control text"
                                     type="text"
-                                    [(ngModel)]="p.valueText"
+                                    [(ngModel)]="p.value"
                                     name="valueText{{i}}"
-                                    placeholder="Enter value"
+                                    placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
                             />
 
                             <input
-                                    *ngIf="p.type === 'file'"
+                                    *ngIf="p.value_type === 'FILE'"
                                     class="form-control text"
                                     type="file"
                                     (change)="onFileChange(i, $event)"
                                     name="valueFile{{i}}"
+                                    placeholder="{{ 'dictionary.edit.file-placeholder' | translate }}"
                             />
                         </div>
                     </div>
@@ -81,11 +83,11 @@
             </div>
 
             <div class="mb-3">
-                <button type="button" class="btn btn-outline-primary me-2" (click)="addPair()">Add pair</button>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-outline-primary me-2" (click)="addPair()">{{ 'dictionary.edit.add-pair' | translate }}</button>
+                <button type="submit" class="btn btn-primary" *ngIf=" pairs.length">{{ 'dictionary.edit.save-pair' | translate }}</button>
             </div>
 
-            <div class="alert alert-success" *ngIf="isSuccessful">Saved successfully.</div>
+            <div class="alert alert-success" *ngIf="isSuccessful">{{ 'dictionary.edit.cards-saved' | translate }}</div>
             <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
         </form>
     </div>

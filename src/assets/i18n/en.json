@@ -232,6 +232,24 @@
   "dictionary": {
     "header": "Cards",
     "subheader": "Select a folder to select cards",
-    "error_no_folders_found": "No folders found, please create a folder first"
+    "error_no_folders_found": "No folders found, please create a folder first",
+    "edit": {
+      "cardTitle": "Card ",
+      "errorMessage": "Cannot load data",
+      "errorNameRequired": "name is required",
+      "errorNameFileRequired": "name file must be selected",
+      "errorValueFileRequired": "value file must be selected",
+      "header": "Cards in folder",
+      "cards-saved": "Data saved successfully",
+      "name": "Name",
+      "value": "Value",
+      "text": "Text",
+      "file": "File",
+      "text-placeholder": "Input value here",
+      "file-placeholder": "Upload file here",
+      "add-pair": "Add new pair",
+      "save-pair": "Save dictionary",
+      "no-cards-added": "No Pairs added to the dictionary"
+    }
   }
 }
