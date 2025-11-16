@@ -3,7 +3,7 @@
     <div class="jumbotron bg-light p-5 rounded card-container-wide w-100">
         <header class="jumbotron">
             <h3 *ngIf="rootFolder != undefined">
-                {{ 'dictionary.edit.header' | translate  }}: <span class="me-2" *ngIf="rootFolder.icon"><i class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b>
+              <a [routerLink]="['/dictionary']">{{ 'dictionary.edit.header' | translate  }}</a>: <span class="me-2" *ngIf="rootFolder.icon"><i class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b> <a [routerLink]="['/folders', rootFolder.id, 'edit']"><i class="bi bi-gear ms-1"></i></a>
             </h3>
         </header>
 
@@ -28,6 +28,7 @@
                                     type="text"
                                     [(ngModel)]="p.name"
                                     name="name ̰{{i}}"
+                                    [ngbTypeahead]="searchDictionaryNames"
                                     placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
                             />
 

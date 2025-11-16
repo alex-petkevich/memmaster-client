@@ -14,4 +14,5 @@ export interface IFolder {
     created_at?: Date,
     last_modified_at?: Date,
     children?: IFolder[],
+    dictionary_count?: number
 }

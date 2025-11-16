@@ -19,15 +19,15 @@
                                 <td [ngClass]="{ 'disabled': !folder.active}">
                                     <span class="me-2" *ngIf="folder.icon"><i class="bi bi-{{folder.icon}}"></i></span>
                                     <span class="me-2 d-inline-flex w-20" *ngIf="!folder.icon">&nbsp;</span>
-                                    <a  [routerLink]="['/dictionary', folder.id, 'edit']">{{ folder.name }}</a>
+                                    <a  [routerLink]="['/dictionary', folder.id, 'edit']" placement="top" ngbTooltip="{{ 'dictionary.cards' | translate }}: {{ folder.dictionary_count }}">{{ folder.name }}</a>
                                 </td>
                             </tr>
                             <tr *ngFor="let subfolder of folder.children;">
                                 <td [ngClass]="{ 'disabled': !subfolder.active}" class="ps-5">
                                     <span class="me-2" *ngIf="subfolder.icon"><i class="bi bi-{{subfolder.icon}}"></i></span>
                                     <div class="me-2 d-inline-flex w-20" *ngIf="!subfolder.icon">&nbsp;</div>
-                                    <a  [routerLink]="['/dictionary', subfolder.id, 'edit']">{{ subfolder.name }}
-                                </a>
+                                    <a  [routerLink]="['/dictionary', subfolder.id, 'edit']" placement="top" ngbTooltip="{{ 'dictionary.cards' | translate }}: {{ subfolder.dictionary_count }}">{{ subfolder.name }}</a>
+
                             </tr>
 
                         </table>

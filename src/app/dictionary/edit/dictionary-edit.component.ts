@@ -8,6 +8,8 @@ import {IFolder} from 'src/app/model/folder.model';
 import {NgForm} from "@angular/forms";
 import {DictionaryService} from "../../_services/dictionary.service";
 import {IDictionaryPair} from "../../model/name_value.model";
+import {catchError, debounceTime, distinctUntilChanged, Observable, of, OperatorFunction, switchMap, tap} from "rxjs";
+import {ExtTranslatorService} from "../../_services/ext-translator.service";
 
 @Component({
   standalone: false,
@@ -18,6 +20,7 @@ import {IDictionaryPair} from "../../model/name_value.model";
 export class DictionaryEditComponent implements OnInit {
   rootFolder: IFolder | undefined = undefined;
   isSuccessful: boolean = false;
+
   form: IFolder = {
     name: "",
     uuid: "",
@@ -38,6 +41,7 @@ export class DictionaryEditComponent implements OnInit {
   constructor(private readonly auth: AuthService,
               private readonly foldersService: FoldersService,
               private readonly dictionaryService: DictionaryService,
+              private readonly extTranslatorService: ExtTranslatorService,
               private readonly route: ActivatedRoute,
               private readonly router: Router,
               private readonly translate: TranslateService) {
@@ -147,6 +151,19 @@ export class DictionaryEditComponent implements OnInit {
     this.pairs[i].name_type = valType;
     this.pairs[i].name_file = valFile;
   }
+
+  searchDictionaryNames: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      switchMap((term) =>
+        this.extTranslatorService.translateText(term, this.rootFolder?.lng_src as string, this.rootFolder?.lng_dest as string).pipe(
+          catchError(() => {
+            return of([]);
+          }),
+        ),
+      ),
+    );
+
 
   private loadPairs() {
     if (!this.rootFolder) {
