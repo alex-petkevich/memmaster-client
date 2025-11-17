@@ -8,7 +8,7 @@ import {IFolder} from 'src/app/model/folder.model';
 import {NgForm} from "@angular/forms";
 import {DictionaryService} from "../../_services/dictionary.service";
 import {IDictionaryPair} from "../../model/name_value.model";
-import {catchError, debounceTime, distinctUntilChanged, Observable, of, OperatorFunction, switchMap, tap} from "rxjs";
+import {catchError, debounceTime, Observable, of, OperatorFunction, switchMap} from "rxjs";
 import {ExtTranslatorService} from "../../_services/ext-translator.service";
 
 @Component({

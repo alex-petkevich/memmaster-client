@@ -36,6 +36,7 @@ const routes: Routes = [
   { path: 'admin/metrics/:id', component: MetricsComponent },
   { path: 'admin/logs', component: LogsComponent },
   { path: 'admin/configs', component: ConfigsComponent },
+  { path: 'admin/settings', component: SettingsComponent },
   { path: 'folders', component: FoldersComponent },
   { path: 'folders/new', component: FoldersEditComponent },
   { path: 'folders/:id/:action', component: FoldersEditComponent },
@@ -43,7 +44,6 @@ const routes: Routes = [
   { path: 'dictionary', component: DictionaryComponent },
   { path: 'dictionary/:id/:action', component: DictionaryEditComponent },
   { path: 'user', component: BoardUserComponent },
-  { path: 'settings', component: SettingsComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

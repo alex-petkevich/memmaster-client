@@ -21,7 +21,15 @@ export class SettingsService {
     return this.http.get(API_URL, { responseType: 'json' });
   }
 
+  getGlobalSettings() : Observable<any> {
+    return this.http.get(API_URL + 'global/', { responseType: 'json' });
+  }
+
   save(settings: ISettingsInfo): Observable<any> {
     return this.http.post(API_URL, settings, httpOptions);
+  }
+
+  saveGlobalSettings(settings: ISettingsInfo): Observable<any> {
+    return this.http.post(API_URL + 'global/', settings, httpOptions);
   }
 }

@@ -3,7 +3,6 @@ import {SettingsService} from "../../_services/settings.service";
 import {AuthService} from "../../_services/auth.service";
 import { ISettingsResponse } from "../../model/setting_response.model";
 import { ISettingsInfo } from "../../model/setting.model";
-import { DialogComponent } from '../../shared-components/dialog/dialog.component';
 
 @Component({
   standalone: false,
@@ -13,29 +12,20 @@ import { DialogComponent } from '../../shared-components/dialog/dialog.component
 })
 export class SettingsComponent implements OnInit {
 
-  @ViewChild("mailssl") mailssl!:  ElementRef;
-  
   form: any = {
-    mailserver: null,
-    mailport: null,
-    mailssl: null,
-    username: null,
-    password: null,
-    id: null,
-    user_id: null,
-    period: "10"
+    api_key: null
   };
   isSuccessful = false;
   isUpdatingFailed = false;
   errorMessage = '';
-  periods: string[] = ["1", "10", "30", "60", "180", "1440"];
 
-  constructor(private settingsService: SettingsService, private auth: AuthService) { }
+  constructor(private readonly settingsService: SettingsService,
+              private readonly auth: AuthService) { }
 
-  async ngOnInit(): Promise<void> {
-    await this.auth.isLoggedIn();
+  ngOnInit(): void {
+    this.auth.isLoggedIn();
 
-    this.settingsService.getUserSettings().subscribe({
+    this.settingsService.getGlobalSettings().subscribe({
       next: data => {
         (data as Array<ISettingsResponse>).forEach(it => {
           this.form[it.name] = it.value;
@@ -45,16 +35,11 @@ export class SettingsComponent implements OnInit {
   }
 
   onSubmit(valid: any): void {
-    let { mailserver, mailport, username, password, period } = this.form;
+    let { api_key } = this.form;
     const settings: ISettingsInfo = {
-      'mailserver': mailserver,
-      'mailport': mailport,
-      'mailssl': this.mailssl.nativeElement.checked ? "true" : "false",
-      'username': username,
-      'password': password,
-      'period': period
+      'api_key': api_key
     }
-    this.settingsService.save(settings).subscribe({
+    this.settingsService.saveGlobalSettings(settings).subscribe({
       next: data => {
         console.log(data);
         this.isSuccessful = true;

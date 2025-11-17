@@ -13,73 +13,21 @@
     novalidate
   >
     <div class="mb-3">
-      <label for="mailserver">{{ 'account.settings.mailserver' | translate  }}</label>
+      <label for="api_key">{{ 'account.settings.api_key' | translate  }}</label>
       <input
         type="text"
-        class="form-control" [ngClass]="{ 'is-invalid': mailserver.errors && f.submitted}"
-        name="mail-server"
-        [(ngModel)]="form.mailserver"
+        class="form-control" [ngClass]="{ 'is-invalid': api_key.errors && f.submitted}"
+        name="api_key"
+        [(ngModel)]="form.api_key"
         required
-        #mailserver="ngModel"
+        #api_key="ngModel"
       />
-      <div class="invalid-feedback" *ngIf="mailserver.errors && f.submitted">
-        <div *ngIf="mailserver.errors['required']">{{ 'account.settings.mailserver-required' | translate  }}</div>
-        <div *ngIf="mailserver.errors['mailserver']">
-          {{ 'account.settings.mailserver-valid' | translate  }}
+      <div class="invalid-feedback" *ngIf="api_key.errors && f.submitted">
+        <div *ngIf="api_key.errors['required']">{{ 'account.settings.api_key-required' | translate  }}</div>
+        <div *ngIf="api_key.errors['api_key']">
+          {{ 'account.settings.api_key-valid' | translate  }}
         </div>
       </div>
-    </div>
-    <div class="mb-3">
-      <label for="mailport">{{ 'account.settings.mailport' | translate  }}</label>
-      <input
-        type="text"
-        class="form-control"
-        name="mailport"
-        [(ngModel)]="form.mailport"
-        #mailport="ngModel"
-      />
-    </div>
-    <div class="mb-3">
-      <input
-        type="checkbox"
-        class="form-check-input me-1"
-        name="mailssl"
-        id="mailssl"
-        [checked]="form.mailssl === 'true'"
-        #mailssl
-      />
-      <label for="mailssl">{{ 'account.settings.mailssl' | translate  }}</label>
-    </div>
-    <div class="mb-3">
-      <label for="username">{{ 'account.settings.username' | translate  }}</label>
-      <input
-        type="text"
-        class="form-control"
-        name="username"
-        [(ngModel)]="form.username"
-        #username="ngModel"
-      />
-    </div>
-    <div class="mb-3">
-      <label for="password">{{ 'account.settings.password' | translate  }}</label>
-      <input
-              type="password"
-              class="form-control"
-              name="password"
-              [(ngModel)]="form.password"
-              #password="ngModel"
-      />
-    </div>
-    <div class="mb-3">
-      <label for="period">{{ 'account.settings.period' | translate  }}</label>
-      <select
-              class="form-control"
-              name="period"
-              [(ngModel)]="form.period"
-              #period="ngModel"
-      >
-      <option *ngFor="let c of periods" [ngValue]="c">{{c}}</option>
-      </select>
     </div>
     <div class="mb-3">
       <button class="btn btn-primary btn-block">{{ 'account.settings.save-data' | translate  }}</button>

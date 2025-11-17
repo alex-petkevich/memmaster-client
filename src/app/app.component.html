@@ -31,6 +31,9 @@
                 <a href="/admin/users" class="dropdown-item" >
                   {{ 'users-menu' | translate }}
                 </a>
+                <a href="/admin/settings" class="dropdown-item" >
+                  {{ 'settings' | translate }}
+                </a>
                 <a href="/admin/metrics" class="dropdown-item" >
                   {{ 'metrics-menu' | translate }}
                 </a>
@@ -44,7 +47,7 @@
             </div>
           </li>
           <li class="nav-item dropdown" *ngIf="isLoggedIn">
-            <a class="nav-link dropdown-toggle" [ngClass]="{'active': path === 'profile' || path === 'settings'}" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" [ngClass]="{'active': path === 'profile'}" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
               <img src="{{ avatar }}" alt="" width="30" height="24" class="d-inline-block align-text-top profile-avatar-img-card" *ngIf="avatar">
               <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="" width="30" height="24" class="d-inline-block align-text-top profile-avatar-img-card" *ngIf="!avatar">
               {{ username }}
@@ -53,9 +56,6 @@
               <ng-container>
                 <a href="/profile" class="dropdown-item" >
                   {{ 'profile' | translate }}
-                </a>
-                <a href="/settings" class="dropdown-item" >
-                  {{ 'settings' | translate }}
                 </a>
                 <a href class="nav-link" class="dropdown-item" (click)="logout()">
                   {{ 'logout' | translate }}
