@@ -28,7 +28,7 @@
                                     type="text"
                                     [(ngModel)]="p.name"
                                     name="name ̰{{i}}"
-                                    [ngbTypeahead]="searchDictionaryNames"
+                                    (change)="translateName(i)"
                                     placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
                             />
 

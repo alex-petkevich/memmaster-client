@@ -8,7 +8,7 @@ import {IFolder} from 'src/app/model/folder.model';
 import {NgForm} from "@angular/forms";
 import {DictionaryService} from "../../_services/dictionary.service";
 import {IDictionaryPair} from "../../model/name_value.model";
-import {catchError, debounceTime, Observable, of, OperatorFunction, switchMap} from "rxjs";
+import {catchError, delay, of} from "rxjs";
 import {ExtTranslatorService} from "../../_services/ext-translator.service";
 
 @Component({
@@ -152,19 +152,6 @@ export class DictionaryEditComponent implements OnInit {
     this.pairs[i].name_file = valFile;
   }
 
-  searchDictionaryNames: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(300),
-      switchMap((term) =>
-        this.extTranslatorService.translateText(term, this.rootFolder?.lng_src as string, this.rootFolder?.lng_dest as string).pipe(
-          catchError(() => {
-            return of([]);
-          }),
-        ),
-      ),
-    );
-
-
   private loadPairs() {
     if (!this.rootFolder) {
       return;
@@ -175,5 +162,21 @@ export class DictionaryEditComponent implements OnInit {
           this.pairs = data as IDictionaryPair[];
         }
       });
+  }
+
+  protected translateName(i: number) {
+    if (this.pairs[i].name !== '' && !this.pairs[i].value) {
+      this.extTranslatorService.lookup(this.pairs[i].name, this.rootFolder?.lng_src as string, this.rootFolder?.lng_dest as string)
+          .subscribe({
+            next: data => {
+              if (data?.length > 0) {
+                this.pairs[i].value = data[0].translation as string;
+              }
+            },
+            error: err => {
+              console.error("Translation error");
+            }
+          });
+    }
   }
 }
