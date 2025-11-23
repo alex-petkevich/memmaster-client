@@ -15,6 +15,7 @@
                     <!-- Name type selector and input/file -->
                     <div class="col-md-5">
                         <label class="form-label" for="name_type">{{ 'dictionary.edit.name' | translate }}</label>
+                        <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_src) }})</span>
                         <div class="input-group">
                             <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{i}}">
                                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
@@ -49,6 +50,7 @@
                     <!-- Value type selector and input/file -->
                     <div class="col-md-5">
                         <label class="form-label" for="value_type">{{ 'dictionary.edit.value' | translate }}</label>
+                      <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_dest) }})</span>
                         <div class="input-group">
                             <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{i}}">
                               <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
@@ -61,6 +63,7 @@
                                     type="text"
                                     [(ngModel)]="p.value"
                                     name="valueText{{i}}"
+                                    (change)="translateValue(i)"
                                     placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
                             />
 

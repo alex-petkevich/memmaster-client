@@ -10,6 +10,9 @@ import {DictionaryService} from "../../_services/dictionary.service";
 import {IDictionaryPair} from "../../model/name_value.model";
 import {catchError, delay, of} from "rxjs";
 import {ExtTranslatorService} from "../../_services/ext-translator.service";
+import {IDirectory} from "../../model/directory.model";
+import {DirectoryService} from "../../_services/directory.service";
+import {DIRECTORY_TYPES} from "../../shared-components/general.constants";
 
 @Component({
   standalone: false,
@@ -33,7 +36,7 @@ export class DictionaryEditComponent implements OnInit {
   };
   pairs: IDictionaryPair[] = [
   ];
-
+  languages: IDirectory[] | undefined = [];
 
   errorMessage: string = "";
   @ViewChild("finalDialog") toastComponent: ToastComponent | undefined;
@@ -44,13 +47,25 @@ export class DictionaryEditComponent implements OnInit {
               private readonly extTranslatorService: ExtTranslatorService,
               private readonly route: ActivatedRoute,
               private readonly router: Router,
-              private readonly translate: TranslateService) {
+              private readonly translate: TranslateService,
+              private readonly directory: DirectoryService) {
   }
 
-  async ngOnInit(): Promise<void> {
-    await this.auth.isLoggedIn();
+  ngOnInit(): void {
+    this.auth.isLoggedIn();
 
     this.findFolder();
+
+    this.directory.list(DIRECTORY_TYPES.LANGUAGE).subscribe({
+      next: data => {
+        if (data) {
+          this.languages = data;
+        }
+      },
+      error: err => {
+        this.errorMessage = err?.error?.message || err?.message;
+      }
+    });
   }
 
   private findFolder() {
@@ -166,17 +181,39 @@ export class DictionaryEditComponent implements OnInit {
 
   protected translateName(i: number) {
     if (this.pairs[i].name !== '' && !this.pairs[i].value) {
-      this.extTranslatorService.lookup(this.pairs[i].name, this.rootFolder?.lng_src as string, this.rootFolder?.lng_dest as string)
-          .subscribe({
-            next: data => {
-              if (data?.length > 0) {
-                this.pairs[i].value = data[0].translation as string;
-              }
-            },
-            error: err => {
-              console.error("Translation error");
-            }
-          });
+      this.lookupWord(i, true);
     }
   }
+
+  protected translateValue(i: number) {
+    if (this.pairs[i].value !== '' && !this.pairs[i].name) {
+      this.lookupWord(i, false);
+    }
+  }
+
+  private lookupWord(i: number, isName: boolean) {
+    let name = isName ? this.pairs[i].name : this.pairs[i].value;
+    let lngSrc = (isName ? this.rootFolder?.lng_src : this.rootFolder?.lng_dest) as string;
+    let lngDest = (isName ? this.rootFolder?.lng_dest : this.rootFolder?.lng_src ) as string;
+    this.extTranslatorService.lookup(name as string, lngSrc, lngDest)
+      .subscribe({
+        next: data => {
+          if (data?.length > 0) {
+            if (isName) {
+              this.pairs[i].value = data[0].translation as string;
+            } else {
+              this.pairs[i].name = data[0].translation as string;
+            }
+          }
+        },
+        error: err => {
+          console.error("Translation error");
+        }
+      });
+  }
+
+  protected lngName(lngCode: string | undefined) {
+    return this.languages?.find(l => l.key === lngCode)?.value || lngCode || '';
+  }
+
 }

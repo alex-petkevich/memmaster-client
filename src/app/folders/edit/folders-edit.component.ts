@@ -31,14 +31,14 @@ export class FoldersEditComponent implements OnInit {
     is_public: false,
     icon: ""
   };
-  errorMessage: String = "";
+  errorMessage: string = "";
   @ViewChild("finalDialog") toastComponent: ToastComponent | undefined;
 
-  constructor(private auth: AuthService,
-              private foldersService: FoldersService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private directory: DirectoryService) { }
+  constructor(private readonly auth: AuthService,
+              private readonly foldersService: FoldersService,
+              private readonly route: ActivatedRoute,
+              private readonly router: Router,
+              private readonly directory: DirectoryService) { }
 
   async ngOnInit(): Promise<void> {
    await this.auth.isLoggedIn();
