@@ -77,8 +77,18 @@
                             />
                         </div>
                     </div>
+                  <!-- Is remembered checkbox -->
+                  <div class="col-md-1">
+                    <label class="form-label" for="isRemembered{{i}}">
+                      {{ 'dictionary.edit.remembered' | translate }}
+                    </label>
+                    <div class="form-check form-switch sw-remembered">
+                      <input class="form-check-input sw-input"  type="checkbox" id="isRemembered{{i}}" [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{i}}">
+                    </div>
+                  </div>
 
-                    <div class="col-md-1">
+
+                  <div class="col-md-1">
                         <button type="button" class="btn btn-danger" (click)="removePair(i)" [disabled]="pairs.length === 1">
                             &times;
                         </button>

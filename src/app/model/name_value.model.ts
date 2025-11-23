@@ -10,6 +10,7 @@ export interface IDictionaryPair {
   value?: string;
   value_type: IPairType;
   value_file?: File | null;
+  is_remembered?: boolean;
 }
 
 export interface IDictionary {

@@ -245,6 +245,7 @@
       "value": "Value",
       "text": "Text",
       "file": "File",
+      "remembered": "Remembered",
       "text-placeholder": "Input value here",
       "file-placeholder": "Upload file here",
       "add-pair": "Add new pair",
