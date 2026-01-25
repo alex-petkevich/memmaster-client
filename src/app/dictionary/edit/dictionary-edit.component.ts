@@ -8,7 +8,6 @@ import {IFolder} from 'src/app/model/folder.model';
 import {NgForm} from "@angular/forms";
 import {DictionaryService} from "../../_services/dictionary.service";
 import {IDictionaryPair} from "../../model/name_value.model";
-import {catchError, delay, of} from "rxjs";
 import {ExtTranslatorService} from "../../_services/ext-translator.service";
 import {IDirectory} from "../../model/directory.model";
 import {DirectoryService} from "../../_services/directory.service";
@@ -156,16 +155,12 @@ export class DictionaryEditComponent implements OnInit {
   }
 
   exchangePair(i: number) {
-    const val = this.pairs[i].value;
-    const valType = this.pairs[i].value_type;
-    const valFile = this.pairs[i].value_file;
-    this.pairs[i].value = this.pairs[i].name;
-    this.pairs[i].value_file = this.pairs[i].name_file;
-    this.pairs[i].value_type = this.pairs[i].name_type;
-    this.pairs[i].name = val as string;
-    this.pairs[i].name_type = valType;
-    this.pairs[i].name_file = valFile;
+    const pair = this.pairs[i];
+    [pair.name, pair.value] = [pair.value || '', pair.name];
+    [pair.name_type, pair.value_type] = [pair.value_type, pair.name_type];
+    [pair.name_file, pair.value_file] = [pair.value_file, pair.name_file];
   }
+
 
   private loadPairs() {
     if (!this.rootFolder) {

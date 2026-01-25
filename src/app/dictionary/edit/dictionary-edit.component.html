@@ -1,109 +1,122 @@
 <!-- html -->
-<div class="col-md-12 d-flex justify-content-center">
-    <div class="jumbotron bg-light p-5 rounded card-container-wide w-100">
-        <header class="jumbotron">
-            <h3 *ngIf="rootFolder != undefined">
-              <a [routerLink]="['/dictionary']">{{ 'dictionary.edit.header' | translate  }}</a>: <span class="me-2" *ngIf="rootFolder.icon"><i class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b> <a [routerLink]="['/folders', rootFolder.id, 'edit']"><i class="bi bi-gear ms-1"></i></a>
-            </h3>
-        </header>
+<div class="col-md-12 d-flex justify-content-center pb-5">
+  <div class="jumbotron bg-light p-4 pb-5 rounded card-container-wide w-100">
+    <header class="jumbotron">
+      <h3 *ngIf="rootFolder != undefined">
+        <a [routerLink]="['/dictionary']">{{ 'dictionary.edit.header' | translate }}</a>: <span class="me-2"
+                                                                                                *ngIf="rootFolder.icon"><i
+          class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b> <a
+          [routerLink]="['/folders', rootFolder.id, 'edit']"><i class="bi bi-gear ms-1"></i></a>
+      </h3>
+    </header>
 
-        <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
-            <div *ngIf="!pairs.length" class="container-fluid p-3 border m-3">{{ 'dictionary.edit.no-cards-added' | translate }}</div>
-            <div *ngFor="let p of pairs; let i = index" class="mb-3 border rounded p-3">
-                <div class="row g-2 align-items-end">
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+      <div *ngIf="!pairs.length"
+           class="container-fluid p-3 border m-3">{{ 'dictionary.edit.no-cards-added' | translate }}
+      </div>
+      <div *ngFor="let p of pairs; let i = index" class="mb-3 border rounded p-3">
+        <div class="row g-2 align-items-end">
 
-                    <!-- Name type selector and input/file -->
-                    <div class="col-md-5">
-                        <label class="form-label" for="name_type">{{ 'dictionary.edit.name' | translate }}</label>
-                        <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_src) }})</span>
-                        <div class="input-group">
-                            <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{i}}">
-                                <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
-                                <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
-                            </select>
+          <!-- Name type selector and input/file -->
+          <div class="col-md-5">
+            <label class="form-label" for="name_type">{{ 'dictionary.edit.name' | translate }}</label>
+            <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_src) }})</span>
+            <div class="input-group">
+              <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{i}}">
+                <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
+                <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
+              </select>
 
-                            <input
-                                    *ngIf="p.name_type === 'TEXT'"
-                                    class="form-control text"
-                                    required
-                                    type="text"
-                                    [(ngModel)]="p.name"
-                                    name="name ̰{{i}}"
-                                    (change)="translateName(i)"
-                                    placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
-                            />
+              <input
+                  *ngIf="p.name_type === 'TEXT'"
+                  class="form-control text"
+                  required
+                  type="text"
+                  [(ngModel)]="p.name"
+                  name="name ̰{{i}}"
+                  (change)="translateName(i)"
+                  placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
+              />
 
-                            <input
-                                    *ngIf="p.name_type === 'FILE'"
-                                    class="form-control text"
-                                    type="file"
-                                    (change)="onNameFileChange(i, $event)"
-                                    name="nameFile{{i}}"
-                            />
-                        </div>
-                    </div>
+              <input
+                  *ngIf="p.name_type === 'FILE'"
+                  class="form-control text"
+                  type="file"
+                  (change)="onNameFileChange(i, $event)"
+                  name="nameFile{{i}}"
+              />
+            </div>
+          </div>
 
-                    <div class="col-md-1 justify-content-center d-flex">
-                        <button class="btn btn-outline-primary" type="button" (click)="exchangePair(i)"><em class="bi bi-arrow-left-right"></em></button>
-                    </div>
+          <div class="col-md-auto justify-content-center d-flex">
+            <button class="btn btn-outline-primary" type="button" (click)="exchangePair(i)"><em
+                class="bi bi-arrow-left-right"></em></button>
+          </div>
 
-                    <!-- Value type selector and input/file -->
-                    <div class="col-md-5">
-                        <label class="form-label" for="value_type">{{ 'dictionary.edit.value' | translate }}</label>
-                      <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_dest) }})</span>
-                        <div class="input-group">
-                            <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{i}}">
-                              <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
-                              <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
-                            </select>
+          <!-- Value type selector and input/file -->
+          <div class="col-md-5">
+            <label class="form-label" for="value_type">{{ 'dictionary.edit.value' | translate }}</label>
+            <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_dest) }})</span>
+            <div class="input-group">
+              <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{i}}">
+                <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
+                <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
+              </select>
 
-                            <input
-                                    *ngIf="p.value_type === 'TEXT'"
-                                    class="form-control text"
-                                    type="text"
-                                    [(ngModel)]="p.value"
-                                    name="valueText{{i}}"
-                                    (change)="translateValue(i)"
-                                    placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
-                            />
+              <input
+                  *ngIf="p.value_type === 'TEXT'"
+                  class="form-control text"
+                  type="text"
+                  [(ngModel)]="p.value"
+                  name="valueText{{i}}"
+                  (change)="translateValue(i)"
+                  placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
+              />
 
-                            <input
-                                    *ngIf="p.value_type === 'FILE'"
-                                    class="form-control text"
-                                    type="file"
-                                    (change)="onFileChange(i, $event)"
-                                    name="valueFile{{i}}"
-                                    placeholder="{{ 'dictionary.edit.file-placeholder' | translate }}"
-                            />
-                        </div>
-                    </div>
-                  <!-- Is remembered checkbox -->
-                  <div class="col-md-1">
-                    <label class="form-label" for="isRemembered{{i}}">
-                      {{ 'dictionary.edit.remembered' | translate }}
-                    </label>
-                    <div class="form-check form-switch sw-remembered">
-                      <input class="form-check-input sw-input"  type="checkbox" id="isRemembered{{i}}" [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{i}}">
-                    </div>
-                  </div>
-
-
-                  <div class="col-md-1">
-                        <button type="button" class="btn btn-danger" (click)="removePair(i)" [disabled]="pairs.length === 1">
-                            &times;
-                        </button>
-                    </div>
+              <input
+                  *ngIf="p.value_type === 'FILE'"
+                  class="form-control text"
+                  type="file"
+                  (change)="onFileChange(i, $event)"
+                  name="valueFile{{i}}"
+                  placeholder="{{ 'dictionary.edit.file-placeholder' | translate }}"
+              />
+            </div>
+          </div>
+          <!-- Is remembered checkbox -->
+          <div class="col-md-auto">
+            <div class="row">
+              <div class="col">
+                <label class="form-label" for="isRemembered{{i}}">
+                  {{ 'dictionary.edit.remembered' | translate }}
+                </label>
+                <div class="form-check form-switch sw-remembered">
+                  <input class="form-check-input sw-input" type="checkbox" id="isRemembered{{i}}"
+                         [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{i}}">
                 </div>
+              </div>
+              <div class="col d-flex align-items-end">
+                <button type="button" class="btn btn-danger" (click)="removePair(i)" [disabled]="pairs.length === 1">
+                  &times;
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div class="mb-3">
-                <button type="button" class="btn btn-outline-primary me-2" (click)="addPair()">{{ 'dictionary.edit.add-pair' | translate }}</button>
-                <button type="submit" class="btn btn-primary" *ngIf=" pairs.length">{{ 'dictionary.edit.save-pair' | translate }}</button>
-            </div>
+      <div class="mb-3">
+        <button type="button" class="btn btn-outline-primary me-2"
+                (click)="addPair()">{{ 'dictionary.edit.add-pair' | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary"
+                *ngIf=" pairs.length">{{ 'dictionary.edit.save-pair' | translate }}
+        </button>
+      </div>
 
-            <div class="alert alert-success" *ngIf="isSuccessful">{{ 'dictionary.edit.cards-saved' | translate }}</div>
-            <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
-        </form>
-    </div>
+      <div class="alert alert-success" *ngIf="isSuccessful">{{ 'dictionary.edit.cards-saved' | translate }}</div>
+      <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+    </form>
+  </div>
 </div>
 <app-toast #finalDialog></app-toast>
