@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef, TemplateRef, HostListener} from '@angular/core';
 import {AuthService} from "../../_services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastComponent} from "../../shared-components/toast/toast.component";
@@ -13,8 +13,15 @@ import {IDirectory} from "../../model/directory.model";
 import {DirectoryService} from "../../_services/directory.service";
 import {DIRECTORY_TYPES} from "../../shared-components/general.constants";
 import {HttpClient} from "@angular/common/http";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 type UiDictionaryPair = IDictionaryPair & { uiId: number; name_img?: string; value_img?: string };
+
+interface BulkImportItem {
+  name: string;
+  value: string;
+  status: 'new' | 'duplicate' | 'error';
+}
 
 @Component({
   standalone: false,
@@ -28,6 +35,11 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
   private nextPairUiId = 1;
   blobUrlCache = new Map<string, string>();
   private failedBlobPaths = new Set<string>();
+  bulkImportModal: NgbModalRef | undefined;
+  bulkImportData: BulkImportItem[] = [];
+  bulkImportDuplicateCount: number = 0;
+  protected bulkImportFileSelected: File | null = null;
+  protected exportMenuOpen: boolean = false;
 
   form: IFolder = {
     name: "",
@@ -45,6 +57,7 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
 
   errorMessage: string = "";
   @ViewChild("finalDialog") toastComponent: ToastComponent | undefined;
+  @ViewChild("bulkImportModal") bulkImportModalTemplate: TemplateRef<any> | undefined;
 
   constructor(private readonly auth: AuthService,
               private readonly foldersService: FoldersService,
@@ -55,7 +68,8 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
               private readonly translate: TranslateService,
               private readonly directory: DirectoryService,
               private readonly http: HttpClient,
-              private readonly cdr: ChangeDetectorRef) {
+              private readonly cdr: ChangeDetectorRef,
+              private readonly modalService: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -374,6 +388,219 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
   protected clearValueImg(i: number): void {
     this.pairs[i].value_img = undefined;
     this.pairs[i].value = '';
+  }
+
+  protected openBulkImportModal(): void {
+    this.exportMenuOpen = false;
+    this.bulkImportData = [];
+    this.bulkImportDuplicateCount = 0;
+    this.bulkImportFileSelected = null;
+    if (this.bulkImportModalTemplate) {
+      this.bulkImportModal = this.modalService.open(this.bulkImportModalTemplate, {
+        size: 'lg',
+        backdrop: 'static',
+        keyboard: false
+      });
+    }
+  }
+
+  protected onBulkFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) {
+      this.bulkImportFileSelected = null;
+      return;
+    }
+
+    const file = input.files[0];
+    this.bulkImportFileSelected = file;
+    this.parseBulkFile(file);
+  }
+
+  private parseBulkFile(file: File): void {
+    const lowerName = file.name.toLowerCase();
+    if (lowerName.endsWith('.xlsx') || lowerName.endsWith('.xls')) {
+      // XLS/XLSX is parsed on backend; keep preview empty but allow import action.
+      this.bulkImportData = [];
+      this.bulkImportDuplicateCount = 0;
+      return;
+    }
+
+    if (!lowerName.endsWith('.csv')) {
+      this.errorMessage = this.translate.instant('dictionary.edit.unsupported-format');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      try {
+        const rows = this.parseCSV((e.target?.result as string) || '');
+        this.processBulkData(rows);
+      } catch (err) {
+        this.errorMessage = this.translate.instant('dictionary.edit.file-parse-error');
+        console.error('File parse error:', err);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  private parseCSV(csv: string): any[] {
+    const lines = csv.trim().split('\n');
+    const rows: any[] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+
+      // Simple CSV parsing - handle quoted values
+      const parts = line.split(',').map(p => {
+        p = p.trim();
+        if (p.startsWith('"') && p.endsWith('"')) {
+          return p.slice(1, -1).replace(/""/g, '"');
+        }
+        return p;
+      });
+
+      if (parts.length >= 2) {
+        rows.push({
+          name: parts[0],
+          value: parts[1]
+        });
+      }
+    }
+
+    return rows;
+  }
+
+
+  private processBulkData(rows: any[]): void {
+    this.bulkImportData = [];
+    this.bulkImportDuplicateCount = 0;
+
+    // Get existing names to check for duplicates
+    const existingNames = new Set(this.pairs.map(p => p.name?.toLowerCase()));
+
+    for (const row of rows) {
+      if (!row.name || String(row.name).trim() === '') {
+        continue;
+      }
+
+      const name = String(row.name).trim();
+      const value = String(row.value || '').trim();
+
+      // Check if it's a duplicate
+      if (existingNames.has(name.toLowerCase())) {
+        this.bulkImportData.push({
+          name,
+          value,
+          status: 'duplicate'
+        });
+        this.bulkImportDuplicateCount++;
+      } else {
+        this.bulkImportData.push({
+          name,
+          value,
+          status: 'new'
+        });
+        existingNames.add(name.toLowerCase());
+      }
+    }
+  }
+
+  protected importBulkData(modal: any): void {
+    if (!this.bulkImportFileSelected) {
+      this.errorMessage = this.translate.instant('dictionary.edit.import-select-file');
+      return;
+    }
+
+    this.dictionaryService.bulkImportFile(this.rootFolder?.id as number, this.bulkImportFileSelected).subscribe({
+      next: (data) => {
+        for (const savedPair of data) {
+          this.pairs.unshift(this.withUiId({
+            ...savedPair,
+            name_img: this.normalizeStoredPath(savedPair.name_file),
+            value_img: this.normalizeStoredPath(savedPair.value_file),
+            name_file: null,
+            value_file: null
+          } as IDictionaryPair));
+        }
+
+        this.bulkImportData = [];
+        this.bulkImportDuplicateCount = 0;
+        this.bulkImportFileSelected = null;
+        modal.dismiss();
+
+        this.isSuccessful = true;
+        setTimeout(() => {
+          this.isSuccessful = false;
+        }, 3000);
+
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.errorMessage = err?.error?.message || this.translate.instant('dictionary.edit.errorMessage');
+      }
+    });
+  }
+
+  protected toggleExportMenu(): void {
+    this.exportMenuOpen = !this.exportMenuOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  protected onDocumentClick(event: MouseEvent): void {
+    if (!this.exportMenuOpen) {
+      return;
+    }
+
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('.export-menu-container')) {
+      return;
+    }
+
+    this.exportMenuOpen = false;
+  }
+
+  protected exportAs(format: 'csv' | 'xlsx' | 'docx'): void {
+    this.exportMenuOpen = false;
+    if (!this.rootFolder?.id) {
+      return;
+    }
+
+    this.dictionaryService.export(this.rootFolder.id, format).subscribe({
+      next: (response) => {
+        const blob = response.body;
+        if (!blob) {
+          this.errorMessage = this.translate.instant('dictionary.edit.export-error');
+          return;
+        }
+
+        const fileName = this.extractFileName(response.headers.get('content-disposition'))
+          || `dictionary-${this.rootFolder?.id}.${format}`;
+        const objectUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = objectUrl;
+        link.download = fileName;
+        link.click();
+        URL.revokeObjectURL(objectUrl);
+      },
+      error: (err) => {
+        this.errorMessage = err?.error?.message || this.translate.instant('dictionary.edit.export-error');
+      }
+    });
+  }
+
+  private extractFileName(contentDisposition: string | null): string | null {
+    if (!contentDisposition) {
+      return null;
+    }
+
+    const utf8Match = /filename\*=UTF-8''([^;]+)/i.exec(contentDisposition);
+    if (utf8Match?.[1]) {
+      return decodeURIComponent(utf8Match[1]);
+    }
+
+    const plainMatch = /filename="?([^";]+)"?/i.exec(contentDisposition);
+    return plainMatch?.[1] || null;
   }
 
 }

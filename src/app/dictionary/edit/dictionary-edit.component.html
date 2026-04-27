@@ -15,10 +15,25 @@
            class="container-fluid p-3 border m-3">{{ 'dictionary.edit.no-cards-added' | translate }}
       </div>
 
-      <div class="mb-3">
+      <div class="mb-3 d-flex align-items-start">
         <button type="button" class="btn btn-outline-primary me-2"
                 (click)="addPair()">{{ 'dictionary.edit.add-pair' | translate }}
         </button>
+        <button type="button" class="btn btn-outline-info me-2"
+                (click)="openBulkImportModal()">{{ 'dictionary.edit.bulk-import' | translate }}
+        </button>
+
+        <div class="btn-group me-2 position-relative export-menu-container" *ngIf="pairs.length">
+          <button type="button" class="btn btn-outline-secondary" (click)="toggleExportMenu()">
+            {{ 'dictionary.edit.export-as' | translate }}
+          </button>
+          <ul class="dropdown-menu show" *ngIf="exportMenuOpen" style="inset: auto auto auto 0;">
+            <li><button type="button" class="dropdown-item" (click)="exportAs('xlsx')">{{ 'dictionary.edit.export-excel' | translate }}</button></li>
+            <li><button type="button" class="dropdown-item" (click)="exportAs('csv')">{{ 'dictionary.edit.export-csv' | translate }}</button></li>
+            <li><button type="button" class="dropdown-item" (click)="exportAs('docx')">{{ 'dictionary.edit.export-word' | translate }}</button></li>
+          </ul>
+        </div>
+
         <button type="submit" class="btn btn-primary"
                 *ngIf=" pairs.length">{{ 'dictionary.edit.save-pair' | translate }}
         </button>
@@ -199,3 +214,65 @@
   </div>
 </div>
 <app-toast #finalDialog></app-toast>
+
+<!-- Bulk Import Modal -->
+<ng-template #bulkImportModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ 'dictionary.edit.bulk-import-title' | translate }}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label for="fileInput" class="form-label">{{ 'dictionary.edit.import-file' | translate }}</label>
+      <input 
+        type="file" 
+        class="form-control" 
+        id="fileInput" 
+        accept=".csv,.xlsx,.xls"
+        (change)="onBulkFileSelected($event)"
+      />
+      <small class="form-text text-muted">{{ 'dictionary.edit.import-file-help' | translate }}</small>
+    </div>
+    <div class="alert alert-info" *ngIf="!bulkImportData.length && !bulkImportFileSelected">
+      {{ 'dictionary.edit.import-select-file' | translate }}
+    </div>
+    <div class="alert alert-secondary" *ngIf="bulkImportFileSelected && !bulkImportData.length">
+      {{ 'dictionary.edit.preview-server-side' | translate }}
+    </div>
+    <div *ngIf="bulkImportData.length" class="mb-3">
+      <h6>{{ 'dictionary.edit.preview' | translate }} ({{ bulkImportData.length }} {{ 'dictionary.edit.records' | translate }})</h6>
+      <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+        <table class="table table-sm table-striped">
+          <thead class="table-light">
+            <tr>
+              <th>{{ 'dictionary.edit.name' | translate }}</th>
+              <th>{{ 'dictionary.edit.value' | translate }}</th>
+              <th>{{ 'dictionary.edit.status' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of bulkImportData" [class.table-danger]="item.status === 'duplicate'">
+              <td class="text-truncate" style="max-width: 150px;">{{ item.name }}</td>
+              <td class="text-truncate" style="max-width: 150px;">{{ item.value }}</td>
+              <td>
+                <span *ngIf="item.status === 'new'" class="badge bg-success">{{ 'dictionary.edit.new' | translate }}</span>
+                <span *ngIf="item.status === 'duplicate'" class="badge bg-warning">{{ 'dictionary.edit.duplicate' | translate }}</span>
+                <span *ngIf="item.status === 'error'" class="badge bg-danger">{{ 'dictionary.edit.error' | translate }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="alert alert-warning" *ngIf="bulkImportDuplicateCount > 0">
+      {{ 'dictionary.edit.import-duplicates-notice' | translate: { count: bulkImportDuplicateCount } }}
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">{{ 'dictionary.edit.cancel' | translate }}</button>
+    <button type="button" class="btn btn-primary" (click)="importBulkData(modal)" [disabled]="!bulkImportFileSelected">
+      {{ 'dictionary.edit.import' | translate }}
+    </button>
+  </div>
+</ng-template>
+

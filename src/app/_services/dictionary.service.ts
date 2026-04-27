@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {environment} from "../environments/environment";
 import {IDictionaryPair} from "../model/name_value.model";
@@ -22,6 +22,23 @@ export class DictionaryService {
 
   save(folder_id:number, dictionary: IDictionaryPair[]) : Observable<any> {
     return this.http.post(API_URL + folder_id + '/', dictionary, httpOptions);
+  }
+
+  bulkImport(folder_id:number, dictionary: IDictionaryPair[]) : Observable<any> {
+    return this.http.post(API_URL + folder_id + '/bulk-import', dictionary, httpOptions);
+  }
+
+  bulkImportFile(folder_id:number, file: File): Observable<any> {
+    const fd = new FormData();
+    fd.append('file', file, file.name);
+    return this.http.post(API_URL + folder_id + '/bulk-import-file', fd);
+  }
+
+  export(folder_id:number, format: 'csv' | 'xlsx' | 'docx'): Observable<HttpResponse<Blob>> {
+    return this.http.get(API_URL + folder_id + '/export?format=' + encodeURIComponent(format), {
+      observe: 'response',
+      responseType: 'blob'
+    });
   }
 
   uploadAttachment(file: File): Observable<{ filename: string }> {

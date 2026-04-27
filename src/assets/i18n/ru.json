@@ -250,6 +250,7 @@
       "errorNameRequired": "Название обязательно",
       "errorNameFileRequired": "Файл или текст должны быть заполнены",
       "errorValueFileRequired": "Файл должен быть выбран",
+      "errorFileUpload": "Ошибка загрузки файла",
       "header": "Карточки папки",
       "cards-saved": "Данные карточек сохранены успешно",
       "name": "Название",
@@ -261,8 +262,31 @@
       "file-placeholder": "Загрузите файл здесь",
       "add-pair": "Добавить новую пару",
       "save-pair": "Сохранить карточки",
-      "no-cards-added": "Не добавлены пары в словарь"
+      "no-cards-added": "Не добавлены пары в словарь",
+      "bulk-import": "Массовый импорт",
+      "export-as": "Экспорт в...",
+      "export-excel": "Excel",
+      "export-csv": "CSV",
+      "export-word": "Word",
+      "bulk-import-title": "Импорт из CSV/XLSX",
+      "import-file": "Выберите файл",
+      "import-file-help": "Поддерживаемые форматы: CSV, XLSX. Первый столбец = Название, Второй столбец = Определение",
+      "import-select-file": "Выберите файл CSV или XLSX для импорта",
+      "preview-server-side": "Предпросмотр доступен только для CSV. XLS/XLSX будет обработан на сервере после импорта.",
+      "preview": "Предпросмотр",
+      "records": "записей",
+      "status": "Статус",
+      "new": "Новое",
+      "duplicate": "Дубликат",
+      "error": "Ошибка",
+      "import-duplicates-notice": "{{count}} записей является дубликатами и будут пропущены",
+      "no-new-records": "Нет новых записей для импорта",
+      "cancel": "Отмена",
+      "import": "Импорт",
+      "unsupported-format": "Неподдерживаемый формат файла",
+      "file-parse-error": "Ошибка при анализе файла. Пожалуйста, проверьте формат.",
+      "export-error": "Не удалось экспортировать словарь",
+      "remove-file": "Удалить файл"
     }
   }
 }
-
