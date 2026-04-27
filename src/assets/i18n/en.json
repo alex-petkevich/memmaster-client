@@ -17,7 +17,32 @@
     "or": "or",
     "login": "login",
     "to-get-funct": "to get access to the Mem Master functionality",
-    "short-stat": "Short statistics"
+    "short-stat": "Short statistics",
+    "learn": {
+      "title": "Enhance Your Vocabulary with MemMaster!",
+      "lead": "Learn new terms efficiently and effectively. Join thousands who have improved their memory skills.",
+      "register-btn": "Register Now",
+      "download-btn": "Download App",
+      "benefits-title": "Benefits of Using MemMaster",
+      "benefit-plans": "Personalized learning plans tailored to your needs.",
+      "benefit-quizzes": "Interactive quizzes to test your progress.",
+      "benefit-library": "Access to a vast library of words and definitions.",
+      "benefit-mobile": "Mobile-friendly interface for learning on the go.",
+      "download-title": "Download the Mobile App",
+      "download-desc": "Available on Android and iOS. Click below to download:",
+      "select-folder": "Select a folder:",
+      "choose-folder": "-- Choose a folder --",
+      "hint-select-folder": "Select a folder to start learning.",
+      "hint-all-remembered": "All cards already marked as remembered, select another folder.",
+      "include-remembered": "Include remembered cards",
+      "tap-to-reveal": "Tap to reveal answer",
+      "cards-left": "card(s) left",
+      "cards-count": "cards",
+      "archive": "Archive",
+      "remembered": "Remembered",
+      "edit-cards": "Edit cards",
+      "next": "Next"
+    }
   },
   "account": {
     "forgot-password": {

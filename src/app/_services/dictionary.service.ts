@@ -34,6 +34,14 @@ export class DictionaryService {
     return this.http.post(API_URL + folder_id + '/bulk-import-file', fd);
   }
 
+  markAsRemembered(folder_id: number, pair_id: number): Observable<any> {
+    return this.http.patch(API_URL + folder_id + '/' + pair_id + '/remembered', {}, httpOptions);
+  }
+
+  markAsArchived(folder_id: number, pair_id: number): Observable<any> {
+    return this.http.patch(API_URL + folder_id + '/' + pair_id + '/archived', {}, httpOptions);
+  }
+
   export(folder_id:number, format: 'csv' | 'xlsx' | 'docx'): Observable<HttpResponse<Blob>> {
     return this.http.get(API_URL + folder_id + '/export?format=' + encodeURIComponent(format), {
       observe: 'response',

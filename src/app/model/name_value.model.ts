@@ -18,6 +18,7 @@ export interface IDictionaryPair {
   value_img?: string;
 
   is_remembered?: boolean;
+  is_archived?: boolean;
 }
 
 export interface IDictionary {

@@ -1,0 +1,139 @@
+.learn-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.folder-select {
+  max-width: 400px;
+}
+
+.hint-box {
+  padding: 3rem 1rem;
+}
+
+.card-wrapper {
+  min-height: 340px;
+}
+
+.flashcard {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+  padding: 2.5rem 2rem 1.5rem;
+  width: 100%;
+  max-width: 560px;
+  text-align: center;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.flashcard-name {
+  cursor: default;
+
+  &.clickable {
+    cursor: pointer;
+  }
+}
+
+.card-name-text {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.card-value-text {
+  font-size: 1.5rem;
+  color: #0d6efd;
+  font-weight: 500;
+}
+
+.card-img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.card-video {
+  width: 100%;
+  max-height: 280px;
+  border-radius: 8px;
+  background: #000;
+}
+
+.card-file-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #0d6efd;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.card-file-link:hover {
+  text-decoration: underline;
+}
+
+.tap-hint {
+  font-size: 0.8rem;
+}
+
+.flashcard-value {
+  text-align: center;
+}
+
+.flashcard-actions {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1rem;
+}
+
+.action-link {
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  transition: background 0.15s;
+
+  &.remembered-link {
+    color: #198754;
+
+    &:hover {
+      background: #d1e7dd;
+    }
+  }
+
+  &.next-link {
+    color: #0d6efd;
+
+    &:hover {
+      background: #cfe2ff;
+    }
+  }
+
+  &.archive-link {
+    color: #6c757d;
+
+    &:hover {
+      background: #e9ecef;
+    }
+  }
+
+  &.edit-link {
+    color: #6f42c1;
+
+    &:hover {
+      background: #e2d9f3;
+    }
+  }
+}
+
+.cards-remaining {
+  font-size: 0.8rem;
+}
+

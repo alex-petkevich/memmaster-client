@@ -1,52 +1,152 @@
-<div class="jumbotron text-center bg-light p-5 rounded">
-  <h1 class="display-4">Enhance Your Vocabulary with MemMaster!</h1>
-  <p class="lead">Learn new terms efficiently and effectively. Join thousands who have improved their memory skills.</p>
-  <hr class="my-4">
-  <a class="btn btn-primary btn-lg me-2" href="/register" role="button"><i class="fas fa-user-plus"></i> Register Now</a>
-  <a class="btn btn-secondary btn-lg" href="#download" role="button"><i class="fas fa-mobile-alt"></i> Download App</a>
-</div>
-
-<section id="benefits" class="mt-5">
-  <h2>Benefits of Using WordMaster</h2>
-  <div class="row">
-    <div class="col-md-3 text-center">
-      <i class="fas fa-brain benefit-icon"></i>
-      <p>Personalized learning plans tailored to your needs.</p>
-    </div>
-    <div class="col-md-3 text-center">
-      <i class="fas fa-puzzle-piece benefit-icon"></i>
-      <p>Interactive quizzes to test your progress.</p>
-    </div>
-    <div class="col-md-3 text-center">
-      <i class="fas fa-book-open benefit-icon"></i>
-      <p>Access to a vast library of words and definitions.</p>
-    </div>
-    <div class="col-md-3 text-center">
-      <i class="fas fa-mobile-alt benefit-icon"></i>
-      <p>Mobile-friendly interface for learning on the go.</p>
-    </div>
+<!-- Public landing page for non-logged-in users -->
+<ng-container *ngIf="!isLoggedIn">
+  <div class="jumbotron text-center bg-light p-5 rounded">
+    <h1 class="display-4">{{ 'home.learn.title' | translate }}</h1>
+    <p class="lead">{{ 'home.learn.lead' | translate }}</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg me-2" href="/register" role="button"><i class="fas fa-user-plus"></i> {{ 'home.learn.register-btn' | translate }}</a>
+    <a class="btn btn-secondary btn-lg" href="#download" role="button"><i class="fas fa-mobile-alt"></i> {{ 'home.learn.download-btn' | translate }}</a>
   </div>
-</section>
 
-<!--<section id="register" class="mt-5">
-  <h2>Register for Free</h2>
-  <form>
-    <div class="form-group">
-      <label for="email">Email address</label>
-      <input type="email" class="form-control" id="email" placeholder="Enter email">
+  <section id="benefits" class="mt-5">
+    <h2>{{ 'home.learn.benefits-title' | translate }}</h2>
+    <div class="row">
+      <div class="col-md-3 text-center">
+        <i class="fas fa-brain benefit-icon"></i>
+        <p>{{ 'home.learn.benefit-plans' | translate }}</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <i class="fas fa-puzzle-piece benefit-icon"></i>
+        <p>{{ 'home.learn.benefit-quizzes' | translate }}</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <i class="fas fa-book-open benefit-icon"></i>
+        <p>{{ 'home.learn.benefit-library' | translate }}</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <i class="fas fa-mobile-alt benefit-icon"></i>
+        <p>{{ 'home.learn.benefit-mobile' | translate }}</p>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" class="form-control" id="password" placeholder="Password">
-    </div>
-    <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Sign Up</button>
-  </form>
-</section>-->
+  </section>
 
-<section id="download" class="mt-5 text-center">
-  <h2>Download the Mobile App</h2>
-  <img src="https://via.placeholder.com/150" alt="Mobile App" class="img-fluid mb-3">
-  <p>Available on Android and iOS. Click below to download:</p>
-  <a href="#" class="btn btn-success me-2"><i class="fab fa-android"></i> Download for Android</a>
-  <a href="#" class="btn btn-info"><i class="fab fa-apple"></i> Download for iOS</a>
-</section>
+  <section id="download" class="mt-5 text-center">
+    <h2>{{ 'home.learn.download-title' | translate }}</h2>
+    <p>{{ 'home.learn.download-desc' | translate }}</p>
+    <a href="#" class="btn btn-success me-2"><i class="fab fa-android"></i> Download for Android</a>
+    <a href="#" class="btn btn-info"><i class="fab fa-apple"></i> Download for iOS</a>
+  </section>
+</ng-container>
+
+<!-- Dashboard for logged-in users -->
+<ng-container *ngIf="isLoggedIn">
+  <div class="learn-container">
+
+    <!-- Folder selector -->
+    <div class="folder-selector mb-4">
+      <label for="folderSelect" class="form-label fw-semibold">
+        <i class="fas fa-folder-open me-1"></i> {{ 'home.learn.select-folder' | translate }}
+      </label>
+      <select id="folderSelect" class="form-select folder-select" (change)="onFolderChange($any($event.target).value)">
+        <option value="">{{ 'home.learn.choose-folder' | translate }}</option>
+        <option *ngFor="let folder of flatFolders" [value]="folder.id">{{ getFolderIndent(folder.depth) }}{{ folder.label }} ({{ getFolderCount(folder) }} {{ 'home.learn.cards-count' | translate }})</option>
+      </select>
+
+      <div class="form-check form-switch mt-3">
+        <input
+          id="includeRememberedSwitch"
+          class="form-check-input"
+          type="checkbox"
+          [checked]="includeRemembered"
+          (change)="onIncludeRememberedChange($any($event.target).checked)"
+        >
+        <label class="form-check-label" for="includeRememberedSwitch">
+          {{ 'home.learn.include-remembered' | translate }}
+        </label>
+      </div>
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="loadingCards" class="text-center mt-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- No folder selected hint -->
+    <div *ngIf="!loadingCards && selectedFolderId === null" class="hint-box text-center mt-5">
+      <i class="fas fa-hand-point-up fa-2x text-muted mb-3"></i>
+      <p class="text-muted fs-5">{{ 'home.learn.hint-select-folder' | translate }}</p>
+    </div>
+
+    <!-- All cards remembered hint -->
+    <div *ngIf="!loadingCards && selectedFolderId !== null && currentCard === null" class="hint-box text-center mt-5">
+      <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+      <p class="text-success fs-5">{{ 'home.learn.hint-all-remembered' | translate }}</p>
+    </div>
+
+    <!-- Flashcard -->
+    <div *ngIf="!loadingCards && currentCard !== null" class="card-wrapper d-flex justify-content-center align-items-center">
+      <div class="flashcard">
+
+        <!-- Card name (always visible) -->
+        <div class="flashcard-name" (click)="revealValue()" [class.clickable]="!showValue">
+          <ng-container *ngIf="currentCard.name_type === 'FILE' && currentCard.name_img; else nameText">
+            <ng-container [ngSwitch]="getAttachmentKind(currentCard.name_img)">
+              <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.name_img)" alt="card name" class="card-img" />
+              <video *ngSwitchCase="'video'" class="card-video" controls preload="metadata" playsinline [src]="getBlobUrl(currentCard.name_img)">
+              </video>
+              <a *ngSwitchDefault href="" (click)="$event.preventDefault(); openAttachment(currentCard.name_img)" class="card-file-link">
+                  <i class="fas fa-download me-1"></i>{{ getAttachmentFileName(currentCard.name_img) }}
+              </a>
+            </ng-container>
+          </ng-container>
+          <ng-template #nameText>
+            <span class="card-name-text">{{ currentCard.name }}</span>
+          </ng-template>
+          <div *ngIf="!showValue" class="tap-hint text-muted small mt-2">
+            <i class="fas fa-hand-pointer me-1"></i>{{ 'home.learn.tap-to-reveal' | translate }}
+          </div>
+        </div>
+
+        <!-- Card value (revealed on click) -->
+        <div *ngIf="showValue" class="flashcard-value mt-3 pt-3 border-top">
+          <ng-container *ngIf="currentCard.value_type === 'FILE' && currentCard.value_img; else valueText">
+            <ng-container [ngSwitch]="getAttachmentKind(currentCard.value_img)">
+              <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.value_img)" alt="card value" class="card-img" />
+              <video *ngSwitchCase="'video'" class="card-video" controls preload="metadata" playsinline [src]="getBlobUrl(currentCard.value_img)">
+              </video>
+              <a *ngSwitchDefault href="" (click)="$event.preventDefault(); openAttachment(currentCard.value_img)" class="card-file-link">
+                  <i class="fas fa-download me-1"></i>{{ getAttachmentFileName(currentCard.value_img) }}
+              </a>
+            </ng-container>
+          </ng-container>
+          <ng-template #valueText>
+            <span class="card-value-text">{{ currentCard.value }}</span>
+          </ng-template>
+        </div>
+
+        <!-- Actions -->
+        <div class="flashcard-actions d-flex justify-content-between align-items-center mt-4">
+          <a class="action-link archive-link" (click)="archiveCard()">
+            <i class="fas fa-archive me-1"></i>{{ 'home.learn.archive' | translate }}
+          </a>
+          <a class="action-link remembered-link" (click)="markRemembered()">
+            <i class="fas fa-check me-1"></i>{{ 'home.learn.remembered' | translate }}
+          </a>
+          <span class="cards-remaining text-muted small">{{ cards.length + 1 }} {{ 'home.learn.cards-left' | translate }}</span>
+          <a class="action-link next-link" (click)="nextCard()">
+            {{ 'home.learn.next' | translate }} <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 text-align-right" *ngIf="selectedFolderId !== null">
+      <button type="button" class="btn btn-outline-primary btn-sm" (click)="editCurrentFolderCards()">
+        <i class="fas fa-edit me-1"></i>{{ 'home.learn.edit-cards' | translate }}
+      </button>
+    </div>
+
+  </div>
+</ng-container>
+
