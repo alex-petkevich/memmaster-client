@@ -14,7 +14,20 @@
       <div *ngIf="!pairs.length"
            class="container-fluid p-3 border m-3">{{ 'dictionary.edit.no-cards-added' | translate }}
       </div>
-      <div *ngFor="let p of pairs; let i = index" class="mb-3 border rounded p-3">
+
+      <div class="mb-3">
+        <button type="button" class="btn btn-outline-primary me-2"
+                (click)="addPair()">{{ 'dictionary.edit.add-pair' | translate }}
+        </button>
+        <button type="submit" class="btn btn-primary"
+                *ngIf=" pairs.length">{{ 'dictionary.edit.save-pair' | translate }}
+        </button>
+      </div>
+
+      <div class="alert alert-success" *ngIf="isSuccessful">{{ 'dictionary.edit.cards-saved' | translate }}</div>
+      <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+      
+      <div *ngFor="let p of pairs; let i = index; trackBy: trackByPair" class="mb-3 border rounded p-3">
         <div class="row g-2 align-items-end">
 
           <!-- Name type selector and input/file -->
@@ -22,7 +35,7 @@
             <label class="form-label" for="name_type">{{ 'dictionary.edit.name' | translate }}</label>
             <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_src) }})</span>
             <div class="input-group">
-              <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{i}}">
+              <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{p.uiId}}">
                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
                 <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
               </select>
@@ -33,18 +46,57 @@
                   required
                   type="text"
                   [(ngModel)]="p.name"
-                  name="name ̰{{i}}"
+                  name="nameText{{p.uiId}}"
                   (change)="translateName(i)"
                   placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
               />
 
-              <input
-                  *ngIf="p.name_type === 'FILE'"
-                  class="form-control text"
-                  type="file"
-                  (change)="onNameFileChange(i, $event)"
-                  name="nameFile{{i}}"
-              />
+              <!-- Name FILE input or existing attachment preview -->
+              <ng-container *ngIf="p.name_type === 'FILE'">
+                <ng-container *ngIf="p.name_img; else nameFileInput">
+                  <div class="input-group">
+                    <ng-template #nameImgPreview>
+                      <span *ngIf="isImagePath(p.name_img) && blobUrlCache.get(p.name_img)" class="file-preview-img" 
+                            [ngStyle]="{'background-image': 'url(' + blobUrlCache.get(p.name_img) + ')'}">
+                      </span>
+                      <span *ngIf="isImagePath(p.name_img) && !blobUrlCache.get(p.name_img)" class="file-preview-img-loading">
+                        Loading...
+                      </span>
+                      <span *ngIf="!isImagePath(p.name_img)"><i class="bi bi-file-earmark me-1"></i>{{ p.name }}</span>
+                    </ng-template>
+                    <button *ngIf="isImagePath(p.name_img)"
+                            type="button"
+                            class="form-control text-truncate d-flex align-items-center"
+                            [ngbTooltip]="nameImgPreview" placement="bottom" tooltipClass="file-preview-tooltip" container="body"
+                            (click)="openAttachment(p.name_img)">
+                      <img *ngIf="getBlobUrl(p.name_img) as nameBlobUrl; else nameLoadingIcon"
+                           [src]="nameBlobUrl" alt="" class="me-2" style="max-height:28px;max-width:60px;object-fit:contain;">
+                      <ng-template #nameLoadingIcon>
+                        <i class="bi bi-hourglass-split me-1"></i>
+                      </ng-template>
+                      {{ p.name }}
+                    </button>
+                    <button *ngIf="!isImagePath(p.name_img)"
+                            type="button"
+                            class="form-control text-truncate d-flex align-items-center"
+                            [ngbTooltip]="nameImgPreview" placement="bottom" tooltipClass="file-preview-tooltip" container="body"
+                            (click)="openAttachment(p.name_img)">
+                      <i class="bi bi-file-earmark me-1"></i>{{ p.name }}
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" title="{{ 'dictionary.edit.remove-file' | translate }}" (click)="clearNameImg(i)">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </div>
+                </ng-container>
+                <ng-template #nameFileInput>
+                  <input
+                      class="form-control text"
+                      type="file"
+                      (change)="onNameFileChange(i, $event)"
+                      name="nameFile{{p.uiId}}"
+                  />
+                </ng-template>
+              </ng-container>
             </div>
           </div>
 
@@ -58,7 +110,7 @@
             <label class="form-label" for="value_type">{{ 'dictionary.edit.value' | translate }}</label>
             <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_dest) }})</span>
             <div class="input-group">
-              <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{i}}">
+              <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{p.uiId}}">
                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
                 <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
               </select>
@@ -68,31 +120,69 @@
                   class="form-control text"
                   type="text"
                   [(ngModel)]="p.value"
-                  name="valueText{{i}}"
+                  name="valueText{{p.uiId}}"
                   (change)="translateValue(i)"
                   placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
               />
 
-              <input
-                  *ngIf="p.value_type === 'FILE'"
-                  class="form-control text"
-                  type="file"
-                  (change)="onFileChange(i, $event)"
-                  name="valueFile{{i}}"
-                  placeholder="{{ 'dictionary.edit.file-placeholder' | translate }}"
-              />
+              <!-- Value FILE input or existing attachment preview -->
+              <ng-container *ngIf="p.value_type === 'FILE'">
+                <ng-container *ngIf="p.value_img; else valueFileInput">
+                  <div class="input-group">
+                    <ng-template #valueImgPreview>
+                      <span *ngIf="isImagePath(p.value_img) && blobUrlCache.get(p.value_img)" class="file-preview-img"
+                            [ngStyle]="{'background-image': 'url(' + blobUrlCache.get(p.value_img) + ')'}">
+                      </span>
+                      <span *ngIf="isImagePath(p.value_img) && !blobUrlCache.get(p.value_img)" class="file-preview-img-loading">
+                        Loading...
+                      </span>
+                      <span *ngIf="!isImagePath(p.value_img)"><i class="bi bi-file-earmark me-1"></i>{{ p.value }}</span>
+                    </ng-template>
+                    <button *ngIf="isImagePath(p.value_img)"
+                            type="button"
+                            class="form-control text-truncate d-flex align-items-center"
+                            [ngbTooltip]="valueImgPreview" placement="bottom" tooltipClass="file-preview-tooltip" container="body"
+                            (click)="openAttachment(p.value_img)">
+                      <img *ngIf="getBlobUrl(p.value_img) as valueBlobUrl; else valueLoadingIcon"
+                           [src]="valueBlobUrl" alt="" class="me-2" style="max-height:28px;max-width:60px;object-fit:contain;">
+                      <ng-template #valueLoadingIcon>
+                        <i class="bi bi-hourglass-split me-1"></i>
+                      </ng-template>
+                      {{ p.value }}
+                    </button>
+                    <button *ngIf="!isImagePath(p.value_img)"
+                            type="button"
+                            class="form-control text-truncate d-flex align-items-center"
+                            [ngbTooltip]="valueImgPreview" placement="bottom" tooltipClass="file-preview-tooltip" container="body"
+                            (click)="openAttachment(p.value_img)">
+                      <i class="bi bi-file-earmark me-1"></i>{{ p.value }}
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" title="{{ 'dictionary.edit.remove-file' | translate }}" (click)="clearValueImg(i)">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </div>
+                </ng-container>
+                <ng-template #valueFileInput>
+                  <input
+                      class="form-control text"
+                      type="file"
+                      (change)="onFileChange(i, $event)"
+                      name="valueFile{{p.uiId}}"
+                  />
+                </ng-template>
+              </ng-container>
             </div>
           </div>
           <!-- Is remembered checkbox -->
           <div class="col-md-auto">
             <div class="row">
               <div class="col">
-                <label class="form-label" for="isRemembered{{i}}">
+                <label class="form-label" for="isRemembered{{p.uiId}}">
                   {{ 'dictionary.edit.remembered' | translate }}
                 </label>
                 <div class="form-check form-switch sw-remembered">
-                  <input class="form-check-input sw-input" type="checkbox" id="isRemembered{{i}}"
-                         [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{i}}">
+                  <input class="form-check-input sw-input" type="checkbox" id="isRemembered{{p.uiId}}"
+                         [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{p.uiId}}">
                 </div>
               </div>
               <div class="col d-flex align-items-end">
@@ -105,17 +195,6 @@
         </div>
       </div>
 
-      <div class="mb-3">
-        <button type="button" class="btn btn-outline-primary me-2"
-                (click)="addPair()">{{ 'dictionary.edit.add-pair' | translate }}
-        </button>
-        <button type="submit" class="btn btn-primary"
-                *ngIf=" pairs.length">{{ 'dictionary.edit.save-pair' | translate }}
-        </button>
-      </div>
-
-      <div class="alert alert-success" *ngIf="isSuccessful">{{ 'dictionary.edit.cards-saved' | translate }}</div>
-      <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
     </form>
   </div>
 </div>

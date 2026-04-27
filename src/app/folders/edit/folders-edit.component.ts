@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {AuthService} from "../../_services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {Location} from "@angular/common";
 import { ToastComponent } from "../../shared-components/toast/toast.component";
 import { FoldersService } from 'src/app/_services/folders.service';
 import { IFolder } from 'src/app/model/folder.model';
@@ -38,6 +39,7 @@ export class FoldersEditComponent implements OnInit {
               private readonly foldersService: FoldersService,
               private readonly route: ActivatedRoute,
               private readonly router: Router,
+              private readonly location: Location,
               private readonly directory: DirectoryService) { }
 
   async ngOnInit(): Promise<void> {
@@ -87,10 +89,8 @@ export class FoldersEditComponent implements OnInit {
     savedFolder.active = this.form.active !== undefined ? this.form.active : true;
 
     this.foldersService.save(savedFolder).subscribe({
-      next: data => {
-        this.router.navigate(['/folders']).then(() => {
-          window.location.reload();
-        });
+      next: _ => {
+        this.location.back();
       },
       error: err => {
         this.errorMessage = err?.error?.message || err?.message;
@@ -101,5 +101,9 @@ export class FoldersEditComponent implements OnInit {
 
   onIconPickerSelect(icon: string) {
     this.form.icon = icon;
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

@@ -97,8 +97,8 @@
 
          <div class="mb-1">
             <button class="btn btn-primary">{{ 'folders.edit.save-data' | translate  }}</button>&nbsp;
-            <button class="btn btn-secondary"
-                    [routerLink]="['/folders']">{{ 'folders.edit.cancel' | translate }}</button>
+            <button type="button" class="btn btn-secondary"
+                    (click)="goBack()">{{ 'folders.edit.cancel' | translate }}</button>
          </div>
       </form>
       <div class="alert alert-success" *ngIf="isSuccessful">
