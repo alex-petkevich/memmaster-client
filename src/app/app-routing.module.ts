@@ -25,6 +25,7 @@ const routes: Routes = [
   { path: 'account/password-reset', component: PasswordResetComponent },
   { path: 'admin', component: BoardAdminComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'shared/:publicFolderUuid', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'register', component: RegisterComponent },

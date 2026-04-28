@@ -32,4 +32,12 @@ export class SettingsService {
   saveGlobalSettings(settings: ISettingsInfo): Observable<any> {
     return this.http.post(API_URL + 'global/', settings, httpOptions);
   }
+
+  saveHomePreferences(preferences: { [key: string]: string }): Observable<any> {
+    return this.http.post(API_URL + 'home-preferences', preferences, httpOptions);
+  }
+
+  getHomePreferences(): Observable<any> {
+    return this.http.get(API_URL + 'home-preferences', { responseType: 'json' });
+  }
 }

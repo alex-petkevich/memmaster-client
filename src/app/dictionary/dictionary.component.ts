@@ -48,7 +48,7 @@ export class DictionaryComponent implements OnInit {
 
     private loadFolders() {
         this.loadProgress = true;
-            this.foldersService.list('', '', '', true)
+            this.foldersService.listMine('', '', '', true)
             .pipe(
                 finalize(() => {
                     this.loadProgress = false;

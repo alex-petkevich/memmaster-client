@@ -10,6 +10,9 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto" routerLinkActive="active">
           <li class="nav-item" *ngIf="isLoggedIn">
+            <a href="/" class="nav-link" [ngClass]="{'active': path === 'home'}" *ngIf="isLoggedIn" routerLink="home">{{ 'home-nav' | translate }}</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn">
             <a href="/cards" class="nav-link" [ngClass]="{'active': path === 'dictionary'}" *ngIf="isLoggedIn" routerLink="dictionary">{{ 'my-cards' | translate }}</a>
           </li>
           <li class="nav-item" *ngIf="isLoggedIn">

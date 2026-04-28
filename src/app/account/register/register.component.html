@@ -76,6 +76,10 @@
       <div class="mb-1">
         <button class="btn btn-primary btn-block">{{ 'account.register.signup' | translate  }}</button>
       </div>
+      <div class="text-center my-3 text-muted">{{ 'account.login.or' | translate }}</div>
+      <div class="d-flex justify-content-center mb-2">
+        <div id="googleRegisterButton"></div>
+      </div>
       <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
         {{ 'account.register.signup-failed' | translate  }}!<br />{{ errorMessage }}
       </div>

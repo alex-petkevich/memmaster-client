@@ -23,6 +23,18 @@ export class FoldersService {
     return this.http.get(API_URL + '?name='+name+'&uuid='+uuid+'&parent_id='+parent_id+'&active='+active+'&sort='+sort + sortOrder, { responseType: 'json' });
   }
 
+  listMine(name:string, uuid: string, parent_id: string, active: boolean, sort = "", order = "") : Observable<any> {
+    let sortOrder = '';
+    if (order == 'desc' && sort) {
+      sortOrder = '-desc';
+    }
+    return this.http.get(API_URL + 'mine?name='+name+'&uuid='+uuid+'&parent_id='+parent_id+'&active='+active+'&sort='+sort + sortOrder, { responseType: 'json' });
+  }
+
+  getSharedByUuid(uuid: string): Observable<any> {
+    return this.http.get(API_URL + 'shared/' + encodeURIComponent(uuid), { responseType: 'json' });
+  }
+
   get(id: Number) : Observable<any> {
     return this.http.get(API_URL + id, { responseType: 'json' });
   }

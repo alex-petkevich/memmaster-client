@@ -1,6 +1,6 @@
 {
   "title": "Mem Master",
-  "home-nav": "Home",
+  "home-nav": "Practice",
   "admin": "Admin Board",
   "my-cards": "Cards",
   "my-folders": "Folders",
@@ -41,6 +41,7 @@
       "archive": "Archive",
       "remembered": "Remembered",
       "edit-cards": "Edit cards",
+      "view-cards": "View all cards",
       "next": "Next"
     }
   },
@@ -60,6 +61,7 @@
       "username-required": "Username is required!",
       "password": "Password",
       "login": "Login",
+      "or": "or",
       "password-required": "Password is required",
       "password-6-chars": "Password must be at least 6 characters",
       "forgot-password": "Forgot Password",
@@ -67,7 +69,8 @@
       "activated-successfully": "Account activated successfully. Please check Email to create a new password and login",
       "activation-key-not-exists": "Activation key not exists",
       "create-a-new-password": "Create a new password",
-      "problem": "Problem"
+      "problem": "Problem",
+      "google-problem": "Google sign-in failed"
     },
     "reset": {
       "success": "Password changed successfully",
@@ -229,6 +232,7 @@
     "actions": "Actions",
     "delete": "Delete",
     "public-folder": "Shared folder - click to copy link",
+    "shared-link-copied": "Shared link copied to clipboard",
     "show_filter": "Filter",
     "apply_filter": "Apply",
     "reset_filter": "Reset",

@@ -1,6 +1,11 @@
 .bg-nav {
   background-color: #E7E7E9;
 }
+
+.bg-nav .nav-link.active {
+  text-decoration: underline;
+}
+
 .dd-lang {
   left: -66px !important;
 }

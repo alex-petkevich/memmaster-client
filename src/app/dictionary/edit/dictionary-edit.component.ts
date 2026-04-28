@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild, ChangeDetectorRef, TemplateRef, HostListener} from '@angular/core';
 import {AuthService} from "../../_services/auth.service";
+import {TokenStorageService} from "../../_services/token-storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastComponent} from "../../shared-components/toast/toast.component";
 import {TranslateService} from "@ngx-translate/core";
@@ -55,11 +56,14 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
   ];
   languages: IDirectory[] | undefined = [];
 
+  isOwner: boolean = true;
+
   errorMessage: string = "";
   @ViewChild("finalDialog") toastComponent: ToastComponent | undefined;
   @ViewChild("bulkImportModal") bulkImportModalTemplate: TemplateRef<any> | undefined;
 
   constructor(private readonly auth: AuthService,
+              private readonly tokenStorage: TokenStorageService,
               private readonly foldersService: FoldersService,
               private readonly dictionaryService: DictionaryService,
               private readonly extTranslatorService: ExtTranslatorService,
@@ -99,6 +103,8 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
               next: data => {
                 if (data) {
                   this.rootFolder = data;
+                  const currentUserId = this.tokenStorage.getUser()?.id;
+                  this.isOwner = currentUserId != null && data.user_id === currentUserId;
                 }
               }
             });

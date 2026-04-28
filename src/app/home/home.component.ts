@@ -2,10 +2,12 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { TokenStorageService } from "../_services/token-storage.service";
 import { FoldersService } from "../_services/folders.service";
 import { DictionaryService } from "../_services/dictionary.service";
+import { SettingsService } from "../_services/settings.service";
 import { IFolder } from "../model/folder.model";
 import { IDictionaryPair } from "../model/name_value.model";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
+import { Subscription } from "rxjs";
 
 export interface IFlatFolder {
   id: number;
@@ -34,34 +36,124 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentCard: IDictionaryPair | null = null;
   showValue: boolean = false;
   loadingCards: boolean = false;
+  isSharedMode: boolean = false;
+  isSharedFolderOwner: boolean = false;
+  sharedFolderUuid: string | null = null;
   private readonly blobUrlCache = new Map<string, string>();
   private readonly failedBlobPaths = new Set<string>();
+  private routeSubscription: Subscription | null = null;
 
   constructor(
     private tokenStorageService: TokenStorageService,
     private foldersService: FoldersService,
     public dictionaryService: DictionaryService,
+    private settingsService: SettingsService,
     private router: Router,
+    private route: ActivatedRoute,
     private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
-    if (this.isLoggedIn) {
-      this.loadFolders();
-    }
+    this.routeSubscription = this.route.paramMap.subscribe(params => {
+      this.initializeByRoute(params.get('publicFolderUuid'));
+    });
   }
 
   ngOnDestroy(): void {
+    this.routeSubscription?.unsubscribe();
     this.blobUrlCache.forEach(url => URL.revokeObjectURL(url));
     this.blobUrlCache.clear();
   }
 
+  private initializeByRoute(publicFolderUuid: string | null): void {
+    this.resetCardState();
+    if (!this.isLoggedIn) {
+      return;
+    }
+
+    if (publicFolderUuid) {
+      this.isSharedMode = true;
+      this.sharedFolderUuid = publicFolderUuid;
+      this.includeRemembered = false;
+      this.loadSharedFolder(publicFolderUuid);
+      return;
+    }
+
+    this.isSharedMode = false;
+    this.sharedFolderUuid = null;
+    this.loadFolders();
+    this.loadHomePreferences();
+  }
+
+  private resetCardState(): void {
+    this.flatFolders = [];
+    this.selectedFolderId = null;
+    this.isSharedFolderOwner = false;
+    this.allCards = [];
+    this.cards = [];
+    this.currentCard = null;
+    this.showValue = false;
+    this.loadingCards = false;
+  }
+
+  private loadHomePreferences(): void {
+    this.settingsService.getHomePreferences().subscribe({
+      next: (prefs: any) => {
+        this.includeRemembered = prefs.includeRemembered === 'true';
+
+        if (prefs.selectedFolderId && prefs.selectedFolderId !== '') {
+          this.selectedFolderId = parseInt(prefs.selectedFolderId, 10);
+        }
+      }
+    });
+  }
+
+  private saveHomePreferences(): void {
+    const preferences = {
+      'home_selected_folder_id': this.selectedFolderId?.toString() ?? '',
+      'home_include_remembered': this.includeRemembered.toString()
+    };
+    this.settingsService.saveHomePreferences(preferences).subscribe();
+  }
+
   private loadFolders(): void {
-    this.foldersService.list('', '', '', true).subscribe({
+    this.foldersService.listMine('', '', '', true).subscribe({
       next: (data: IFolder[]) => {
         this.flatFolders = this.flattenTree(data, 0);
+
+        if (this.selectedFolderId == null) {
+          return;
+        }
+
+        const selectedFolderVisible = this.flatFolders.some(folder => folder.id === this.selectedFolderId);
+        if (!selectedFolderVisible) {
+          this.selectedFolderId = null;
+          this.saveHomePreferences();
+          return;
+        }
+
+        this.loadCardsForSelectedFolder();
+      }
+    });
+  }
+
+  private loadSharedFolder(uuid: string): void {
+    this.loadingCards = true;
+    this.foldersService.getSharedByUuid(uuid).subscribe({
+      next: (folder: IFolder) => {
+        this.selectedFolderId = folder?.id ?? null;
+        if (this.selectedFolderId) {
+          const currentUserId = this.tokenStorageService.getUser()?.id;
+          this.isSharedFolderOwner = currentUserId != null && folder.user_id === currentUserId;
+          this.loadCardsForSelectedFolder();
+          return;
+        }
+        this.loadingCards = false;
+      },
+      error: () => {
+        this.loadingCards = false;
       }
     });
   }
@@ -202,8 +294,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFolderChange(folderId: string): void {
-    this.selectedFolderId = folderId ? +folderId : null;
+  onFolderChange(folderId: number | null): void {
+    if (this.isSharedMode) {
+      return;
+    }
+    this.selectedFolderId = folderId;
     this.allCards = [];
     this.cards = [];
     this.currentCard = null;
@@ -212,13 +307,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.selectedFolderId) {
       this.loadCardsForSelectedFolder();
     }
+    this.saveHomePreferences();
   }
 
   onIncludeRememberedChange(checked: boolean): void {
+    if (this.isSharedMode) {
+      return;
+    }
     this.includeRemembered = checked;
     if (this.selectedFolderId) {
       this.loadCardsForSelectedFolder();
     }
+    this.saveHomePreferences();
   }
 
   private loadCardsForSelectedFolder(): void {
@@ -279,6 +379,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   editCurrentFolderCards(): void {
+    if (this.isSharedMode || !this.selectedFolderId) {
+      return;
+    }
+    this.router.navigate(['/dictionary', this.selectedFolderId, 'edit']);
+  }
+
+  viewSharedFolderCards(): void {
     if (!this.selectedFolderId) {
       return;
     }

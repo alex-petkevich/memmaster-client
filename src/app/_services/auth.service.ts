@@ -24,6 +24,12 @@ export class AuthService {
     }, httpOptions);
   }
 
+  loginWithGoogle(idToken: string): Observable<any> {
+    return this.http.post(environment.backendUrl + AUTH_API + 'oauth/google', {
+      idToken
+    }, httpOptions);
+  }
+
   register(username: string, email: string, lastname: string, firstname: string): Observable<any> {
     return this.http.post(environment.backendUrl + AUTH_API + 'signup', {
       username,

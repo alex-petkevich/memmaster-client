@@ -5,8 +5,8 @@
       <h3 *ngIf="rootFolder != undefined">
         <a [routerLink]="['/dictionary']">{{ 'dictionary.edit.header' | translate }}</a>: <span class="me-2"
                                                                                                 *ngIf="rootFolder.icon"><i
-          class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b> <a
-          [routerLink]="['/folders', rootFolder.id, 'edit']"><i class="bi bi-gear ms-1"></i></a>
+          class="bi bi-{{rootFolder.icon}}"></i></span> <b>{{ rootFolder.name }}</b>
+        <a *ngIf="isOwner" [routerLink]="['/folders', rootFolder.id, 'edit']"><i class="bi bi-gear ms-1"></i></a>
       </h3>
     </header>
 
@@ -16,10 +16,10 @@
       </div>
 
       <div class="mb-3 d-flex align-items-start">
-        <button type="button" class="btn btn-outline-primary me-2"
+        <button type="button" class="btn btn-outline-primary me-2" *ngIf="isOwner"
                 (click)="addPair()">{{ 'dictionary.edit.add-pair' | translate }}
         </button>
-        <button type="button" class="btn btn-outline-info me-2"
+        <button type="button" class="btn btn-outline-info me-2" *ngIf="isOwner"
                 (click)="openBulkImportModal()">{{ 'dictionary.edit.bulk-import' | translate }}
         </button>
 
@@ -35,7 +35,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary"
-                *ngIf=" pairs.length">{{ 'dictionary.edit.save-pair' | translate }}
+                *ngIf="isOwner && pairs.length">{{ 'dictionary.edit.save-pair' | translate }}
         </button>
       </div>
 
@@ -50,7 +50,7 @@
             <label class="form-label" for="name_type">{{ 'dictionary.edit.name' | translate }}</label>
             <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_src) }})</span>
             <div class="input-group">
-              <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{p.uiId}}">
+              <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{p.uiId}}" [disabled]="!isOwner">
                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
                 <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
               </select>
@@ -64,6 +64,7 @@
                   name="nameText{{p.uiId}}"
                   (change)="translateName(i)"
                   placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
+                  [readonly]="!isOwner"
               />
 
               <!-- Name FILE input or existing attachment preview -->
@@ -98,13 +99,13 @@
                             (click)="openAttachment(p.name_img)">
                       <i class="bi bi-file-earmark me-1"></i>{{ p.name }}
                     </button>
-                    <button type="button" class="btn btn-outline-danger" title="{{ 'dictionary.edit.remove-file' | translate }}" (click)="clearNameImg(i)">
+                    <button *ngIf="isOwner" type="button" class="btn btn-outline-danger" title="{{ 'dictionary.edit.remove-file' | translate }}" (click)="clearNameImg(i)">
                       <i class="bi bi-x"></i>
                     </button>
                   </div>
                 </ng-container>
                 <ng-template #nameFileInput>
-                  <input
+                  <input *ngIf="isOwner"
                       class="form-control text"
                       type="file"
                       (change)="onNameFileChange(i, $event)"
@@ -116,7 +117,7 @@
           </div>
 
           <div class="col-md-auto justify-content-center d-flex">
-            <button class="btn btn-outline-primary" type="button" (click)="exchangePair(i)"><em
+            <button *ngIf="isOwner" class="btn btn-outline-primary" type="button" (click)="exchangePair(i)"><em
                 class="bi bi-arrow-left-right"></em></button>
           </div>
 
@@ -125,7 +126,7 @@
             <label class="form-label" for="value_type">{{ 'dictionary.edit.value' | translate }}</label>
             <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_dest) }})</span>
             <div class="input-group">
-              <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{p.uiId}}">
+              <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{p.uiId}}" [disabled]="!isOwner">
                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
                 <option value="FILE">{{ 'dictionary.edit.file' | translate }}</option>
               </select>
@@ -138,6 +139,7 @@
                   name="valueText{{p.uiId}}"
                   (change)="translateValue(i)"
                   placeholder="{{ 'dictionary.edit.text-placeholder' | translate }}"
+                  [readonly]="!isOwner"
               />
 
               <!-- Value FILE input or existing attachment preview -->
@@ -172,13 +174,13 @@
                             (click)="openAttachment(p.value_img)">
                       <i class="bi bi-file-earmark me-1"></i>{{ p.value }}
                     </button>
-                    <button type="button" class="btn btn-outline-danger" title="{{ 'dictionary.edit.remove-file' | translate }}" (click)="clearValueImg(i)">
+                    <button *ngIf="isOwner" type="button" class="btn btn-outline-danger" title="{{ 'dictionary.edit.remove-file' | translate }}" (click)="clearValueImg(i)">
                       <i class="bi bi-x"></i>
                     </button>
                   </div>
                 </ng-container>
                 <ng-template #valueFileInput>
-                  <input
+                  <input *ngIf="isOwner"
                       class="form-control text"
                       type="file"
                       (change)="onFileChange(i, $event)"
@@ -197,10 +199,10 @@
                 </label>
                 <div class="form-check form-switch sw-remembered">
                   <input class="form-check-input sw-input" type="checkbox" id="isRemembered{{p.uiId}}"
-                         [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{p.uiId}}">
+                         [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{p.uiId}}" [disabled]="!isOwner">
                 </div>
               </div>
-              <div class="col d-flex align-items-end">
+              <div *ngIf="isOwner" class="col d-flex align-items-end">
                 <button type="button" class="btn btn-danger" (click)="removePair(i)" [disabled]="pairs.length === 1">
                   &times;
                 </button>

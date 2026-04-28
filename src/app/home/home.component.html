@@ -43,13 +43,18 @@
   <div class="learn-container">
 
     <!-- Folder selector -->
-    <div class="folder-selector mb-4">
+    <div class="folder-selector mb-4" *ngIf="!isSharedMode">
       <label for="folderSelect" class="form-label fw-semibold">
         <i class="fas fa-folder-open me-1"></i> {{ 'home.learn.select-folder' | translate }}
       </label>
-      <select id="folderSelect" class="form-select folder-select" (change)="onFolderChange($any($event.target).value)">
-        <option value="">{{ 'home.learn.choose-folder' | translate }}</option>
-        <option *ngFor="let folder of flatFolders" [value]="folder.id">{{ getFolderIndent(folder.depth) }}{{ folder.label }} ({{ getFolderCount(folder) }} {{ 'home.learn.cards-count' | translate }})</option>
+      <select
+        id="folderSelect"
+        class="form-select folder-select"
+        [ngModel]="selectedFolderId"
+        (ngModelChange)="onFolderChange($event)"
+      >
+        <option [ngValue]="null">{{ 'home.learn.choose-folder' | translate }}</option>
+        <option *ngFor="let folder of flatFolders" [ngValue]="folder.id">{{ getFolderIndent(folder.depth) }}{{ folder.label }} ({{ getFolderCount(folder) }} {{ 'home.learn.cards-count' | translate }})</option>
       </select>
 
       <div class="form-check form-switch mt-3">
@@ -128,10 +133,10 @@
 
         <!-- Actions -->
         <div class="flashcard-actions d-flex justify-content-between align-items-center mt-4">
-          <a class="action-link archive-link" (click)="archiveCard()">
+          <a class="action-link archive-link" *ngIf="!isSharedMode" (click)="archiveCard()">
             <i class="fas fa-archive me-1"></i>{{ 'home.learn.archive' | translate }}
           </a>
-          <a class="action-link remembered-link" (click)="markRemembered()">
+          <a class="action-link remembered-link" *ngIf="!isSharedMode" (click)="markRemembered()">
             <i class="fas fa-check me-1"></i>{{ 'home.learn.remembered' | translate }}
           </a>
           <span class="cards-remaining text-muted small">{{ cards.length + 1 }} {{ 'home.learn.cards-left' | translate }}</span>
@@ -141,9 +146,14 @@
         </div>
       </div>
     </div>
-    <div class="mt-3 text-align-right" *ngIf="selectedFolderId !== null">
+    <div class="mt-3 text-align-right" *ngIf="!isSharedMode && selectedFolderId !== null">
       <button type="button" class="btn btn-outline-primary btn-sm" (click)="editCurrentFolderCards()">
         <i class="fas fa-edit me-1"></i>{{ 'home.learn.edit-cards' | translate }}
+      </button>
+    </div>
+    <div class="mt-3 text-align-right" *ngIf="isSharedMode && selectedFolderId !== null">
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="viewSharedFolderCards()">
+        <i class="fas fa-list me-1"></i>{{ 'home.learn.view-cards' | translate }}
       </button>
     </div>
 

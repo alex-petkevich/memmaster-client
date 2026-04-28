@@ -8,6 +8,7 @@ export interface IFolder {
     lng_src?: string,
     lng_dest?: string,
     user?: IUser,
+    user_id?: number,
     parent_id?: number,
     is_public?: Boolean,
     active?: Boolean,

@@ -1,6 +1,6 @@
 {
   "title": "MemMaster",
-  "home-nav": "Домой",
+  "home-nav": "Тренировка",
   "admin": "Администрирование",
   "my-cards": "Карточки",
   "my-folders": "Папки",
@@ -44,6 +44,7 @@
       "archive": "Архив",
       "remembered": "Выучено",
       "edit-cards": "Редактировать карточки",
+      "view-cards": "Просмотреть все карточки",
       "next": "Далее"
     }
   },
@@ -63,6 +64,7 @@
       "username-required": "Имя пользователя обязательно!",
       "password": "Пароль",
       "login": "Логин",
+      "or": "или",
       "password-required": "Пароль обязателен",
       "password-6-chars": "Пароль должен быть не менее 6 символов",
       "forgot-password": "Забыли пароль",
@@ -70,7 +72,8 @@
       "activated-successfully": "Аккаунт активирован успешно. Ссылка для создания пароля успешно отправлена на ваш Email",
       "activation-key-not-exists": "Ключ активации не найден",
       "create-a-new-password": "Создайте пароль",
-      "problem": "Проблема"
+      "problem": "Проблема",
+      "google-problem": "Ошибка входа через Google"
     },
     "reset": {
       "success": "Пароль успешно изменен",
