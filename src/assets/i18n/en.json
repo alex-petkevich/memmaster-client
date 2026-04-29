@@ -23,6 +23,7 @@
       "lead": "Learn new terms efficiently and effectively. Join thousands who have improved their memory skills.",
       "register-btn": "Register Now",
       "download-btn": "Download App",
+      "login-btn": "Login Now",
       "benefits-title": "Benefits of Using MemMaster",
       "benefit-plans": "Personalized learning plans tailored to your needs.",
       "benefit-quizzes": "Interactive quizzes to test your progress.",
@@ -262,6 +263,7 @@
     "header": "Cards",
     "subheader": "Select a folder to select cards",
     "error_no_folders_found": "No folders found, please create a folder first",
+    "cards": "Cards",
     "edit": {
       "cardTitle": "Card ",
       "errorMessage": "Cannot load data",
@@ -304,7 +306,17 @@
       "unsupported-format": "Unsupported file format",
       "file-parse-error": "Error parsing file. Please check the format.",
       "export-error": "Failed to export dictionary",
-      "remove-file": "Remove file"
+       "remove-file": "Remove file",
+       "archive": "Archive",
+       "retrieve": "Retrieve",
+       "archive-hint": "Archive this card",
+       "retrieve-hint": "Retrieve from archive",
+       "delete-hint": "Delete this card",
+       "copy-to-my-folder": "Copy to my folder",
+      "select-target-folder": "Select target folder",
+      "choose-folder": "Choose a folder",
+      "copy": "Copy",
+      "copy-success": "Cards copied successfully. Duplicates were skipped."
     }
   }
 }

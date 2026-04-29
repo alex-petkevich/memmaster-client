@@ -22,6 +22,10 @@
         <button type="button" class="btn btn-outline-info me-2" *ngIf="isOwner"
                 (click)="openBulkImportModal()">{{ 'dictionary.edit.bulk-import' | translate }}
         </button>
+        <button type="button" class="btn btn-outline-success me-2" *ngIf="!isOwner && pairs.length"
+                (click)="openCopyToFolderModal()">
+          <i class="bi bi-files me-1"></i>{{ 'dictionary.edit.copy-to-my-folder' | translate }}
+        </button>
 
         <div class="btn-group me-2 position-relative export-menu-container" *ngIf="pairs.length">
           <button type="button" class="btn btn-outline-secondary" (click)="toggleExportMenu()">
@@ -41,14 +45,25 @@
 
       <div class="alert alert-success" *ngIf="isSuccessful">{{ 'dictionary.edit.cards-saved' | translate }}</div>
       <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <div class="row g-2 fw-semibold text-muted mb-2 px-1" *ngIf="pairs.length">
+        <div class="col-4">
+          {{ 'dictionary.edit.name' | translate }}
+          <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_src) }})</span>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-4">
+          {{ 'dictionary.edit.value' | translate }}
+          <span *ngIf="rootFolder?.lng_dest"> ({{ lngName(rootFolder?.lng_dest) }})</span>
+        </div>
+        <div class="col-3 text-end">{{ 'dictionary.edit.remembered' | translate }}</div>
+      </div>
       
       <div *ngFor="let p of pairs; let i = index; trackBy: trackByPair" class="mb-3 border rounded p-3">
-        <div class="row g-2 align-items-end">
+        <div class="row g-2 align-items-end flex-nowrap">
 
           <!-- Name type selector and input/file -->
-          <div class="col-md-5">
-            <label class="form-label" for="name_type">{{ 'dictionary.edit.name' | translate }}</label>
-            <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_src) }})</span>
+          <div class="col-4">
             <div class="input-group">
               <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{p.uiId}}" [disabled]="!isOwner">
                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
@@ -116,15 +131,13 @@
             </div>
           </div>
 
-          <div class="col-md-auto justify-content-center d-flex">
+          <div class="col-1 justify-content-center d-flex">
             <button *ngIf="isOwner" class="btn btn-outline-primary" type="button" (click)="exchangePair(i)"><em
                 class="bi bi-arrow-left-right"></em></button>
           </div>
 
           <!-- Value type selector and input/file -->
-          <div class="col-md-5">
-            <label class="form-label" for="value_type">{{ 'dictionary.edit.value' | translate }}</label>
-            <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_dest) }})</span>
+          <div class="col-4">
             <div class="input-group">
               <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{p.uiId}}" [disabled]="!isOwner">
                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
@@ -191,22 +204,29 @@
             </div>
           </div>
           <!-- Is remembered checkbox -->
-          <div class="col-md-auto">
-            <div class="row">
-              <div class="col">
-                <label class="form-label" for="isRemembered{{p.uiId}}">
-                  {{ 'dictionary.edit.remembered' | translate }}
-                </label>
-                <div class="form-check form-switch sw-remembered">
-                  <input class="form-check-input sw-input" type="checkbox" id="isRemembered{{p.uiId}}"
-                         [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{p.uiId}}" [disabled]="!isOwner">
-                </div>
+          <div class="col-3 d-flex align-items-end justify-content-end flex-nowrap gap-2">
+            <div>
+              <div class="form-check form-switch sw-remembered">
+                <input class="form-check-input sw-input" type="checkbox" id="isRemembered{{p.uiId}}"
+                       [(ngModel)]="p.is_remembered" role="switch" name="isRemembered{{p.uiId}}" [disabled]="!isOwner">
               </div>
-              <div *ngIf="isOwner" class="col d-flex align-items-end">
-                <button type="button" class="btn btn-danger" (click)="removePair(i)" [disabled]="pairs.length === 1">
-                  &times;
-                </button>
-              </div>
+            </div>
+            <div *ngIf="isOwner" class="d-flex align-items-end gap-1">
+              <button type="button"
+                      class="btn btn-outline-warning"
+                      [ngbTooltip]="p.is_archived ? ('dictionary.edit.retrieve-hint' | translate) : ('dictionary.edit.archive-hint' | translate)"
+                      placement="top"
+                      (click)="toggleArchived(i)">
+                <i [class]="p.is_archived ? 'bi bi-arrow-counterclockwise' : 'bi bi-archive'"></i>
+              </button>
+              <button type="button"
+                      class="btn btn-danger"
+                      [ngbTooltip]="'dictionary.edit.delete-hint' | translate"
+                      placement="top"
+                      (click)="removePair(i)"
+                      [disabled]="pairs.length === 1">
+                <i class="bi bi-trash"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -278,3 +298,38 @@
   </div>
 </ng-template>
 
+<!-- Copy to my folder Modal -->
+<ng-template #copyToFolderModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ 'dictionary.edit.copy-to-my-folder' | translate }}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="copyToFolderData.loading" class="text-center py-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div *ngIf="copyToFolderData.success" class="alert alert-success">
+      {{ 'dictionary.edit.copy-success' | translate }}
+    </div>
+    <div *ngIf="copyToFolderData.error" class="alert alert-danger">
+      {{ copyToFolderData.error }}
+    </div>
+    <div *ngIf="!copyToFolderData.loading && !copyToFolderData.success">
+      <label class="form-label fw-semibold">{{ 'dictionary.edit.select-target-folder' | translate }}</label>
+      <select class="form-select" [(ngModel)]="copyToFolderData.selectedFolderId" name="copyTargetFolder">
+        <option [ngValue]="null">-- {{ 'dictionary.edit.choose-folder' | translate }} --</option>
+        <option *ngFor="let f of copyToFolderData.folders" [ngValue]="f.id">{{ f.name }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">{{ 'dictionary.edit.cancel' | translate }}</button>
+    <button type="button" class="btn btn-success"
+            (click)="confirmCopyToFolder(modal)"
+            [disabled]="!copyToFolderData.selectedFolderId || copyToFolderData.loading || copyToFolderData.success">
+      <i class="bi bi-files me-1"></i>{{ 'dictionary.edit.copy' | translate }}
+    </button>
+  </div>
+</ng-template>

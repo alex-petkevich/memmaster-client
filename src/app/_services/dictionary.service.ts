@@ -42,11 +42,19 @@ export class DictionaryService {
     return this.http.patch(API_URL + folder_id + '/' + pair_id + '/archived', {}, httpOptions);
   }
 
+  toggleArchived(folder_id: number, pair_id: number): Observable<any> {
+    return this.http.patch(API_URL + folder_id + '/' + pair_id + '/toggle-archived', {}, httpOptions);
+  }
+
   export(folder_id:number, format: 'csv' | 'xlsx' | 'docx'): Observable<HttpResponse<Blob>> {
     return this.http.get(API_URL + folder_id + '/export?format=' + encodeURIComponent(format), {
       observe: 'response',
       responseType: 'blob'
     });
+  }
+
+  copyToFolder(source_folder_id: number, target_folder_id: number): Observable<any> {
+    return this.http.post(API_URL + source_folder_id + '/copy-to/' + target_folder_id, {}, httpOptions);
   }
 
   uploadAttachment(file: File): Observable<{ filename: string }> {

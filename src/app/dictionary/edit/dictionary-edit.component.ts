@@ -37,6 +37,10 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
   blobUrlCache = new Map<string, string>();
   private failedBlobPaths = new Set<string>();
   bulkImportModal: NgbModalRef | undefined;
+  copyToFolderModal: NgbModalRef | undefined;
+  copyToFolderData: { folders: IFolder[]; selectedFolderId: number | null; loading: boolean; success: boolean; error: string } = {
+    folders: [], selectedFolderId: null, loading: false, success: false, error: ''
+  };
   bulkImportData: BulkImportItem[] = [];
   bulkImportDuplicateCount: number = 0;
   protected bulkImportFileSelected: File | null = null;
@@ -57,10 +61,14 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
   languages: IDirectory[] | undefined = [];
 
   isOwner: boolean = true;
+  copyToFolderModalTemplate: TemplateRef<any> | undefined;
 
   errorMessage: string = "";
   @ViewChild("finalDialog") toastComponent: ToastComponent | undefined;
   @ViewChild("bulkImportModal") bulkImportModalTemplate: TemplateRef<any> | undefined;
+  @ViewChild("copyToFolderModal") set copyToFolderModalRef(ref: TemplateRef<any>) {
+    this.copyToFolderModalTemplate = ref;
+  }
 
   constructor(private readonly auth: AuthService,
               private readonly tokenStorage: TokenStorageService,
@@ -119,6 +127,7 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
 
   addPair(): void {
     this.pairs.unshift(this.newEmptyPair());
+    this.sortPairsByArchived();
   }
 
   removePair(index: number): void {
@@ -218,6 +227,30 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
     [pair.name_file, pair.value_file] = [pair.value_file, pair.name_file];
   }
 
+  toggleArchived(i: number): void {
+    if (!this.isOwner || !this.rootFolder?.id || !this.pairs[i].id) {
+      return;
+    }
+    const pairId = this.pairs[i].id;
+    const folderId = this.rootFolder.id;
+    
+    this.dictionaryService.toggleArchived(folderId, pairId).subscribe({
+      next: (data: any) => {
+        this.pairs[i] = this.withUiId({
+          ...data,
+          name_img: this.normalizeStoredPath(data.name_file as string | undefined),
+          value_img: this.normalizeStoredPath(data.value_file as string | undefined),
+          name_file: null,
+          value_file: null
+        } as IDictionaryPair);
+        this.sortPairsByArchived();
+      },
+      error: () => {
+        this.errorMessage = this.translate.instant('dictionary.edit.errorMessage');
+      }
+    });
+  }
+
 
   private loadPairs() {
     if (!this.rootFolder) {
@@ -233,6 +266,7 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
             name_file: null,
             value_file: null
           } as IDictionaryPair));
+          this.sortPairsByArchived();
           // Pre-fetch blob URLs for images
           this.pairs.forEach(pair => {
             if (pair.name_img && this.isImagePath(pair.name_img)) {
@@ -338,6 +372,10 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
     } as IDictionaryPair));
   }
 
+  private sortPairsByArchived(): void {
+    this.pairs.sort((a, b) => Number(Boolean(a.is_archived)) - Number(Boolean(b.is_archived)));
+  }
+
   protected translateName(i: number) {
     if (this.pairs[i].name !== '' && !this.pairs[i].value) {
       this.lookupWord(i, true);
@@ -396,8 +434,58 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
     this.pairs[i].value = '';
   }
 
-  protected openBulkImportModal(): void {
-    this.exportMenuOpen = false;
+  protected openCopyToFolderModal(): void {
+    this.copyToFolderData = { folders: [], selectedFolderId: null, loading: true, success: false, error: '' };
+    if (this.copyToFolderModalTemplate) {
+      this.copyToFolderModal = this.modalService.open(this.copyToFolderModalTemplate, {
+        size: 'lg',
+        backdrop: 'static',
+        keyboard: false
+      });
+    }
+    this.foldersService.listMine('', '', '', false).subscribe({
+      next: (data: IFolder[]) => {
+        this.copyToFolderData.folders = this.flattenFolderTree(data);
+        this.copyToFolderData.loading = false;
+      },
+      error: () => {
+        this.copyToFolderData.loading = false;
+        this.copyToFolderData.error = this.translate.instant('dictionary.edit.errorMessage');
+      }
+    });
+  }
+
+  private flattenFolderTree(folders: IFolder[], depth = 0): IFolder[] {
+    const result: IFolder[] = [];
+    for (const f of folders) {
+      result.push({ ...f, name: '\u00A0'.repeat(depth * 4) + (depth > 0 ? '└ ' : '') + f.name });
+      if (f.children?.length) {
+        result.push(...this.flattenFolderTree(f.children, depth + 1));
+      }
+    }
+    return result;
+  }
+
+  protected confirmCopyToFolder(modal: any): void {
+    if (!this.copyToFolderData.selectedFolderId || !this.rootFolder?.id) {
+      return;
+    }
+    this.copyToFolderData.loading = true;
+    this.copyToFolderData.error = '';
+    this.dictionaryService.copyToFolder(this.rootFolder.id, this.copyToFolderData.selectedFolderId).subscribe({
+      next: () => {
+        this.copyToFolderData.loading = false;
+        this.copyToFolderData.success = true;
+        setTimeout(() => modal.dismiss(), 1500);
+      },
+      error: (err: any) => {
+        this.copyToFolderData.loading = false;
+        this.copyToFolderData.error = err?.error?.message || this.translate.instant('dictionary.edit.errorMessage');
+      }
+    });
+  }
+
+  protected openBulkImportModal(): void {    this.exportMenuOpen = false;
     this.bulkImportData = [];
     this.bulkImportDuplicateCount = 0;
     this.bulkImportFileSelected = null;
