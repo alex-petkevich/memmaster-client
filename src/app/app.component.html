@@ -91,7 +91,18 @@
 </div>
 
 <footer class="footer bg-light text-center py-3 mt-5">
-    <p>&copy; 2025 MemMaster. All rights reserved.</p>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-main">
+          <p>&copy; 2026 MemMaster. All rights reserved.</p>
+          <div class="footer-links">
+            <a [routerLink]="['/terms-of-service']" class="footer-link me-2">{{ 'legal.terms.title' | translate }}</a>
+            <span class="footer-separator">|</span>
+            <a [routerLink]="['/privacy-policy']" class="footer-link ms-2">{{ 'legal.privacy.title' | translate }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
 </footer>
 
 

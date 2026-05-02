@@ -29,6 +29,8 @@ import { FoldersEditComponent } from './folders/edit/folders-edit.component';
 import {NgxBootstrapIconsPickerModule} from "ngx-bootstrap-icons-picker";
 import {DictionaryComponent} from "./dictionary/dictionary.component";
 import {DictionaryEditComponent} from "./dictionary/edit/dictionary-edit.component";
+import { TermsOfServiceComponent } from "./legal/terms-of-service/terms-of-service.component";
+import { PrivacyPolicyComponent } from "./legal/privacy-policy/privacy-policy.component";
 
 @NgModule({
   declarations: [
@@ -62,7 +64,9 @@ import {DictionaryEditComponent} from "./dictionary/edit/dictionary-edit.compone
 		NgbModule,
         NgSelectModule,
 		ReactiveFormsModule,
-        SharedModule
+        SharedModule,
+        TermsOfServiceComponent,
+        PrivacyPolicyComponent
 	],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
