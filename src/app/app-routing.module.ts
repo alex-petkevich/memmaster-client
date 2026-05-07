@@ -49,6 +49,7 @@ const routes: Routes = [
   { path: 'user', component: BoardUserComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'contact', component: ContactComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

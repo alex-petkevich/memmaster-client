@@ -66,7 +66,8 @@ import { PrivacyPolicyComponent } from "./legal/privacy-policy/privacy-policy.co
 		ReactiveFormsModule,
         SharedModule,
         TermsOfServiceComponent,
-        PrivacyPolicyComponent
+        PrivacyPolicyComponent,
+        ContactComponent
 	],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
