@@ -375,7 +375,20 @@
        "section8-content": "We will retain your personal data only for as long as necessary to provide our services and for legitimate business purposes. You can request deletion of your account and associated data at any time.",
        "section9-title": "9. Third-Party Links",
        "section9-content": "Our service may contain links to third-party websites. We are not responsible for the privacy practices or content of these external sites. Please review their privacy policies before providing any personal information.",
-       "contact-info": "© 2026 MemMaster. All rights reserved. For questions about our Privacy Policy, please contact memmaster@abcdef.at"
-     }
+        "contact-info": "© 2026 MemMaster. All rights reserved. For questions about our Privacy Policy, please contact memmaster@abcdef.at"
+      }
+   },
+   "contact": {
+     "title": "Contact Us",
+     "question-type": "Question Type",
+     "select-type": "-- Select question type --",
+     "subject": "Subject",
+     "comment": "Comment",
+     "send": "Send",
+     "success": "Your message has been sent successfully!",
+     "question-type-required": "Question type is required",
+     "subject-required": "Subject is required",
+     "comment-required": "Comment is required"
    }
  }
+

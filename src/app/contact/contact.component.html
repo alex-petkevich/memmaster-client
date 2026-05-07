@@ -1,0 +1,70 @@
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <h3>{{ 'contact.title' | translate }}</h3>
+
+    <div class="alert alert-success" *ngIf="isSuccessful">
+      {{ 'contact.success' | translate }}
+    </div>
+
+    <div class="alert alert-danger" *ngIf="isSendFailed">
+      {{ errorMessage }}
+    </div>
+
+    <form *ngIf="!isSuccessful" (ngSubmit)="onSubmit()" #contactForm="ngForm">
+      <div class="mb-3">
+        <label for="questionType" class="form-label">{{ 'contact.question-type' | translate }}</label>
+        <select
+          class="form-select"
+          id="questionType"
+          [(ngModel)]="form.questionType"
+          name="questionType"
+          required
+          #questionType="ngModel"
+          [class.is-invalid]="isSubmitted && !form.questionType">
+          <option value="" disabled>{{ 'contact.select-type' | translate }}</option>
+          <option *ngFor="let type of questionTypes" [value]="type">{{ type }}</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="isSubmitted && !form.questionType">
+          {{ 'contact.question-type-required' | translate }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="subject" class="form-label">{{ 'contact.subject' | translate }}</label>
+        <input
+          type="text"
+          class="form-control"
+          id="subject"
+          [(ngModel)]="form.subject"
+          name="subject"
+          required
+          #subject="ngModel"
+          [class.is-invalid]="isSubmitted && !form.subject" />
+        <div class="invalid-feedback" *ngIf="isSubmitted && !form.subject">
+          {{ 'contact.subject-required' | translate }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="comment" class="form-label">{{ 'contact.comment' | translate }}</label>
+        <textarea
+          class="form-control"
+          id="comment"
+          rows="5"
+          [(ngModel)]="form.comment"
+          name="comment"
+          required
+          #comment="ngModel"
+          [class.is-invalid]="isSubmitted && !form.comment"></textarea>
+        <div class="invalid-feedback" *ngIf="isSubmitted && !form.comment">
+          {{ 'contact.comment-required' | translate }}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        {{ 'contact.send' | translate }}
+      </button>
+    </form>
+  </div>
+</div>
+

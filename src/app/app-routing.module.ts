@@ -20,6 +20,7 @@ import {DictionaryComponent} from "./dictionary/dictionary.component";
 import {DictionaryEditComponent} from "./dictionary/edit/dictionary-edit.component";
 import { TermsOfServiceComponent } from "./legal/terms-of-service/terms-of-service.component";
 import { PrivacyPolicyComponent } from "./legal/privacy-policy/privacy-policy.component";
+import { ContactComponent } from "./contact/contact.component";
 
 const routes: Routes = [
   { path: 'account/activate', component: LoginComponent },
@@ -49,6 +50,7 @@ const routes: Routes = [
   { path: 'user', component: BoardUserComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'contact', component: ContactComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
