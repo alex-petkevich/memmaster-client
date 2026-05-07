@@ -1,5 +1,5 @@
 <div class="col-md-12  d-flex justify-content-center">
-  <div class="jumbotron bg-light p-5 rounded card-container-wide" *ngIf="currentUser; else loggedOut">
+  <div class="jumbotron bg-light p-md-5 p-3 rounded card-container-wide" *ngIf="currentUser; else loggedOut">
     <img
             id="profile-img"
             src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
@@ -59,7 +59,7 @@
       />
       <div class="invalid-feedback" *ngIf="lastname.errors && f.submitted">
         <div *ngIf="lastname.errors['required']">{{ 'account.profile.lastname-required' | translate  }}</div>
--      </div>
+      </div>
     </div>
     <div class="mb-2">
       <a href="/account/forgot-password">{{ 'account.profile.change-password' | translate  }}</a>

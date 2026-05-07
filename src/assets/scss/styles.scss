@@ -5,12 +5,20 @@ body, html {
 
 .card-container-wide.jumbotron {
   max-width: 1250px;
+
+  @media (max-width: 576px) {
+    max-width: 100%;
+  }
 }
 
 .card-container.jumbotron {
   max-width: 350px;
-  min-width: 500px;
   padding: 40px 40px;
+
+  @media (max-width: 576px) {
+    max-width: 100%;
+    padding: 20px;
+  }
 }
 
 .btn {
