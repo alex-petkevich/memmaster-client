@@ -7,7 +7,7 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarNav" #navbarCollapse>
       <ul class="navbar-nav me-auto" routerLinkActive="active">
           <li class="nav-item" *ngIf="isLoggedIn">
             <a href="/" class="nav-link" [ngClass]="{'active': path === 'home'}" *ngIf="isLoggedIn" routerLink="home">{{ 'home-nav' | translate }}</a>
