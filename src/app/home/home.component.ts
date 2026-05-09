@@ -28,21 +28,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly imageExtensions = new Set(['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg']);
   private readonly videoExtensions = new Set(['mp4', 'webm', 'ogg', 'mov', 'm4v']);
 
-  isLoggedIn: boolean = false;
-  flatFolders: IFlatFolder[] = [];
-  selectedFolderId: number | null = null;
-  includeRemembered: boolean = false;
-  allCards: IDictionaryPair[] = [];
-  cards: IDictionaryPair[] = [];
-  currentCard: IDictionaryPair | null = null;
-  showValue: boolean = false;
-  loadingCards: boolean = false;
-  isSharedMode: boolean = false;
-  isSharedFolderOwner: boolean = false;
-  sharedFolderUuid: string | null = null;
-  private readonly blobUrlCache = new Map<string, string>();
-  private readonly failedBlobPaths = new Set<string>();
-  private routeSubscription: Subscription | null = null;
+   isLoggedIn: boolean = false;
+   flatFolders: IFlatFolder[] = [];
+   selectedFolderId: number | null = null;
+   includeRemembered: boolean = false;
+   allCards: IDictionaryPair[] = [];
+   cards: IDictionaryPair[] = [];
+   currentCard: IDictionaryPair | null = null;
+   showValue: boolean = false;
+   showHint: boolean = false;
+   loadingCards: boolean = false;
+   isSharedMode: boolean = false;
+   isSharedFolderOwner: boolean = false;
+   sharedFolderUuid: string | null = null;
+   private readonly blobUrlCache = new Map<string, string>();
+   private readonly failedBlobPaths = new Set<string>();
+   private routeSubscription: Subscription | null = null;
 
   constructor(
     private tokenStorageService: TokenStorageService,
@@ -113,16 +114,17 @@ export class HomeComponent implements OnInit, OnDestroy {
      });
    }
 
-  private resetCardState(): void {
-    this.flatFolders = [];
-    this.selectedFolderId = null;
-    this.isSharedFolderOwner = false;
-    this.allCards = [];
-    this.cards = [];
-    this.currentCard = null;
-    this.showValue = false;
-    this.loadingCards = false;
-  }
+   private resetCardState(): void {
+     this.flatFolders = [];
+     this.selectedFolderId = null;
+     this.isSharedFolderOwner = false;
+     this.allCards = [];
+     this.cards = [];
+     this.currentCard = null;
+     this.showValue = false;
+     this.showHint = false;
+     this.loadingCards = false;
+   }
 
    private saveHomePreferences(): void {
      const preferences = {
@@ -339,15 +341,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     return cards.filter(p => !p.is_archived && (this.includeRemembered || !p.is_remembered));
   }
 
-  private showNextCard(): void {
-    this.showValue = false;
-    if (this.cards.length > 0) {
-      this.currentCard = this.cards.shift()!;
-      this.preloadCardMedia(this.currentCard);
-    } else {
-      this.currentCard = null;
-    }
-  }
+   private showNextCard(): void {
+     this.showValue = false;
+     this.showHint = false;
+     if (this.cards.length > 0) {
+       this.currentCard = this.cards.shift()!;
+       this.preloadCardMedia(this.currentCard);
+     } else {
+       this.currentCard = null;
+     }
+   }
 
    onCardClick(): void {
      if (this.showValue) {
@@ -359,12 +362,27 @@ export class HomeComponent implements OnInit, OnDestroy {
      }
    }
 
-   revealValue(): void {
-     this.showValue = true;
-     if (this.currentCard?.value_type === 'FILE' && this.currentCard.value_img && this.getAttachmentKind(this.currentCard.value_img) !== 'binary') {
-       this.fetchBlobUrl(this.currentCard.value_img);
-     }
-   }
+    revealValue(): void {
+      this.showValue = true;
+      if (this.currentCard?.value_type === 'FILE' && this.currentCard.value_img && this.getAttachmentKind(this.currentCard.value_img) !== 'binary') {
+        this.fetchBlobUrl(this.currentCard.value_img);
+      }
+    }
+
+    toggleHint(): void {
+      this.showHint = !this.showHint;
+    }
+
+    getHintText(): string {
+      if (!this.currentCard?.value || !this.showHint) {
+        return '';
+      }
+      const name = this.currentCard.value.toString();
+      if (name.length === 1) {
+        return name;
+      }
+      return name.charAt(0) + '*'.repeat(name.length - 1);
+    }
 
   markRemembered(): void {
     if (!this.currentCard?.id || !this.selectedFolderId) return;

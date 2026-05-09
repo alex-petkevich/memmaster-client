@@ -83,28 +83,31 @@
      <div *ngIf="!loadingCards && currentCard !== null" class="card-wrapper d-flex justify-content-center align-items-center">
        <div class="flashcard" (click)="onCardClick()" [class.clickable]="true">
 
-         <!-- Card name (always visible) -->
-         <div class="flashcard-name">
-           <ng-container *ngIf="currentCard.name_type === 'FILE' && currentCard.name_img; else nameText">
-             <ng-container [ngSwitch]="getAttachmentKind(currentCard.name_img)">
-               <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.name_img)" alt="card name" class="card-img" />
-               <video *ngSwitchCase="'video'" class="card-video" controls preload="metadata" playsinline [src]="getBlobUrl(currentCard.name_img)">
-               </video>
-               <a *ngSwitchDefault href="" (click)="$event.preventDefault(); openAttachment(currentCard.name_img)" class="card-file-link">
-                   <i class="fas fa-download me-1"></i>{{ getAttachmentFileName(currentCard.name_img) }}
-               </a>
-             </ng-container>
-           </ng-container>
-           <ng-template #nameText>
-             <span class="card-name-text">{{ currentCard.name }}</span>
-           </ng-template>
-           <div *ngIf="!showValue" class="tap-hint text-muted small mt-2">
-             <i class="fas fa-hand-pointer me-1"></i>{{ 'home.learn.tap-to-reveal' | translate }}
-           </div>
-         </div>
+          <!-- Card name (always visible) -->
+          <div class="flashcard-name position-relative" [title]="!showValue ? ('home.learn.tap-to-reveal' | translate) : ''">
+            <button type="button" class="btn btn-sm btn-link hint-button position-absolute top-0 end-0"
+                    (click)="$event.stopPropagation(); toggleHint()"
+                    *ngIf="!isSharedMode"
+                    [title]="'home.learn.hint' | translate">
+              <i class="fas fa-lightbulb"></i>
+            </button>
+            <ng-container *ngIf="currentCard.name_type === 'FILE' && currentCard.name_img; else nameText">
+              <ng-container [ngSwitch]="getAttachmentKind(currentCard.name_img)">
+                <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.name_img)" alt="card name" class="card-img" />
+                <video *ngSwitchCase="'video'" class="card-video" controls preload="metadata" playsinline [src]="getBlobUrl(currentCard.name_img)">
+                </video>
+                <a *ngSwitchDefault href="" (click)="$event.preventDefault(); openAttachment(currentCard.name_img)" class="card-file-link">
+                    <i class="fas fa-download me-1"></i>{{ getAttachmentFileName(currentCard.name_img) }}
+                </a>
+              </ng-container>
+            </ng-container>
+            <ng-template #nameText>
+              <span class="card-name-text">{{ showHint && !showValue ? getHintText() : currentCard.name }}</span>
+            </ng-template>
+          </div>
 
          <!-- Card value (revealed on click) -->
-         <div *ngIf="showValue" class="flashcard-value mt-3 pt-3 border-top">
+         <div *ngIf="showValue" class="flashcard-value mt-3 pt-3 border-top" [title]="'home.learn.tap-to-next' | translate">
            <ng-container *ngIf="currentCard.value_type === 'FILE' && currentCard.value_img; else valueText">
              <ng-container [ngSwitch]="getAttachmentKind(currentCard.value_img)">
                <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.value_img)" alt="card value" class="card-img" />
@@ -118,9 +121,6 @@
            <ng-template #valueText>
              <span class="card-value-text">{{ currentCard.value }}</span>
            </ng-template>
-           <div class="tap-hint text-muted small mt-2">
-             <i class="fas fa-hand-pointer me-1"></i>{{ 'home.learn.tap-to-next' | translate }}
-           </div>
          </div>
 
         <!-- Actions -->
@@ -148,7 +148,7 @@
        </button>
        <div class="d-flex gap-2">
          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="mixCards()" title="{{ 'home.learn.mix-cards' | translate }}">
-           <i class="fas fa-shuffle"></i>
+           <i class="bi bi-shuffle"></i>
          </button>
          <button type="button" class="btn btn-outline-primary btn-sm" (click)="editCurrentFolderCards()">
            <i class="fas fa-edit me-1"></i>{{ 'home.learn.edit-cards' | translate }}
