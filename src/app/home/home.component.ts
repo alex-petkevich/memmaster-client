@@ -396,10 +396,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dictionary', this.selectedFolderId, 'edit']);
   }
 
-  nextCard(): void {
-    if (this.currentCard) {
-      this.cards.push(this.currentCard);
-    }
-    this.showNextCard();
-  }
+   nextCard(): void {
+     if (this.currentCard) {
+       this.cards.push(this.currentCard);
+     }
+     this.showNextCard();
+   }
+
+   mixCards(): void {
+     if (this.currentCard) {
+       this.cards.push(this.currentCard);
+     }
+     // Fisher-Yates shuffle algorithm
+     for (let i = this.cards.length - 1; i > 0; i--) {
+       const j = Math.floor(Math.random() * (i + 1));
+       [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
+     }
+     this.showNextCard();
+   }
 }
