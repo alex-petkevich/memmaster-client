@@ -79,46 +79,49 @@
       <p class="text-success fs-5">{{ 'home.learn.hint-all-remembered' | translate }}</p>
     </div>
 
-    <!-- Flashcard -->
-    <div *ngIf="!loadingCards && currentCard !== null" class="card-wrapper d-flex justify-content-center align-items-center">
-      <div class="flashcard">
+     <!-- Flashcard -->
+     <div *ngIf="!loadingCards && currentCard !== null" class="card-wrapper d-flex justify-content-center align-items-center">
+       <div class="flashcard" (click)="onCardClick()" [class.clickable]="true">
 
-        <!-- Card name (always visible) -->
-        <div class="flashcard-name" (click)="revealValue()" [class.clickable]="!showValue">
-          <ng-container *ngIf="currentCard.name_type === 'FILE' && currentCard.name_img; else nameText">
-            <ng-container [ngSwitch]="getAttachmentKind(currentCard.name_img)">
-              <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.name_img)" alt="card name" class="card-img" />
-              <video *ngSwitchCase="'video'" class="card-video" controls preload="metadata" playsinline [src]="getBlobUrl(currentCard.name_img)">
-              </video>
-              <a *ngSwitchDefault href="" (click)="$event.preventDefault(); openAttachment(currentCard.name_img)" class="card-file-link">
-                  <i class="fas fa-download me-1"></i>{{ getAttachmentFileName(currentCard.name_img) }}
-              </a>
-            </ng-container>
-          </ng-container>
-          <ng-template #nameText>
-            <span class="card-name-text">{{ currentCard.name }}</span>
-          </ng-template>
-          <div *ngIf="!showValue" class="tap-hint text-muted small mt-2">
-            <i class="fas fa-hand-pointer me-1"></i>{{ 'home.learn.tap-to-reveal' | translate }}
-          </div>
-        </div>
+         <!-- Card name (always visible) -->
+         <div class="flashcard-name">
+           <ng-container *ngIf="currentCard.name_type === 'FILE' && currentCard.name_img; else nameText">
+             <ng-container [ngSwitch]="getAttachmentKind(currentCard.name_img)">
+               <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.name_img)" alt="card name" class="card-img" />
+               <video *ngSwitchCase="'video'" class="card-video" controls preload="metadata" playsinline [src]="getBlobUrl(currentCard.name_img)">
+               </video>
+               <a *ngSwitchDefault href="" (click)="$event.preventDefault(); openAttachment(currentCard.name_img)" class="card-file-link">
+                   <i class="fas fa-download me-1"></i>{{ getAttachmentFileName(currentCard.name_img) }}
+               </a>
+             </ng-container>
+           </ng-container>
+           <ng-template #nameText>
+             <span class="card-name-text">{{ currentCard.name }}</span>
+           </ng-template>
+           <div *ngIf="!showValue" class="tap-hint text-muted small mt-2">
+             <i class="fas fa-hand-pointer me-1"></i>{{ 'home.learn.tap-to-reveal' | translate }}
+           </div>
+         </div>
 
-        <!-- Card value (revealed on click) -->
-        <div *ngIf="showValue" class="flashcard-value mt-3 pt-3 border-top">
-          <ng-container *ngIf="currentCard.value_type === 'FILE' && currentCard.value_img; else valueText">
-            <ng-container [ngSwitch]="getAttachmentKind(currentCard.value_img)">
-              <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.value_img)" alt="card value" class="card-img" />
-              <video *ngSwitchCase="'video'" class="card-video" controls preload="metadata" playsinline [src]="getBlobUrl(currentCard.value_img)">
-              </video>
-              <a *ngSwitchDefault href="" (click)="$event.preventDefault(); openAttachment(currentCard.value_img)" class="card-file-link">
-                  <i class="fas fa-download me-1"></i>{{ getAttachmentFileName(currentCard.value_img) }}
-              </a>
-            </ng-container>
-          </ng-container>
-          <ng-template #valueText>
-            <span class="card-value-text">{{ currentCard.value }}</span>
-          </ng-template>
-        </div>
+         <!-- Card value (revealed on click) -->
+         <div *ngIf="showValue" class="flashcard-value mt-3 pt-3 border-top">
+           <ng-container *ngIf="currentCard.value_type === 'FILE' && currentCard.value_img; else valueText">
+             <ng-container [ngSwitch]="getAttachmentKind(currentCard.value_img)">
+               <img *ngSwitchCase="'image'" [src]="getBlobUrl(currentCard.value_img)" alt="card value" class="card-img" />
+               <video *ngSwitchCase="'video'" class="card-video" controls preload="metadata" playsinline [src]="getBlobUrl(currentCard.value_img)">
+               </video>
+               <a *ngSwitchDefault href="" (click)="$event.preventDefault(); openAttachment(currentCard.value_img)" class="card-file-link">
+                   <i class="fas fa-download me-1"></i>{{ getAttachmentFileName(currentCard.value_img) }}
+               </a>
+             </ng-container>
+           </ng-container>
+           <ng-template #valueText>
+             <span class="card-value-text">{{ currentCard.value }}</span>
+           </ng-template>
+           <div class="tap-hint text-muted small mt-2">
+             <i class="fas fa-hand-pointer me-1"></i>{{ 'home.learn.tap-to-next' | translate }}
+           </div>
+         </div>
 
         <!-- Actions -->
         <div class="flashcard-actions d-flex justify-content-between align-items-center mt-4">

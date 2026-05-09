@@ -349,12 +349,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  revealValue(): void {
-    this.showValue = true;
-    if (this.currentCard?.value_type === 'FILE' && this.currentCard.value_img && this.getAttachmentKind(this.currentCard.value_img) !== 'binary') {
-      this.fetchBlobUrl(this.currentCard.value_img);
-    }
-  }
+   onCardClick(): void {
+     if (this.showValue) {
+       // If value is already shown, go to next card
+       this.nextCard();
+     } else {
+       // Otherwise, reveal the value
+       this.revealValue();
+     }
+   }
+
+   revealValue(): void {
+     this.showValue = true;
+     if (this.currentCard?.value_type === 'FILE' && this.currentCard.value_img && this.getAttachmentKind(this.currentCard.value_img) !== 'binary') {
+       this.fetchBlobUrl(this.currentCard.value_img);
+     }
+   }
 
   markRemembered(): void {
     if (!this.currentCard?.id || !this.selectedFolderId) return;
