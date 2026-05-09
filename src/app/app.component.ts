@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {TokenStorageService} from "./_services/token-storage.service";
 import {FileService} from "./_services/file.service";
 import {TranslateService} from "@ngx-translate/core";
@@ -14,6 +14,8 @@ import {filter, Subscription} from "rxjs";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+
+  @ViewChild('navbarCollapse', { static: false }) navbarCollapse?: ElementRef;
 
   private roles: string[] = [];
   isLoggedIn = false;
@@ -48,6 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
           .pipe(filter(event => event instanceof NavigationEnd))
           .subscribe(() => {
               this.path = this.getFirstDirectoryFromUrl();
+              this.collapseNavbar();
           });
 
     this.isLoggedIn = !!this.tokenStorageService.getToken();
@@ -67,6 +70,13 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.routerSub?.unsubscribe();
     }
+
+  private collapseNavbar(): void {
+    const el = this.navbarCollapse?.nativeElement;
+    if (el && el.classList.contains('show')) {
+      el.classList.remove('show');
+    }
+  }
 
   logout(): void {
     this.tokenStorageService.signOut();
