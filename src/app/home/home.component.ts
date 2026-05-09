@@ -8,6 +8,7 @@ import { IDictionaryPair } from "../model/name_value.model";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { Subscription } from "rxjs";
+import { concatMap } from "rxjs/operators";
 
 export interface IFlatFolder {
   id: number;
@@ -67,25 +68,50 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.blobUrlCache.clear();
   }
 
-  private initializeByRoute(publicFolderUuid: string | null): void {
-    this.resetCardState();
-    if (!this.isLoggedIn) {
-      return;
-    }
+   private initializeByRoute(publicFolderUuid: string | null): void {
+     this.resetCardState();
+     if (!this.isLoggedIn) {
+       return;
+     }
 
-    if (publicFolderUuid) {
-      this.isSharedMode = true;
-      this.sharedFolderUuid = publicFolderUuid;
-      this.includeRemembered = false;
-      this.loadSharedFolder(publicFolderUuid);
-      return;
-    }
+     if (publicFolderUuid) {
+       this.isSharedMode = true;
+       this.sharedFolderUuid = publicFolderUuid;
+       this.includeRemembered = false;
+       this.loadSharedFolder(publicFolderUuid);
+       return;
+     }
 
-    this.isSharedMode = false;
-    this.sharedFolderUuid = null;
-    this.loadFolders();
-    this.loadHomePreferences();
-  }
+     this.isSharedMode = false;
+     this.sharedFolderUuid = null;
+     // Load preferences first (with concatMap), then automatically load folders
+     this.settingsService.getHomePreferences().pipe(
+       concatMap((prefs: any) => {
+         this.includeRemembered = prefs.includeRemembered === 'true';
+         if (prefs.selectedFolderId && prefs.selectedFolderId !== '') {
+           this.selectedFolderId = parseInt(prefs.selectedFolderId, 10);
+         }
+         return this.foldersService.listMine('', '', '', true);
+       })
+     ).subscribe({
+       next: (data: IFolder[]) => {
+         this.flatFolders = this.flattenTree(data, 0);
+
+         if (this.selectedFolderId == null) {
+           return;
+         }
+
+         const selectedFolderVisible = this.flatFolders.some(folder => folder.id === this.selectedFolderId);
+         if (!selectedFolderVisible) {
+           this.selectedFolderId = null;
+           this.saveHomePreferences();
+           return;
+         }
+
+         this.loadCardsForSelectedFolder();
+       }
+     });
+   }
 
   private resetCardState(): void {
     this.flatFolders = [];
@@ -98,46 +124,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadingCards = false;
   }
 
-  private loadHomePreferences(): void {
-    this.settingsService.getHomePreferences().subscribe({
-      next: (prefs: any) => {
-        this.includeRemembered = prefs.includeRemembered === 'true';
+   private saveHomePreferences(): void {
+     const preferences = {
+       'home_selected_folder_id': this.selectedFolderId?.toString() ?? '',
+       'home_include_remembered': this.includeRemembered.toString()
+     };
+     this.settingsService.saveHomePreferences(preferences).subscribe();
+   }
 
-        if (prefs.selectedFolderId && prefs.selectedFolderId !== '') {
-          this.selectedFolderId = parseInt(prefs.selectedFolderId, 10);
-        }
-      }
-    });
-  }
-
-  private saveHomePreferences(): void {
-    const preferences = {
-      'home_selected_folder_id': this.selectedFolderId?.toString() ?? '',
-      'home_include_remembered': this.includeRemembered.toString()
-    };
-    this.settingsService.saveHomePreferences(preferences).subscribe();
-  }
-
-  private loadFolders(): void {
-    this.foldersService.listMine('', '', '', true).subscribe({
-      next: (data: IFolder[]) => {
-        this.flatFolders = this.flattenTree(data, 0);
-
-        if (this.selectedFolderId == null) {
-          return;
-        }
-
-        const selectedFolderVisible = this.flatFolders.some(folder => folder.id === this.selectedFolderId);
-        if (!selectedFolderVisible) {
-          this.selectedFolderId = null;
-          this.saveHomePreferences();
-          return;
-        }
-
-        this.loadCardsForSelectedFolder();
-      }
-    });
-  }
 
   private loadSharedFolder(uuid: string): void {
     this.loadingCards = true;
