@@ -20,6 +20,7 @@
                                     <span class="me-2" *ngIf="folder.icon"><i class="bi bi-{{folder.icon}}"></i></span>
                                     <span class="me-2 d-inline-flex w-20" *ngIf="!folder.icon">&nbsp;</span>
                                     <a  [routerLink]="['/dictionary', folder.id, 'edit']" placement="top" ngbTooltip="{{ 'dictionary.cards' | translate }}: {{ folder.dictionary_count }}">{{ folder.name }}</a>
+                                    <button type="button" class="btn btn-link ms-2" (click)="copySharedLink(folder.uuid)" *ngIf="folder.is_public" ><em class="bi bi-folder-symlink"data-toggle="tooltip" data-placement="top" title="{{ 'folders.public-folder' | translate }}"></em></button>
                                 </td>
                             </tr>
                             <tr *ngFor="let subfolder of folder.children;">
@@ -27,7 +28,7 @@
                                     <span class="me-2" *ngIf="subfolder.icon"><i class="bi bi-{{subfolder.icon}}"></i></span>
                                     <div class="me-2 d-inline-flex w-20" *ngIf="!subfolder.icon">&nbsp;</div>
                                     <a  [routerLink]="['/dictionary', subfolder.id, 'edit']" placement="top" ngbTooltip="{{ 'dictionary.cards' | translate }}: {{ subfolder.dictionary_count }}">{{ subfolder.name }}</a>
-
+                                    <button type="button" class="btn btn-link ms-2" (click)="copySharedLink(subfolder.uuid)" *ngIf="subfolder.is_public" ><em class="bi bi-folder-symlink"data-toggle="tooltip" data-placement="top" title="{{ 'folders.public-folder' | translate }}"></em></button>
                             </tr>
 
                         </table>

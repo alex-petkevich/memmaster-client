@@ -71,4 +71,15 @@ export class DictionaryComponent implements OnInit {
         this.toastComponent?.error( err );
     }
 
+    copySharedLink(uuid: string | undefined) {
+        if (!uuid) {
+            return;
+        }
+        const url = globalThis.location.origin + '/shared/' + uuid;
+        navigator.clipboard.writeText(url).then(() => {
+            this.toastComponent?.success(this.translate.instant('folders.shared-link-copied'));
+        }).catch(err => {
+            this.toastComponent?.error(this.translate.instant('folders.shared-link-copy-error'));
+        });
+    }
 }

@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   languageList = [
     { code: 'en', label: 'English' },
+    { code: 'de', label: 'Deutsch' },
     { code: 'ru', label: 'Русский' },
   ];
   currentLanguage?: string = this.getLanguageLabel(environment.defaultLanguage);

@@ -125,14 +125,14 @@
 
         <!-- Actions -->
         <div class="flashcard-actions d-flex justify-content-between align-items-center mt-4">
-          <a class="action-link archive-link" *ngIf="!isSharedMode" (click)="archiveCard()">
+          <a class="action-link archive-link" *ngIf="!isSharedMode" (click)="$event.stopPropagation(); archiveCard()">
             <i class="fas fa-archive me-1"></i>{{ 'home.learn.archive' | translate }}
           </a>
-          <a class="action-link remembered-link" *ngIf="!isSharedMode" (click)="markRemembered()">
+          <a class="action-link remembered-link" *ngIf="!isSharedMode" (click)="$event.stopPropagation(); markRemembered()">
             <i class="fas fa-check me-1"></i>{{ 'home.learn.remembered' | translate }}
           </a>
           <span class="cards-remaining text-muted small">{{ cards.length + 1 }} {{ 'home.learn.cards-left' | translate }}</span>
-          <a class="action-link next-link" (click)="nextCard()">
+          <a class="action-link next-link" (click)="$event.stopPropagation(); nextCard()">
             {{ 'home.learn.next' | translate }} <i class="fas fa-arrow-right ms-1"></i>
           </a>
         </div>
@@ -143,6 +143,7 @@
                class="btn btn-sm"
                [class.btn-primary]="includeRemembered"
                [class.btn-outline-secondary]="!includeRemembered"
+               title="{{ 'home.learn.include-remembered-hint' | translate }}"
                (click)="onIncludeRememberedChange(!includeRemembered)">
          <i class="fas fa-redo me-1"></i>{{ 'home.learn.include-remembered' | translate }}
        </button>
@@ -150,8 +151,8 @@
          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="mixCards()" title="{{ 'home.learn.mix-cards' | translate }}">
            <i class="bi bi-shuffle"></i>
          </button>
-         <button type="button" class="btn btn-outline-primary btn-sm" (click)="editCurrentFolderCards()">
-           <i class="fas fa-edit me-1"></i>{{ 'home.learn.edit-cards' | translate }}
+         <button type="button" class="btn btn-outline-primary btn-sm" (click)="editCurrentFolderCards()" title="{{ 'home.learn.edit-cards' | translate }}">
+           <i class="fas fa-edit me-1"></i>
          </button>
        </div>
      </div>
