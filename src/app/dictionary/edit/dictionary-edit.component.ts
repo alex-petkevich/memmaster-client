@@ -16,7 +16,7 @@ import {DIRECTORY_TYPES} from "../../shared-components/general.constants";
 import {HttpClient} from "@angular/common/http";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
-type UiDictionaryPair = IDictionaryPair & { uiId: number; name_img?: string; value_img?: string };
+type UiDictionaryPair = IDictionaryPair & { uiId: number; name_img?: string; value_img?: string; fromPaste?: boolean };
 
 interface BulkImportItem {
   name: string;
@@ -44,6 +44,8 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
   bulkImportData: BulkImportItem[] = [];
   bulkImportDuplicateCount: number = 0;
   protected bulkImportFileSelected: File | null = null;
+  protected bulkPasteText: string = '';
+  protected bulkImportActiveTab: string = 'paste';
   protected exportMenuOpen: boolean = false;
 
   form: IFolder = {
@@ -212,6 +214,7 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
       .subscribe({
         next: _data => {
           this.isSuccessful = true;
+          this.pairs.forEach(p => p.fromPaste = false);
         },
         error: err => {
           this.errorMessage = err.error.message || this.translate.instant('dictionary.edit.errorMessage');
@@ -489,6 +492,8 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
     this.bulkImportData = [];
     this.bulkImportDuplicateCount = 0;
     this.bulkImportFileSelected = null;
+    this.bulkPasteText = '';
+    this.bulkImportActiveTab = 'paste';
     if (this.bulkImportModalTemplate) {
       this.bulkImportModal = this.modalService.open(this.bulkImportModalTemplate, {
         size: 'lg',
@@ -634,6 +639,76 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
         this.errorMessage = err?.error?.message || this.translate.instant('dictionary.edit.errorMessage');
       }
     });
+  }
+
+  protected onBulkPasteImport(modal: any): void {
+    if (!this.bulkPasteText.trim()) {
+      return;
+    }
+
+    const rows = this.parsePastedText(this.bulkPasteText);
+    const existingNames = new Set(this.pairs.map(p => p.name?.toLowerCase()));
+    let added = 0;
+
+    for (const row of rows) {
+      const name = row.name.trim();
+      const value = row.value.trim();
+      if (!name) continue;
+
+      // Skip duplicates
+      if (existingNames.has(name.toLowerCase())) {
+        continue;
+      }
+
+      this.pairs.unshift(this.withUiId({
+        name,
+        name_type: 'TEXT',
+        value,
+        value_type: 'TEXT',
+        fromPaste: true
+      } as any));
+      existingNames.add(name.toLowerCase());
+      added++;
+    }
+
+    this.bulkPasteText = '';
+    modal.dismiss();
+    this.cdr.markForCheck();
+  }
+
+  private parsePastedText(text: string): { name: string; value: string }[] {
+    const results: { name: string; value: string }[] = [];
+    const lines = text.trim().split(/\r?\n/);
+
+    for (const line of lines) {
+      if (!line.trim()) continue;
+
+      // Try tab-separated (XLS copy), then pipe (markdown table), then comma
+      let parts: string[] | null = null;
+
+      if (line.includes('\t')) {
+        parts = line.split('\t');
+      } else if (line.includes('|')) {
+        // Markdown table row: | key | value |
+        const stripped = line.replace(/^\||\|$/g, '');
+        parts = stripped.split('|');
+        // Skip markdown separator lines like |---|---|
+        if (parts.every(p => /^[\s\-:]+$/.test(p))) continue;
+      } else if (line.includes(',')) {
+        parts = line.split(',');
+      } else if (line.includes(';')) {
+        parts = line.split(';');
+      }
+
+      if (parts && parts.length >= 2) {
+        results.push({
+          name: parts[0].trim().replace(/^\*\*|\*\*$/g, '').replace(/^["']|["']$/g, ''),
+          value: parts[1].trim().replace(/^\*\*|\*\*$/g, '').replace(/^["']|["']$/g, '')
+        });
+      }
+    }
+
+    return results;
   }
 
   protected toggleExportMenu(): void {
