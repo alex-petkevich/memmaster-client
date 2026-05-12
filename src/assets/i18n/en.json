@@ -320,6 +320,7 @@
         "archive": "Archive",
         "retrieve": "Retrieve",
         "archive-hint": "Archive this card",
+        "color-hint": "Card color",
         "retrieve-hint": "Retrieve from archive",
         "delete-hint": "Delete this card",
         "copy-to-my-folder": "Copy to my folder",

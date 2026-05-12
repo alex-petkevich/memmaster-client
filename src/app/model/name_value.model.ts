@@ -19,6 +19,7 @@ export interface IDictionaryPair {
 
   is_remembered?: boolean;
   is_archived?: boolean;
+  color?: string;
 }
 
 export interface IDictionary {

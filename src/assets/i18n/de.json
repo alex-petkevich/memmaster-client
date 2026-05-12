@@ -327,6 +327,7 @@
       "archive": "Archiv",
       "retrieve": "Aus Archiv",
       "archive-hint": "Diese Karte archivieren",
+      "color-hint": "Kartenfarbe",
       "retrieve-hint": "Aus Archiv abrufen",
       "delete-hint": "Diese Karte löschen",
       "copy-to-my-folder": "In meinenordner kopieren",

@@ -203,8 +203,13 @@
               </ng-container>
             </div>
           </div>
-          <!-- Is remembered checkbox -->
+          <!-- Color picker & Is remembered checkbox -->
           <div class="col-3 d-flex align-items-end justify-content-end flex-nowrap gap-2">
+            <input type="color" class="form-control-color color-picker-sm"
+                   [(ngModel)]="p.color" name="color{{p.uiId}}"
+                   [ngbTooltip]="'dictionary.edit.color-hint' | translate"
+                   [disabled]="!isOwner"
+                   title="Card color">
             <div>
               <div class="form-check form-switch sw-remembered">
                 <input class="form-check-input sw-input" type="checkbox" id="isRemembered{{p.uiId}}"
