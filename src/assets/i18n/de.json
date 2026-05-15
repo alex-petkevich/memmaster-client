@@ -49,7 +49,17 @@
       "remembered": "Gelernt",
       "edit-cards": "Karten bearbeiten",
       "view-cards": "Alle Karten anzeigen",
-      "next": "Weiter"
+      "next": "Weiter",
+      "aria": {
+        "question": "Frage {{index}} von {{total}}",
+        "correct": "Richtig",
+        "incorrect": "Falsch. Richtige Antwort ist {{answer}}",
+        "timeup": "Die Zeit ist abgelaufen",
+        "finished": {
+          "quiz": "Quiz beendet — Ergebnis: {{score}} / {{total}}",
+          "test": "Test beendet — Ergebnis: {{score}}; Fehler: {{fails}}"
+        }
+      }
     }
   },
   "account": {

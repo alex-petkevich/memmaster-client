@@ -48,6 +48,17 @@
       "edit-cards": "Edit cards",
       "view-cards": "View all cards",
       "next": "Next"
+      ,
+      "aria": {
+        "question": "Question {{index}} of {{total}}",
+        "correct": "Correct",
+        "incorrect": "Incorrect. Correct answer is {{answer}}",
+        "timeup": "Time is up",
+        "finished": {
+          "quiz": "Quiz finished — Score: {{score}} / {{total}}",
+          "test": "Test finished — Score: {{score}}; Fails: {{fails}}"
+        }
+      }
     }
   },
   "account": {

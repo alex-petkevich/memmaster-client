@@ -44,6 +44,23 @@
 <ng-container *ngIf="isLoggedIn">
   <div class="learn-container">
 
+    <!-- Mode selector (tabs on desktop, select on mobile) -->
+    <div class="mode-selector mb-3 d-flex align-items-center justify-content-between">
+      <div class="mode-tabs" role="tablist" aria-label="Study mode">
+        <button type="button" class="btn btn-sm me-2" [class.btn-primary]="mode === 'roll'" [class.btn-outline-secondary]="mode !== 'roll'" (click)="setMode('roll')">🎲 Roll</button>
+        <button type="button" class="btn btn-sm me-2" [class.btn-primary]="mode === 'quiz'" [class.btn-outline-secondary]="mode !== 'quiz'" (click)="setMode('quiz')">❓ Quiz</button>
+        <button type="button" class="btn btn-sm" [class.btn-primary]="mode === 'test'" [class.btn-outline-secondary]="mode !== 'test'" (click)="setMode('test')">⏱️ Test</button>
+      </div>
+      <div class="mode-select d-none">
+        <label class="form-label visually-hidden" for="modeSelect">Mode</label>
+        <select id="modeSelect" class="form-select form-select-sm" [ngModel]="mode" (ngModelChange)="setMode($event)">
+          <option value="roll">Roll</option>
+          <option value="quiz">Quiz</option>
+          <option value="test">Test</option>
+        </select>
+      </div>
+    </div>
+
     <!-- Folder selector -->
     <div class="folder-selector mb-4" *ngIf="!isSharedMode">
       <label for="folderSelect" class="form-label fw-semibold">
@@ -80,8 +97,9 @@
     </div>
 
      <!-- Flashcard -->
-     <div *ngIf="!loadingCards && currentCard !== null" class="card-wrapper d-flex justify-content-center align-items-center">
-       <div class="flashcard" (click)="onCardClick()" [class.clickable]="true" [style.background-color]="currentCard.color || null">
+      <!-- Roll mode flashcard (default) -->
+      <div *ngIf="!loadingCards && currentCard !== null" class="card-wrapper d-flex justify-content-center align-items-center">
+        <div *ngIf="mode === 'roll'" class="flashcard" (click)="onCardClick()" [class.clickable]="true" [style.background-color]="currentCard.color || null">
 
           <!-- Card name (always visible) -->
           <div class="flashcard-name position-relative" [title]="!showValue ? ('home.learn.tap-to-reveal' | translate) : ''">
@@ -136,6 +154,15 @@
             {{ 'home.learn.next' | translate }} <i class="fas fa-arrow-right ms-1"></i>
           </a>
         </div>
+      </div>
+
+      <!-- Quiz/Test components -->
+      <div *ngIf="!loadingCards && mode === 'quiz'">
+        <app-quiz-mode [cards]="cards"></app-quiz-mode>
+      </div>
+
+      <div *ngIf="!loadingCards && mode === 'test'">
+        <app-test-mode [cards]="cards"></app-test-mode>
       </div>
     </div>
      <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="!isSharedMode && selectedFolderId !== null">

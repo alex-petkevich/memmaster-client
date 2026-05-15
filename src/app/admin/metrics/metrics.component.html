@@ -57,6 +57,7 @@
             <div class="mt-1" *ngFor="let tag of metricDetails.availableTags">{{tag.tag}}:
                 <div class="ms-3" *ngFor="let val of tag.values">{{val}}</div>
             </div>
+            </div>
         </div>
         <div class="col-9" *ngIf="loadingMetrics">
             <div class="d-flex align-items-center">
@@ -71,6 +72,7 @@
             <p class="text-center" [innerHTML]=" 'metrics.error_no_metrics_found' | translate"></p>
         </div>
     </div>
+
 </div>
 
 <app-dialog #dialog></app-dialog>

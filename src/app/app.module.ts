@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './account/login/login.component';
 import { RegisterComponent } from './account/register/register.component';
 import { HomeComponent } from './home/home.component';
+import { QuizModeComponent } from './home/quiz-mode.component';
+import { TestModeComponent } from './home/test-mode.component';
 import { ProfileComponent } from './account/profile/profile.component';
 import { BoardAdminComponent } from './admin/board-admin/board-admin.component';
 import { BoardUserComponent } from './board-user/board-user.component';
@@ -60,15 +62,17 @@ import { ContactComponent } from "./contact/contact.component";
 		AppRoutingModule,
 		FormsModule,
 		HttpClientModule,
-		NgxTranslateModule,
-        NgxBootstrapIconsPickerModule,
-		NgbModule,
-        NgSelectModule,
-		ReactiveFormsModule,
-        SharedModule,
-        TermsOfServiceComponent,
-        PrivacyPolicyComponent,
-        ContactComponent
+    NgxTranslateModule,
+      NgxBootstrapIconsPickerModule,
+    NgbModule,
+      NgSelectModule,
+    ReactiveFormsModule,
+      SharedModule,
+      QuizModeComponent,
+      TestModeComponent,
+      TermsOfServiceComponent,
+      PrivacyPolicyComponent,
+      ContactComponent
 	],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

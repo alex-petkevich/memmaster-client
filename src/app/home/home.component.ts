@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { TokenStorageService } from "../_services/token-storage.service";
 import { FoldersService } from "../_services/folders.service";
 import { DictionaryService } from "../_services/dictionary.service";
@@ -41,6 +41,11 @@ export class HomeComponent implements OnInit, OnDestroy {
    isSharedMode: boolean = false;
    isSharedFolderOwner: boolean = false;
    sharedFolderUuid: string | null = null;
+  // Mode selector: 'roll' (default), 'quiz', 'test'
+  // Use a wider `string` type to avoid strict-template comparison narrowing
+  // errors from the Angular template type-checker in some build setups.
+  mode: string = 'roll';
+  private readonly MODE_STORAGE_KEY = 'home_cards_mode';
    private readonly blobUrlCache = new Map<string, string>();
    private readonly failedBlobPaths = new Set<string>();
    private routeSubscription: Subscription | null = null;
@@ -61,6 +66,44 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.routeSubscription = this.route.paramMap.subscribe(params => {
       this.initializeByRoute(params.get('publicFolderUuid'));
     });
+    // load client-stored mode preference (localStorage wins as a quick fallback)
+    try {
+      const stored = localStorage.getItem(this.MODE_STORAGE_KEY);
+      if (stored === 'quiz' || stored === 'test' || stored === 'roll') {
+        this.mode = stored;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // Global keyboard shortcuts: left/right to switch modes; R/Q/T to jump to a mode
+  @HostListener('window:keydown', ['$event'])
+  handleGlobalKeys(ev: KeyboardEvent) {
+    const tag = (ev.target && (ev.target as HTMLElement).tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || (ev.target as HTMLElement)?.isContentEditable) return;
+
+    if (ev.key === 'ArrowRight') {
+      ev.preventDefault();
+      this.cycleMode(1);
+    } else if (ev.key === 'ArrowLeft') {
+      ev.preventDefault();
+      this.cycleMode(-1);
+    } else if (ev.key.toLowerCase() === 'r') {
+      ev.preventDefault(); this.setMode('roll');
+    } else if (ev.key.toLowerCase() === 'q') {
+      ev.preventDefault(); this.setMode('quiz');
+    } else if (ev.key.toLowerCase() === 't') {
+      ev.preventDefault(); this.setMode('test');
+    }
+  }
+
+  private cycleMode(direction: 1 | -1) {
+    const order: ('roll'|'quiz'|'test')[] = ['roll','quiz','test'];
+    // `mode` is a plain string, so cast when searching the known order array.
+    const idx = order.indexOf(this.mode as any);
+    const ni = (idx + direction + order.length) % order.length;
+    this.setMode(order[ni]);
   }
 
   ngOnDestroy(): void {
@@ -92,6 +135,10 @@ export class HomeComponent implements OnInit, OnDestroy {
          if (prefs.selectedFolderId && prefs.selectedFolderId !== '') {
            this.selectedFolderId = parseInt(prefs.selectedFolderId, 10);
          }
+          // server-side persisted mode (if available) should override default
+          if (prefs.home_cards_mode && (prefs.home_cards_mode === 'quiz' || prefs.home_cards_mode === 'test' || prefs.home_cards_mode === 'roll')) {
+            this.mode = prefs.home_cards_mode;
+          }
          return this.foldersService.listMine('', '', '', true);
        })
      ).subscribe({
@@ -127,10 +174,13 @@ export class HomeComponent implements OnInit, OnDestroy {
    }
 
    private saveHomePreferences(): void {
-     const preferences = {
-       'home_selected_folder_id': this.selectedFolderId?.toString() ?? '',
-       'home_include_remembered': this.includeRemembered.toString()
-     };
+      const preferences: any = {
+        'home_selected_folder_id': this.selectedFolderId?.toString() ?? '',
+        'home_include_remembered': this.includeRemembered.toString()
+      };
+      // persist selected mode client-side and send to server when saving preferences
+      preferences.home_cards_mode = this.mode;
+      try { localStorage.setItem(this.MODE_STORAGE_KEY, this.mode); } catch {}
      this.settingsService.saveHomePreferences(preferences).subscribe();
    }
 
@@ -329,12 +379,21 @@ export class HomeComponent implements OnInit, OnDestroy {
           name_img: card.name_img ?? card.name_file,
           value_img: card.value_img ?? card.value_file
         }));
+        // Shuffle and prepare cards for the selected mode
         this.cards = this.filterCards(this.allCards).sort(() => Math.random() - 0.5);
+        // Reset mode-specific states
+        this.resetModeState();
         this.loadingCards = false;
         this.showNextCard();
       },
       error: () => { this.loadingCards = false; }
     });
+  }
+
+  private resetModeState(): void {
+    // Roll defaults
+    this.showValue = false;
+    // Mode-specific components manage their own transient state
   }
 
   private filterCards(cards: IDictionaryPair[]): IDictionaryPair[] {
@@ -353,13 +412,18 @@ export class HomeComponent implements OnInit, OnDestroy {
    }
 
    onCardClick(): void {
-     if (this.showValue) {
-       // If value is already shown, go to next card
-       this.nextCard();
-     } else {
-       // Otherwise, reveal the value
-       this.revealValue();
-     }
+      // only allow roll-by-click behavior in 'roll' mode
+      if (this.mode !== 'roll') {
+        return;
+      }
+
+      if (this.showValue) {
+        // If value is already shown, go to next card
+        this.nextCard();
+      } else {
+        // Otherwise, reveal the value
+        this.revealValue();
+      }
    }
 
     revealValue(): void {
@@ -430,6 +494,24 @@ export class HomeComponent implements OnInit, OnDestroy {
        const j = Math.floor(Math.random() * (i + 1));
        [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
      }
-     this.showNextCard();
+      this.showNextCard();
    }
+
+    // ===== Mode selector API =====
+    setMode(newMode: string): void {
+      if (this.mode === newMode) return;
+      // switching mode resets mode-specific state
+      this.mode = newMode;
+      try { localStorage.setItem(this.MODE_STORAGE_KEY, this.mode); } catch {}
+      // save preferences so server can persist choice as well
+      this.saveHomePreferences();
+      this.resetModeState();
+      // When switching, rebuild cards queue
+      if (this.selectedFolderId) {
+        this.cards = this.filterCards(this.allCards).sort(() => Math.random() - 0.5);
+        if (this.mode === 'roll') {
+          this.showNextCard();
+        }
+      }
+    }
 }

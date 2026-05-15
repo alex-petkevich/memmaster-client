@@ -1,5 +1,6 @@
 .learn-container {
-  max-width: 700px;
+  /* increased max-width so flashcards have more room on larger screens */
+  max-width: 900px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
@@ -8,12 +9,25 @@
   max-width: 400px;
 }
 
+.mode-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mode-tabs button {
+  min-width: 72px;
+}
+
+.mode-select { display: none; }
+
 .hint-box {
   padding: 3rem 1rem;
 }
 
 .card-wrapper {
-  min-height: 340px;
+  /* give a bit more vertical space for large cards */
+  min-height: 380px;
 }
 
 .flashcard {
@@ -23,7 +37,8 @@
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
   padding: 2.5rem 2rem 1.5rem;
   width: 100%;
-  max-width: 560px;
+  /* allow larger flashcards on wider screens while keeping responsiveness */
+  max-width: 720px;
   text-align: center;
   transition: box-shadow 0.2s;
 
@@ -93,6 +108,11 @@
 .flashcard-actions {
   border-top: 1px solid #e0e0e0;
   padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .action-link {
@@ -103,6 +123,8 @@
   border-radius: 8px;
   transition: background 0.15s, transform 0.1s;
   font-size: 0.95rem;
+  /* keep individual action buttons from stretching when the container wraps */
+  flex: 0 0 auto;
 
   &:active {
     transform: scale(0.96);
@@ -195,6 +217,10 @@
   .card-wrapper {
     min-height: 260px;
   }
+
+  /* On small screens hide tab buttons and show native select */
+  .mode-tabs { display: none !important; }
+  .mode-select { display: block !important; width: 140px; }
 }
 
 /* ===== Landing hero ===== */
