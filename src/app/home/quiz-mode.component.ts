@@ -2,11 +2,12 @@ import { Component, Input, OnChanges, SimpleChanges, HostListener } from '@angul
 import { TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { IDictionaryPair } from '../model/name_value.model';
+import {NgxTranslateModule} from "../translate/translate.module";
 
 @Component({
   selector: 'app-quiz-mode',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgxTranslateModule],
   templateUrl: './quiz-mode.component.html',
   styleUrls: ['./quiz-mode.component.scss']
 })

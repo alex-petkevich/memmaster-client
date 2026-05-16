@@ -1,12 +1,12 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges, HostListener } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { IDictionaryPair } from '../model/name_value.model';
 
 @Component({
   selector: 'app-test-mode',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './test-mode.component.html',
   styleUrls: ['./test-mode.component.scss']
 })

@@ -47,16 +47,16 @@
     <!-- Mode selector (tabs on desktop, select on mobile) -->
     <div class="mode-selector mb-3 d-flex align-items-center justify-content-between">
       <div class="mode-tabs" role="tablist" aria-label="Study mode">
-        <button type="button" class="btn btn-sm me-2" [class.btn-primary]="mode === 'roll'" [class.btn-outline-secondary]="mode !== 'roll'" (click)="setMode('roll')">🎲 Roll</button>
-        <button type="button" class="btn btn-sm me-2" [class.btn-primary]="mode === 'quiz'" [class.btn-outline-secondary]="mode !== 'quiz'" (click)="setMode('quiz')">❓ Quiz</button>
-        <button type="button" class="btn btn-sm" [class.btn-primary]="mode === 'test'" [class.btn-outline-secondary]="mode !== 'test'" (click)="setMode('test')">⏱️ Test</button>
+        <button type="button" class="btn btn-sm me-2" [class.btn-primary]="mode === 'roll'" [class.btn-outline-secondary]="mode !== 'roll'" (click)="setMode('roll')">🎲 {{ 'home.learn.roll' | translate }}</button>
+        <button type="button" class="btn btn-sm me-2" [class.btn-primary]="mode === 'quiz'" [class.btn-outline-secondary]="mode !== 'quiz'" (click)="setMode('quiz')">❓ {{ 'home.learn.quiz' | translate }}</button>
+        <button type="button" class="btn btn-sm" [class.btn-primary]="mode === 'test'" [class.btn-outline-secondary]="mode !== 'test'" (click)="setMode('test')">⏱️ {{ 'home.learn.test' | translate }}</button>
       </div>
       <div class="mode-select d-none">
         <label class="form-label visually-hidden" for="modeSelect">Mode</label>
         <select id="modeSelect" class="form-select form-select-sm" [ngModel]="mode" (ngModelChange)="setMode($event)">
-          <option value="roll">Roll</option>
-          <option value="quiz">Quiz</option>
-          <option value="test">Test</option>
+          <option value="roll">{{ 'home.learn.roll' | translate }}</option>
+          <option value="quiz">{{ 'home.learn.quiz' | translate }}</option>
+          <option value="test">{{ 'home.learn.test' | translate }}</option>
         </select>
       </div>
     </div>
