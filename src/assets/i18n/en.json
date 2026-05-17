@@ -35,7 +35,7 @@
       "choose-folder": "-- Choose a folder --",
       "hint-select-folder": "Select a folder to start learning.",
       "hint-all-remembered": "All cards already marked as remembered, select another folder.",
-      "include-remembered": "Remembered",
+      "include-remembered": "Include remembered",
       "include-remembered-hint": "Include remembered cards in the practice session",
       "tap-to-reveal": "Tap to reveal answer",
       "tap-to-next": "Tap to see next card",

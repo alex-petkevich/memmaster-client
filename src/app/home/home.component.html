@@ -45,7 +45,7 @@
   <div class="learn-container">
 
     <!-- Mode selector (tabs on desktop, select on mobile) -->
-    <div class="mode-selector mb-3 d-flex align-items-center justify-content-between">
+    <div class="mode-selector mb-1 d-flex align-items-center justify-content-between">
       <div class="mode-tabs" role="tablist" aria-label="Study mode">
         <button type="button" class="btn btn-sm me-2" [class.btn-primary]="mode === 'roll'" [class.btn-outline-secondary]="mode !== 'roll'" (click)="setMode('roll')">🎲 {{ 'home.learn.roll' | translate }}</button>
         <button type="button" class="btn btn-sm me-2" [class.btn-primary]="mode === 'quiz'" [class.btn-outline-secondary]="mode !== 'quiz'" (click)="setMode('quiz')">❓ {{ 'home.learn.quiz' | translate }}</button>
@@ -62,7 +62,7 @@
     </div>
 
     <!-- Folder selector -->
-    <div class="folder-selector mb-4" *ngIf="!isSharedMode">
+    <div class="folder-selector mb-1" *ngIf="!isSharedMode">
       <label for="folderSelect" class="form-label fw-semibold">
         <i class="fas fa-folder-open me-1"></i> {{ 'home.learn.select-folder' | translate }}
       </label>
@@ -165,7 +165,7 @@
         <app-test-mode [cards]="cards"></app-test-mode>
       </div>
     </div>
-     <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="!isSharedMode && selectedFolderId !== null">
+      <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="!isSharedMode && selectedFolderId !== null && mode === 'roll'">
        <button type="button"
                class="btn btn-sm"
                [class.btn-primary]="includeRemembered"

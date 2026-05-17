@@ -97,7 +97,7 @@ export class TestModeComponent implements OnChanges, OnDestroy {
     if (ok) this.score++; else this.fails++;
     this.ariaMessage = ok ? this.translate.instant('home.learn.aria.correct') : this.translate.instant('home.learn.aria.incorrect', { answer: correct });
     this.feedback = ok ? 'correct' : 'incorrect';
-    if (this.fails > 3) { this.end(); return; }
+    if (this.fails >= 3) { this.end(); return; }
     setTimeout(() => {
       this.nextQuestion();
     }, 600);
