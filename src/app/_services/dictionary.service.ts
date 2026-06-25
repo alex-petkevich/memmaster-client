@@ -57,6 +57,18 @@ export class DictionaryService {
     return this.http.post(API_URL + source_folder_id + '/copy-to/' + target_folder_id, {}, httpOptions);
   }
 
+  copySelectedToFolder(source_folder_id: number, target_folder_id: number, pairIds: number[]): Observable<any> {
+    return this.http.post(API_URL + source_folder_id + '/copy-selected-to/' + target_folder_id, pairIds, httpOptions);
+  }
+
+  moveSelectedToFolder(source_folder_id: number, target_folder_id: number, pairIds: number[]): Observable<any> {
+    return this.http.post(API_URL + source_folder_id + '/move-selected-to/' + target_folder_id, pairIds, httpOptions);
+  }
+
+  deleteSelected(folder_id: number, pairIds: number[]): Observable<any> {
+    return this.http.post(API_URL + folder_id + '/delete-selected', pairIds, httpOptions);
+  }
+
   uploadAttachment(file: File): Observable<{ filename: string }> {
     const fd = new FormData();
     fd.append('file', file, file.name);

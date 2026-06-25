@@ -352,7 +352,24 @@
       "select-target-folder": "Zielordner auswählen",
       "choose-folder": "Ordner auswählen",
       "copy": "Kopieren",
-      "copy-success": "Karten erfolgreich kopiert. Duplikate übersprungen."
+      "copy-success": "Karten erfolgreich kopiert. Duplikate übersprungen.",
+      "select-all": "Alle auswählen",
+      "deselect-all": "Alle abwählen",
+      "selected-count": "{{count}} ausgewählt",
+      "bulk-actions": "Aktionen",
+      "bulk-copy-to": "Kopieren nach...",
+      "bulk-move-to": "Verschieben nach...",
+      "bulk-delete": "Ausgewählte löschen",
+      "confirm-copy-title": "Kopieren bestätigen",
+      "confirm-copy-message": "Möchten Sie wirklich {{count}} ausgewählte Karte(n) in den gewählten Ordner kopieren?",
+      "confirm-move-title": "Verschieben bestätigen",
+      "confirm-move-message": "Möchten Sie wirklich {{count}} ausgewählte Karte(n) in den gewählten Ordner verschieben?",
+      "confirm-delete-title": "Löschen bestätigen",
+      "confirm-delete-message": "Möchten Sie wirklich {{count}} ausgewählte Karte(n) löschen?",
+      "move-success": "Karten erfolgreich verschoben.",
+      "delete-success": "Ausgewählte Karten erfolgreich gelöscht.",
+      "confirm-yes": "Ja",
+      "confirm-no": "Nein"
     }
   },
   "legal": {

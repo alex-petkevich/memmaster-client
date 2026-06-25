@@ -345,8 +345,25 @@
         "copy-to-my-folder": "Copy to my folder",
        "select-target-folder": "Select target folder",
        "choose-folder": "Choose a folder",
-       "copy": "Copy",
-       "copy-success": "Cards copied successfully. Duplicates were skipped."
+        "copy": "Copy",
+        "copy-success": "Cards copied successfully. Duplicates were skipped.",
+        "select-all": "Select all",
+        "deselect-all": "Deselect all",
+        "selected-count": "{{count}} selected",
+        "bulk-actions": "Actions",
+        "bulk-copy-to": "Copy to...",
+        "bulk-move-to": "Move to...",
+        "bulk-delete": "Delete selected",
+        "confirm-copy-title": "Confirm Copy",
+        "confirm-copy-message": "Are you sure you want to copy {{count}} selected card(s) to the chosen folder?",
+        "confirm-move-title": "Confirm Move",
+        "confirm-move-message": "Are you sure you want to move {{count}} selected card(s) to the chosen folder?",
+        "confirm-delete-title": "Confirm Delete",
+        "confirm-delete-message": "Are you sure you want to delete {{count}} selected card(s)?",
+        "move-success": "Cards moved successfully.",
+        "delete-success": "Selected cards deleted successfully.",
+        "confirm-yes": "Yes",
+        "confirm-no": "No"
      }
    },
    "legal": {

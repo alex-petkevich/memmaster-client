@@ -16,7 +16,7 @@ import {DIRECTORY_TYPES} from "../../shared-components/general.constants";
 import {HttpClient} from "@angular/common/http";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
-type UiDictionaryPair = IDictionaryPair & { uiId: number; name_img?: string; value_img?: string; fromPaste?: boolean };
+type UiDictionaryPair = IDictionaryPair & { uiId: number; name_img?: string; value_img?: string; fromPaste?: boolean; selected?: boolean };
 
 interface BulkImportItem {
   name: string;
@@ -47,6 +47,23 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
   protected bulkPasteText: string = '';
   protected bulkImportActiveTab: string = 'paste';
   protected exportMenuOpen: boolean = false;
+  protected bulkActionsMenuOpen: boolean = false;
+  selectedCount: number = 0;
+  selectAllChecked: boolean = false;
+
+  // Confirmation dialog state
+  confirmModalRef: NgbModalRef | undefined;
+  confirmTitle: string = '';
+  confirmMessage: string = '';
+  confirmAction: (() => void) | null = null;
+
+  // Move/Copy selected modal
+  bulkOperationModal: NgbModalRef | undefined;
+  bulkOperationModalTemplate: TemplateRef<any> | undefined;
+  bulkOperationType: 'copy' | 'move' = 'copy';
+  bulkOperationData: { folders: IFolder[]; selectedFolderId: number | null; loading: boolean; success: boolean; error: string } = {
+    folders: [], selectedFolderId: null, loading: false, success: false, error: ''
+  };
 
   form: IFolder = {
     name: "",
@@ -70,6 +87,10 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
   @ViewChild("bulkImportModal") bulkImportModalTemplate: TemplateRef<any> | undefined;
   @ViewChild("copyToFolderModal") set copyToFolderModalRef(ref: TemplateRef<any>) {
     this.copyToFolderModalTemplate = ref;
+  }
+  @ViewChild("confirmModal") confirmModalTemplate: TemplateRef<any> | undefined;
+  @ViewChild("bulkOperationModal") set bulkOperationModalRef(ref: TemplateRef<any>) {
+    this.bulkOperationModalTemplate = ref;
   }
 
   constructor(private readonly auth: AuthService,
@@ -711,22 +732,183 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
     return results;
   }
 
+  // === Selection methods ===
+
+  toggleSelectPair(index: number): void {
+    this.pairs[index].selected = !this.pairs[index].selected;
+    this.updateSelectedCount();
+  }
+
+  toggleSelectAll(): void {
+    this.selectAllChecked = !this.selectAllChecked;
+    this.pairs.forEach(p => p.selected = this.selectAllChecked);
+    this.updateSelectedCount();
+  }
+
+  private updateSelectedCount(): void {
+    this.selectedCount = this.pairs.filter(p => p.selected).length;
+    this.selectAllChecked = this.selectedCount === this.pairs.length && this.pairs.length > 0;
+  }
+
+  private getSelectedPairIds(): number[] {
+    return this.pairs.filter(p => p.selected && p.id).map(p => p.id as number);
+  }
+
+  clearSelection(): void {
+    this.pairs.forEach(p => p.selected = false);
+    this.selectedCount = 0;
+    this.selectAllChecked = false;
+  }
+
+  // === Bulk actions menu ===
+
   protected toggleExportMenu(): void {
     this.exportMenuOpen = !this.exportMenuOpen;
   }
 
-  @HostListener('document:click', ['$event'])
-  protected onDocumentClick(event: MouseEvent): void {
-    if (!this.exportMenuOpen) {
-      return;
-    }
+  protected toggleBulkActionsMenu(): void {
+    this.bulkActionsMenuOpen = !this.bulkActionsMenuOpen;
+  }
 
-    const target = event.target as HTMLElement | null;
-    if (target?.closest('.export-menu-container')) {
-      return;
-    }
+  // === Confirmation dialog ===
 
-    this.exportMenuOpen = false;
+  private openConfirmDialog(title: string, message: string, action: () => void): void {
+    this.confirmTitle = title;
+    this.confirmMessage = message;
+    this.confirmAction = action;
+    if (this.confirmModalTemplate) {
+      this.confirmModalRef = this.modalService.open(this.confirmModalTemplate, {
+        centered: true,
+        backdrop: 'static',
+        keyboard: false
+      });
+    }
+  }
+
+  protected onConfirmYes(modal: any): void {
+    modal.dismiss();
+    if (this.confirmAction) {
+      this.confirmAction();
+      this.confirmAction = null;
+    }
+  }
+
+  // === Bulk Delete ===
+
+  protected bulkDelete(): void {
+    this.bulkActionsMenuOpen = false;
+    const ids = this.getSelectedPairIds();
+    if (!ids.length) return;
+
+    this.openConfirmDialog(
+      this.translate.instant('dictionary.edit.confirm-delete-title'),
+      this.translate.instant('dictionary.edit.confirm-delete-message', { count: this.selectedCount }),
+      () => this.executeBulkDelete(ids)
+    );
+  }
+
+  private executeBulkDelete(ids: number[]): void {
+    if (!this.rootFolder?.id) return;
+    this.dictionaryService.deleteSelected(this.rootFolder.id, ids).subscribe({
+      next: () => {
+        this.pairs = this.pairs.filter(p => !p.selected);
+        this.clearSelection();
+        this.isSuccessful = false;
+        this.toastComponent?.success(this.translate.instant('dictionary.edit.delete-success'));
+        this.cdr.markForCheck();
+      },
+      error: (err: any) => {
+        this.errorMessage = err?.error?.message || this.translate.instant('dictionary.edit.errorMessage');
+      }
+    });
+  }
+
+  // === Bulk Copy To / Move To ===
+
+  protected bulkCopyTo(): void {
+    this.bulkActionsMenuOpen = false;
+    this.openBulkOperationModal('copy');
+  }
+
+  protected bulkMoveTo(): void {
+    this.bulkActionsMenuOpen = false;
+    this.openBulkOperationModal('move');
+  }
+
+  private openBulkOperationModal(type: 'copy' | 'move'): void {
+    this.bulkOperationType = type;
+    this.bulkOperationData = { folders: [], selectedFolderId: null, loading: true, success: false, error: '' };
+    if (this.bulkOperationModalTemplate) {
+      this.bulkOperationModal = this.modalService.open(this.bulkOperationModalTemplate, {
+        size: 'lg',
+        backdrop: 'static',
+        keyboard: false
+      });
+    }
+    this.foldersService.listMine('', '', '', false).subscribe({
+      next: (data: IFolder[]) => {
+        // Exclude current folder from target list
+        this.bulkOperationData.folders = this.flattenFolderTree(data).filter(f => f.id !== this.rootFolder?.id);
+        this.bulkOperationData.loading = false;
+      },
+      error: () => {
+        this.bulkOperationData.loading = false;
+        this.bulkOperationData.error = this.translate.instant('dictionary.edit.errorMessage');
+      }
+    });
+  }
+
+  protected confirmBulkOperation(modal: any): void {
+    if (!this.bulkOperationData.selectedFolderId) return;
+
+    const ids = this.getSelectedPairIds();
+    if (!ids.length) return;
+
+    const count = this.selectedCount;
+    modal.dismiss();
+
+    if (this.bulkOperationType === 'copy') {
+      this.openConfirmDialog(
+        this.translate.instant('dictionary.edit.confirm-copy-title'),
+        this.translate.instant('dictionary.edit.confirm-copy-message', { count }),
+        () => this.executeBulkCopy(ids, this.bulkOperationData.selectedFolderId!)
+      );
+    } else {
+      this.openConfirmDialog(
+        this.translate.instant('dictionary.edit.confirm-move-title'),
+        this.translate.instant('dictionary.edit.confirm-move-message', { count }),
+        () => this.executeBulkMove(ids, this.bulkOperationData.selectedFolderId!)
+      );
+    }
+  }
+
+  private executeBulkCopy(ids: number[], targetFolderId: number): void {
+    if (!this.rootFolder?.id) return;
+    this.dictionaryService.copySelectedToFolder(this.rootFolder.id, targetFolderId, ids).subscribe({
+      next: () => {
+        this.clearSelection();
+        this.toastComponent?.success(this.translate.instant('dictionary.edit.copy-success'));
+        this.cdr.markForCheck();
+      },
+      error: (err: any) => {
+        this.errorMessage = err?.error?.message || this.translate.instant('dictionary.edit.errorMessage');
+      }
+    });
+  }
+
+  private executeBulkMove(ids: number[], targetFolderId: number): void {
+    if (!this.rootFolder?.id) return;
+    this.dictionaryService.moveSelectedToFolder(this.rootFolder.id, targetFolderId, ids).subscribe({
+      next: () => {
+        this.pairs = this.pairs.filter(p => !p.selected);
+        this.clearSelection();
+        this.toastComponent?.success(this.translate.instant('dictionary.edit.move-success'));
+        this.cdr.markForCheck();
+      },
+      error: (err: any) => {
+        this.errorMessage = err?.error?.message || this.translate.instant('dictionary.edit.errorMessage');
+      }
+    });
   }
 
   protected exportAs(format: 'csv' | 'xlsx' | 'docx'): void {
@@ -772,4 +954,16 @@ export class DictionaryEditComponent implements OnInit, OnDestroy {
     return plainMatch?.[1] || null;
   }
 
+  @HostListener('document:click', ['$event'])
+  protected onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+
+    if (this.exportMenuOpen && !target?.closest('.export-menu-container')) {
+      this.exportMenuOpen = false;
+    }
+
+    if (this.bulkActionsMenuOpen && !target?.closest('.bulk-actions-container')) {
+      this.bulkActionsMenuOpen = false;
+    }
+  }
 }

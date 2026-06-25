@@ -15,19 +15,19 @@
            class="container-fluid p-3 border m-3">{{ 'dictionary.edit.no-cards-added' | translate }}
       </div>
 
-      <div class="mb-3 d-flex align-items-start">
-        <button type="button" class="btn btn-outline-primary me-2" *ngIf="isOwner"
+      <div class="mb-3 d-flex align-items-start flex-wrap gap-1">
+        <button type="button" class="btn btn-outline-primary me-1" *ngIf="isOwner"
                 (click)="addPair()">{{ 'dictionary.edit.add-pair' | translate }}
         </button>
-        <button type="button" class="btn btn-outline-info me-2" *ngIf="isOwner"
+        <button type="button" class="btn btn-outline-info me-1" *ngIf="isOwner"
                 (click)="openBulkImportModal()">{{ 'dictionary.edit.bulk-import' | translate }}
         </button>
-        <button type="button" class="btn btn-outline-success me-2" *ngIf="!isOwner && pairs.length"
+        <button type="button" class="btn btn-outline-success me-1" *ngIf="!isOwner && pairs.length"
                 (click)="openCopyToFolderModal()">
           <i class="bi bi-files me-1"></i>{{ 'dictionary.edit.copy-to-my-folder' | translate }}
         </button>
 
-        <div class="btn-group me-2 position-relative export-menu-container" *ngIf="pairs.length">
+        <div class="btn-group me-1 position-relative export-menu-container" *ngIf="pairs.length">
           <button type="button" class="btn btn-outline-secondary" (click)="toggleExportMenu()">
             {{ 'dictionary.edit.export-as' | translate }}
           </button>
@@ -35,6 +35,20 @@
             <li><button type="button" class="dropdown-item" (click)="exportAs('xlsx')">{{ 'dictionary.edit.export-excel' | translate }}</button></li>
             <li><button type="button" class="dropdown-item" (click)="exportAs('csv')">{{ 'dictionary.edit.export-csv' | translate }}</button></li>
             <li><button type="button" class="dropdown-item" (click)="exportAs('docx')">{{ 'dictionary.edit.export-word' | translate }}</button></li>
+          </ul>
+        </div>
+
+        <!-- Bulk actions dropdown (visible when at least 1 pair selected) -->
+        <div class="btn-group me-1 position-relative bulk-actions-container" *ngIf="isOwner && selectedCount > 0">
+          <button type="button" class="btn btn-outline-warning" (click)="toggleBulkActionsMenu()">
+            <i class="bi bi-check2-square me-1"></i>{{ 'dictionary.edit.bulk-actions' | translate }}
+            <span class="badge bg-warning text-dark ms-1">{{ selectedCount }}</span>
+          </button>
+          <ul class="dropdown-menu show" *ngIf="bulkActionsMenuOpen" style="inset: auto auto auto 0;">
+            <li><button type="button" class="dropdown-item" (click)="bulkCopyTo()"><i class="bi bi-files me-2"></i>{{ 'dictionary.edit.bulk-copy-to' | translate }}</button></li>
+            <li><button type="button" class="dropdown-item" (click)="bulkMoveTo()"><i class="bi bi-box-arrow-right me-2"></i>{{ 'dictionary.edit.bulk-move-to' | translate }}</button></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button type="button" class="dropdown-item text-danger" (click)="bulkDelete()"><i class="bi bi-trash me-2"></i>{{ 'dictionary.edit.bulk-delete' | translate }}</button></li>
           </ul>
         </div>
 
@@ -47,23 +61,33 @@
       <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
 
       <div class="row g-2 fw-semibold text-muted mb-2 px-1" *ngIf="pairs.length">
-        <div class="col-4">
+        <div class="col-auto d-flex align-items-center" *ngIf="isOwner">
+          <input type="checkbox" class="form-check-input" [checked]="selectAllChecked"
+                 (change)="toggleSelectAll()" title="{{ (selectAllChecked ? 'dictionary.edit.deselect-all' : 'dictionary.edit.select-all') | translate }}">
+        </div>
+        <div class="col">
           {{ 'dictionary.edit.name' | translate }}
           <span *ngIf="rootFolder?.lng_src"> ({{ lngName(rootFolder?.lng_src) }})</span>
         </div>
-        <div class="col-1"></div>
-        <div class="col-4">
+        <div class="col-auto"></div>
+        <div class="col">
           {{ 'dictionary.edit.value' | translate }}
           <span *ngIf="rootFolder?.lng_dest"> ({{ lngName(rootFolder?.lng_dest) }})</span>
         </div>
-        <div class="col-3 text-end">{{ 'dictionary.edit.remembered' | translate }}</div>
+        <div class="col-auto text-end">{{ 'dictionary.edit.remembered' | translate }}</div>
       </div>
       
-      <div *ngFor="let p of pairs; let i = index; trackBy: trackByPair" class="mb-3 border rounded p-3" [class.border-warning]="p.fromPaste" [class.bg-warning-subtle]="p.fromPaste">
-        <div class="row g-2 align-items-end flex-nowrap">
+      <div *ngFor="let p of pairs; let i = index; trackBy: trackByPair" class="mb-3 border rounded p-3" [class.border-warning]="p.fromPaste" [class.bg-warning-subtle]="p.fromPaste" [class.border-primary]="p.selected" [class.bg-primary-subtle]="p.selected">
+        <div class="row g-2 align-items-center flex-nowrap">
+
+          <!-- Selection checkbox -->
+          <div class="col-auto d-flex align-items-center" *ngIf="isOwner">
+            <input type="checkbox" class="form-check-input" [checked]="p.selected"
+                   (change)="toggleSelectPair(i)">
+          </div>
 
           <!-- Name type selector and input/file -->
-          <div class="col-4">
+          <div class="col">
             <div class="input-group">
               <select class="form-select sel" id="name_type" [(ngModel)]="p.name_type" name="name_type{{p.uiId}}" [disabled]="!isOwner">
                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
@@ -131,13 +155,13 @@
             </div>
           </div>
 
-          <div class="col-1 justify-content-center d-flex">
+          <div class="col-auto justify-content-center d-flex">
             <button *ngIf="isOwner" class="btn btn-outline-primary" type="button" (click)="exchangePair(i)"><em
                 class="bi bi-arrow-left-right"></em></button>
           </div>
 
           <!-- Value type selector and input/file -->
-          <div class="col-4">
+          <div class="col">
             <div class="input-group">
               <select class="form-select sel" id="value_type" [(ngModel)]="p.value_type" name="value_type{{p.uiId}}" [disabled]="!isOwner">
                 <option value="TEXT">{{ 'dictionary.edit.text' | translate }}</option>
@@ -204,7 +228,7 @@
             </div>
           </div>
           <!-- Color picker & Is remembered checkbox -->
-          <div class="col-3 d-flex align-items-end justify-content-end flex-nowrap gap-2">
+          <div class="col-auto d-flex align-items-center justify-content-end flex-nowrap gap-2">
             <input type="color" class="form-control-color color-picker-sm"
                    [(ngModel)]="p.color" name="color{{p.uiId}}"
                    [ngbTooltip]="'dictionary.edit.color-hint' | translate"
@@ -365,3 +389,56 @@
     </button>
   </div>
 </ng-template>
+
+<!-- Bulk Operation (Copy to / Move to) Modal -->
+<ng-template #bulkOperationModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{ (bulkOperationType === 'copy' ? 'dictionary.edit.bulk-copy-to' : 'dictionary.edit.bulk-move-to') | translate }}
+    </h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="bulkOperationData.loading" class="text-center py-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div *ngIf="bulkOperationData.error" class="alert alert-danger">
+      {{ bulkOperationData.error }}
+    </div>
+    <div *ngIf="!bulkOperationData.loading">
+      <p class="text-muted mb-2">{{ 'dictionary.edit.selected-count' | translate: { count: selectedCount } }}</p>
+      <label class="form-label fw-semibold">{{ 'dictionary.edit.select-target-folder' | translate }}</label>
+      <select class="form-select" [(ngModel)]="bulkOperationData.selectedFolderId" name="bulkTargetFolder">
+        <option [ngValue]="null">-- {{ 'dictionary.edit.choose-folder' | translate }} --</option>
+        <option *ngFor="let f of bulkOperationData.folders" [ngValue]="f.id">{{ f.name }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">{{ 'dictionary.edit.cancel' | translate }}</button>
+    <button type="button" class="btn" [ngClass]="bulkOperationType === 'copy' ? 'btn-success' : 'btn-primary'"
+            (click)="confirmBulkOperation(modal)"
+            [disabled]="!bulkOperationData.selectedFolderId || bulkOperationData.loading">
+      <i [class]="bulkOperationType === 'copy' ? 'bi bi-files me-1' : 'bi bi-box-arrow-right me-1'"></i>
+      {{ (bulkOperationType === 'copy' ? 'dictionary.edit.copy' : 'dictionary.edit.bulk-move-to') | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!-- Confirmation Dialog -->
+<ng-template #confirmModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{ confirmTitle }}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>{{ confirmMessage }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">{{ 'dictionary.edit.confirm-no' | translate }}</button>
+    <button type="button" class="btn btn-danger" (click)="onConfirmYes(modal)">{{ 'dictionary.edit.confirm-yes' | translate }}</button>
+  </div>
+</ng-template>
+

@@ -19,3 +19,11 @@
   cursor: pointer;
   flex-shrink: 0;
 }
+
+.bg-primary-subtle {
+  background-color: rgba(13, 110, 253, 0.08) !important;
+}
+
+.bulk-actions-container .dropdown-menu {
+  z-index: 1050;
+}
